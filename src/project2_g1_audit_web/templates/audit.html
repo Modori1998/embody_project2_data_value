@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ header.run_id }} · {{ view.episode.episode_id }}</title>
+  <link rel="stylesheet" href="/static/audit.css?v=7">
+</head>
+<body>
+  {% macro vocab(code) -%}
+    {%- set t = ui_term(code) -%}
+    <span class="term{% if t.kind == 'unknown' %} unknown{% endif %}" title="{{ t.en }}：{{ t.description_zh }}">{{ display_code(code) }}</span>
+  {%- endmacro %}
+
+  <header class="top">
+    <div>
+      <a href="/">全部 Run</a>
+      <h1>G1 单次 Run Episode 浏览</h1>
+    </div>
+    <dl class="meta">
+      <div><dt>run_id</dt><dd id="hdr-run-id"><code>{{ header.run_id }}</code></dd></div>
+      <div><dt>run_stage</dt><dd id="hdr-stage">{{ vocab(header.run_stage) }}</dd></div>
+      <div><dt>config_version</dt><dd>{{ header.config_version }}</dd></div>
+      <div><dt>config_hash</dt><dd><code>{{ header.config_hash }}</code></dd></div>
+      <div><dt>segmentation_version</dt><dd>{{ header.segmentation_version }}</dd></div>
+      <div><dt>signal_contract_version</dt><dd>{{ header.signal_contract_version }}</dd></div>
+      <div><dt>signal_contract_hash</dt><dd><code>{{ header.signal_contract_hash }}</code></dd></div>
+      <div><dt>parent_run_id</dt><dd>{{ header.parent_run_id or "null" }}</dd></div>
+      <div><dt>episode_count</dt><dd>{{ header.episode_count }}</dd></div>
+      <div><dt>contract</dt><dd><code>{{ header.contract_version }}</code></dd></div>
+      {% if header.run_stage == "CALIBRATION" %}
+      <div><dt>Calibration Role</dt><dd>{{ display_code(header.calibration_role) }}</dd></div>
+      <div><dt>Config</dt><dd>{{ display_code(header.calibration_config_role) }}</dd></div>
+      <div><dt>Human Review</dt><dd>{{ display_code(header.human_review_status) }}</dd></div>
+      <div><dt>Search Gate</dt><dd>{{ display_code(header.search_gate) }}</dd></div>
+      {% endif %}
+    </dl>
+  </header>
+
+  {% if header.exploratory_only %}
+  <aside class="banner" id="exploratory-banner">
+    <strong>{{ display_code("EXPLORATORY_ONLY") }}</strong>
+    · {{ display_code("THRESHOLD_NOT_FROZEN") }}
+    <p class="muted">本 Run 只用于形成第一批 Human GT。不是 Frozen Config，不是 Calibration，不是 Evaluation。</p>
+  </aside>
+  {% endif %}
+  {% if header.run_stage == "CALIBRATION" %}
+  <aside class="banner" id="calibration-baseline-banner">
+    <strong>CALIBRATION · BASELINE HUMAN AUDIT</strong>
+    · BASELINE UNMODIFIED · SEARCH GATE CLOSED
+    <p class="muted">本 Run 只用于冻结 Episode 的正式 P1/P2 Human Review；尚未开始参数搜索或 Detector 调参。</p>
+  </aside>
+  {% endif %}
+  {% if header.evaluation_no_tuning %}
+  <aside class="banner eval" id="evaluation-banner">
+    <strong>{{ display_code("EVALUATION") }}</strong>
+    · {{ display_code("NO_TUNING") }}
+    <p class="muted">禁止将本 Run 的人工结果继续用于 threshold / strategy tuning。</p>
+  </aside>
+  {% endif %}
+
+  <nav class="filters">
+    {% for name in filters %}
+      <a class="btn {% if name == filter_name %}active{% endif %}" href="/audit/{{ header.run_id }}?filter={{ name }}">{{ display_code(name) }}</a>
+    {% endfor %}
+    <form class="filter-form" method="get" action="/audit/{{ header.run_id }}">
+      <input type="hidden" name="filter" value="{{ filter_name }}">
+      <label>quality_group
+        <select name="quality_group">
+          <option value="">ALL</option>
+          {% for item in quality_options %}
+          <option value="{{ item }}" {% if item == quality_group %}selected{% endif %}>{{ display_code(item) }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>episode_id
+        <input type="text" name="episode_id" value="{{ episode_query }}" placeholder="data/demo_N">
+      </label>
+      <label>short_segment_count
+        <input type="text" name="short_segment_count" value="{{ short_segment_count }}" size="4">
+      </label>
+      <label>final_boundary_count
+        <input type="text" name="final_boundary_count" value="{{ final_boundary_count }}" size="4">
+      </label>
+      <button class="btn" type="submit">筛选</button>
+    </form>
+  </nav>
+
+  <div class="layout">
+    <aside class="queue">
+      <h2>Episode 队列</h2>
+      <p class="muted">筛选={{ display_code(filter_name) }} · 顺序 = manifest</p>
+      <ol>
+        {% for row in queue %}
+        <li class="{% if view and row.episode_id == view.episode.episode_id %}current{% endif %}">
+          <a href="/audit/{{ header.run_id }}/episode/{{ encode_episode_id(row.episode_id) }}{{ query_suffix }}">
+            {{ row.episode_id }}
+            <span class="tag">{{ display_code(row.quality_group) }}</span>
+            <span class="tag">{{ display_code(row.progress.overall) }}</span>
+            {% if row.review_required %}<span class="tag">{{ display_code("REVIEW_REQUIRED") }}</span>{% endif %}
+          </a>
+          <p class="queue-progress muted">
+            Signal Review: {{ row.progress.signal_reviewed }} / 6
+            · Boundary Review: {{ row.progress.boundary_reviewed }} / {{ row.progress.boundary_total }}
+            · Missed Added: {{ row.progress.missed_n }}
+          </p>
+        </li>
+        {% endfor %}
+      </ol>
+      {% if not queue %}
+      <p>当前筛选没有 Episode。</p>
+      {% endif %}
+    </aside>
+
+    <section class="main">
+      {% if view %}
+      <form id="review-form" method="post" action="/audit/{{ header.run_id }}/episode/{{ view.encoded_id }}/review{{ query_suffix }}">
+      <input type="hidden" name="active_tab" id="active-tab" value="{{ active_tab }}">
+      <h2>{{ view.episode.episode_id }} · {{ view.index_in_filter }} / {{ view.filter_count }}</h2>
+      {% if review_error %}
+      <p class="banner eval" id="review-error">{{ review_error }}</p>
+      {% endif %}
+      {% if review_notice %}
+      <p class="banner saved" id="review-notice">{{ review_notice }}</p>
+      {% endif %}
+      {% if review.reused %}
+      <p class="banner" id="reused-signal">{{ display_code("REUSED_SIGNAL_REVIEW") }}</p>
+      {% endif %}
+      <p class="nav">
+        {% if view.previous_episode_id %}
+        <a class="btn" id="btn-prev" href="/audit/{{ header.run_id }}/episode/{{ encode_episode_id(view.previous_episode_id) }}{{ query_suffix }}">上一条</a>
+        {% else %}
+        <span class="btn disabled">上一条</span>
+        {% endif %}
+        {% if view.next_episode_id %}
+        <a class="btn" id="btn-next" href="/audit/{{ header.run_id }}/episode/{{ encode_episode_id(view.next_episode_id) }}{{ query_suffix }}">下一条</a>
+        {% else %}
+        <span class="btn disabled">下一条</span>
+        {% endif %}
+        <button class="btn" id="btn-save" type="submit" name="action" value="save">保存</button>
+        <button class="btn" id="btn-save-next" type="submit" name="action" value="save_next">保存并下一条</button>
+        <span id="unsaved-flag" class="tag hidden">UNSAVED｜未保存</span>
+      </p>
+      <dl class="fields">
+        <div><dt>episode_id</dt><dd id="fld-episode-id">{{ view.episode.episode_id }}</dd></div>
+        <div><dt>native_episode_key</dt><dd>{{ view.episode.native_episode_key }}</dd></div>
+        <div><dt>quality_group</dt><dd>{{ vocab(view.episode.quality_group) }}</dd></div>
+        <div><dt>length</dt><dd>{{ view.episode.length }}</dd></div>
+        <div><dt>candidate_count</dt><dd>{{ view.episode.candidate_count }}</dd></div>
+        <div><dt>suppressed_count</dt><dd>{{ view.episode.suppressed_count }}</dd></div>
+        <div><dt>final_boundary_count</dt><dd>{{ view.episode.final_boundary_count }}</dd></div>
+        <div><dt>segment_count</dt><dd>{{ view.episode.segment_count }}</dd></div>
+        <div><dt>short_segment_count</dt><dd>{{ view.episode.short_segment_count }}</dd></div>
+        <div><dt>long_segment_count</dt><dd>{{ view.episode.long_segment_count }}</dd></div>
+        <div><dt>review_required</dt><dd>{{ view.episode.review_required }}</dd></div>
+        <div><dt>alignment</dt><dd>{{ view.episode.alignment }}</dd></div>
+        <div><dt>nan_inf</dt><dd>{{ view.episode.nan_inf }}</dd></div>
+        <div><dt>set_role</dt><dd>{{ vocab(view.episode.set_role) }}</dd></div>
+      </dl>
+
+      <div class="tabs workspace-tabs" id="review-tabs">
+        <button type="button" class="btn{% if active_tab == 'p1' %} active{% endif %}" data-tab="p1">P1 Signal Review</button>
+        <button type="button" class="btn{% if active_tab == 'p2' %} active{% endif %}" data-tab="p2">P2 Boundary Review</button>
+        <button type="button" class="btn{% if active_tab == 'diag' %} active{% endif %}" data-tab="diag">Diagnostics｜诊断表</button>
+        {% if export_assessment.ready %}
+        <button type="submit" class="btn" formnovalidate
+          formaction="/audit/{{ header.run_id }}/episode/{{ view.encoded_id }}/export"
+          onclick="return confirm('你将导出：\n{{ export_assessment.signal_rows // 6 }} Episodes\n{{ export_assessment.signal_rows }} Signal Reviews\n{{ export_assessment.predicted_rows }} Predicted Boundary Reviews\n{{ export_assessment.added_rows }} Human Added Boundaries\n\n用途：{{ export_assessment.intended_role }}\n禁止用于：EVALUATION');">Human Calibration Export</button>
+        {% else %}
+        <span class="btn disabled" title="EXPORT_BLOCKED">Human Calibration Export</span>
+        {% endif %}
+      </div>
+
+      <div class="audit-workspace" id="audit-workspace" data-mode="{{ active_tab }}">
+      <div class="audit-split">
+        <div class="audit-split-media">
+          {% for item in view.media %}
+            {% if item.present and item.kind == "video" %}
+              <figure class="media-video">
+                <figcaption>{{ vocab(item.key) }}</figcaption>
+                <video controls preload="none" width="128" height="128" src="{{ item.url }}" data-media-key="{{ item.key }}" data-source-sha256="{{ item.source_sha256 }}" data-needs-proxy="{% if item.needs_proxy %}true{% else %}false{% endif %}" data-proxy-profile="{{ item.proxy_profile_version }}">
+                  当前浏览器无法播放该媒体。
+                </video>
+              </figure>
+            {% endif %}
+          {% endfor %}
+          <section class="frame-context" id="frame-context">
+            <p><strong>Current Frame:</strong> <span id="cur-frame">0</span> / {{ view.episode.length }}</p>
+            <p><strong>Current Time:</strong> <span id="cur-time">0.00</span> s</p>
+            <p><strong>FPS:</strong> {% if view.control_hz == view.control_hz|int %}{{ view.control_hz|int }}{% else %}{{ view.control_hz }}{% endif %}</p>
+          </section>
+          <div class="frame-nav" id="frame-nav">
+            <button type="button" class="btn" data-frame-delta="-5">-5</button>
+            <button type="button" class="btn" data-frame-delta="-1">-1</button>
+            <button type="button" class="btn" data-frame-delta="1">+1</button>
+            <button type="button" class="btn" data-frame-delta="5">+5</button>
+            <label class="jump-label">Jump to Frame
+              <input type="number" id="jump-frame" min="0" max="{{ view.episode.length - 1 if view.episode.length > 0 else 0 }}" step="1" value="0">
+            </label>
+            <button type="button" class="btn" id="btn-jump-frame">跳转</button>
+          </div>
+          <section id="frame-strip" data-fps="{{ view.control_hz }}" data-length="{{ view.episode.length }}">
+            <div class="strip-head">
+              <strong>Frame 对齐轴</strong>
+              <span id="strip-status" class="muted">点标记或表格行 → 视频跳到该帧</span>
+            </div>
+            <div class="strip-track" id="strip-track">
+              <div id="strip-playhead" class="strip-playhead"></div>
+              {% for col in view.frame_groups %}
+              <button type="button" class="strip-col" style="left: {{ col.pct }}%" data-frame="{{ col.frame }}" title="frame {{ col.frame }}">
+                {% for item in col.marks %}
+                <span class="strip-mark {{ item.kind }}" data-id="{{ item.event_id }}" data-kind="{{ item.kind }}" data-members="{{ item.members }}" data-boundary-id="{{ item.boundary_id }}" title="{{ item.kind }} {{ item.event_id }} @ {{ col.frame }} {{ item.type }}">{{ item.short }}</span>
+                {% endfor %}
+                <span class="strip-frame">{{ col.frame }}</span>
+              </button>
+              {% endfor %}
+            </div>
+            <p class="legend strip-legend">
+              <span class="swatch final"></span> Final
+              <span class="swatch candidate"></span> Candidate
+              <span class="swatch suppressed"></span> Suppressed / Merged
+            </p>
+          </section>
+        </div>
+
+        <div class="p1-plot-col" id="p1-plot-col">
+          {% for item in view.media if item.present and item.key == "signal_plot" %}
+            <figure class="p1-plot-figure">
+              <figcaption>{{ vocab(item.key) }} · 点击放大</figcaption>
+              <img class="plot p1-plot" src="{{ item.url }}" alt="{{ item.key }}" data-media-key="{{ item.key }}" onclick="document.getElementById('plot-dialog').showModal(); document.getElementById('plot-dialog-img').src=this.src;">
+            </figure>
+          {% else %}
+            <p class="muted">当前 Episode 没有独立的 P1 signal_plot.png</p>
+          {% endfor %}
+        </div>
+
+        <div class="p1-review-col" id="p1-review-col">
+          <section class="tab-panel{% if active_tab != 'p1' %} hidden{% endif %}" data-panel="p1" id="panel-p1">
+            <div class="p1-intro">
+              <h3>P1 Signal Review｜信号审核</h3>
+              <p>检查整条 Episode 中：视频里的真实机器人运动是否与对应 Signal 的变化基本一致。</p>
+              <p class="muted">这里不是判断 Boundary 切得对不对。Boundary 正确性请在 P2 Boundary Review 中审核。</p>
+              <p class="muted p1-privileged-hint">{{ PRIVILEGED_SUBPLOT_HINT }}</p>
+            </div>
+            {% for sig in review.signals %}
+            {% set guide = signal_review_guide(sig.signal_name) %}
+            <div class="signal-row" data-signal="{{ sig.signal_name }}">
+              <div class="signal-head">
+                <strong title="{{ ui_term(sig.signal_name).description_zh }}">{{ display_code(sig.signal_name) }}</strong>
+                <p class="muted signal-help">{{ ui_term(sig.signal_name).description_zh }}</p>
+                {% if guide.primary %}<p class="signal-map">{{ guide.primary }}</p>{% endif %}
+                {% if guide.support %}<p class="signal-map">{{ guide.support }}</p>{% endif %}
+                {% if guide.note %}<p class="signal-map signal-map-note">{{ guide.note }}</p>{% endif %}
+                <p class="signal-q">{{ guide.question or signal_audit_question(sig.signal_name) }}</p>
+                {% if sig.reused %}
+                <p class="muted">{{ display_code("REUSED_SIGNAL_REVIEW") }} · source_run_id={{ sig.source_run_id }} · reviewed_at={{ sig.reviewed_at }}</p>
+                {% elif sig.reviewed_at %}
+                <p class="muted">source_run_id={{ sig.source_run_id }} · reviewed_at={{ sig.reviewed_at }}</p>
+                {% endif %}
+              </div>
+              <label>decision
+                <select name="signal_{{ sig.signal_name }}_decision" data-signal-decision="{{ sig.signal_name }}">
+                  {% for opt in signal_decisions %}
+                  <option value="{{ opt }}" {% if sig.decision == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <label class="comment-box">comment
+                <textarea name="signal_{{ sig.signal_name }}_comment" rows="2" placeholder="OPTIONAL">{{ sig.comment }}</textarea>
+              </label>
+            </div>
+            {% endfor %}
+            <label class="note-box">episode_note
+              <textarea name="episode_note" id="episode-note" rows="3" placeholder="OPTIONAL 自由备注，不写回 Audit Folder">{{ review.episode_note }}</textarea>
+            </label>
+          </section>
+        </div>
+
+        <div class="audit-split-tables">
+          <section class="tab-panel{% if active_tab != 'p2' %} hidden{% endif %}" data-panel="p2" id="panel-p2">
+            <h3>P2 Boundary Review</h3>
+            <p class="muted">只审核 Final Boundary。Candidate / Decision / Segment 仍在 Diagnostics 只读查看。Merged Evidence 只读，不单独审核。</p>
+            {% if final_member_semantics != 'MATERIALIZED' %}
+            <p class="muted legacy-semantics">Legacy Run｜成员语义由 Candidate 表 join 展示</p>
+            {% endif %}
+            {% for row in review.boundaries %}
+            <article class="review-card sync-row" data-frame="{{ row.predicted_frame }}" data-boundary-id="{{ row.boundary_id }}" data-decision="{{ row.decision }}" data-member-count="{{ row.member_candidate_count }}" data-final-semantics="{{ row.final_member_semantics }}">
+              <header>
+                <code>{{ row.boundary_id }}</code>
+                · Final Frame: {{ row.predicted_frame }}
+              </header>
+              <div class="primary-event" data-primary-event="1">
+                <h4>Primary｜代表事件</h4>
+                <p>{{ vocab(row.candidate_type) }} @{{ row.predicted_frame }}</p>
+              </div>
+              {% if row.show_merged_evidence %}
+              <div class="merged-evidence" data-merged-evidence="1">
+                <h4>Merged Evidence｜合并证据</h4>
+                <ul>
+                  {% for member in row.members %}
+                  <li data-member-id="{{ member.candidate_id }}" data-member-type="{{ member.candidate_type }}" data-member-frame="{{ member.frame if member.frame is not none else '' }}">{{ vocab(member.candidate_type) }} @{{ member.frame if member.frame is not none else '?' }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% endif %}
+              <dl class="mini">
+                <div><dt>reason</dt><dd>{{ row.reason }}</dd></div>
+                <div><dt>supporting_reasons</dt><dd>{{ row.supporting_reasons }}</dd></div>
+                <div><dt>review_flags</dt><dd>{% if row.review_flags %}{{ display_code(row.review_flags) }}{% endif %}</dd></div>
+                <div><dt>member_candidate_ids</dt><dd>{{ row.member_candidate_ids }}</dd></div>
+              </dl>
+              <label>human_review
+                <select name="bound_{{ row.boundary_id }}_decision" data-bound-decision="{{ row.boundary_id }}">
+                  {% for opt in boundary_decisions %}
+                  <option value="{{ opt }}" {% if row.decision == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <label class="cond cond-reason">reason_code
+                <select name="bound_{{ row.boundary_id }}_reason_code" data-reason-for="{{ row.boundary_id }}">
+                  <option value="">—</option>
+                  {% for opt in redundant_reasons %}
+                  <option value="{{ opt }}" data-for="REDUNDANT" {% if row.decision == 'REDUNDANT' and row.reason_code == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+                  {% endfor %}
+                  {% for opt in misaligned_reasons %}
+                  <option value="{{ opt }}" data-for="MISALIGNED" {% if row.decision == 'MISALIGNED' and row.reason_code == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <label class="cond cond-frame">corrected_frame
+                <input type="number" name="bound_{{ row.boundary_id }}_corrected_frame" value="{{ row.corrected_frame }}" min="0" step="1">
+              </label>
+              <label class="comment-box">comment
+                <textarea name="bound_{{ row.boundary_id }}_comment" rows="2" placeholder="OPTIONAL">{{ row.comment }}</textarea>
+              </label>
+            </article>
+            {% endfor %}
+
+            <h3>+ 补充漏掉的 Boundary</h3>
+            <div id="missed-list">
+              {% for row in review.added %}
+              <article class="missed-row" data-missed-index="{{ loop.index0 }}">
+                <strong>{{ row.display_id }}</strong>
+                <input type="hidden" name="missed_{{ loop.index0 }}_group_id" value="{{ row.added_group_id }}">
+                <label>human_added_frame
+                  <input type="number" name="missed_{{ loop.index0 }}_frame" value="{{ row.human_added_frame }}" min="0" step="1">
+                </label>
+                <label>reason_code
+                  <select name="missed_{{ loop.index0 }}_reason_code">
+                    <option value="">—</option>
+                    {% for opt in missed_reasons %}
+                    <option value="{{ opt }}" {% if row.reason_code == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+                <label class="comment-box">comment
+                  <textarea name="missed_{{ loop.index0 }}_comment" rows="2">{{ row.comment }}</textarea>
+                </label>
+              </article>
+              {% endfor %}
+            </div>
+            <button type="button" class="btn" id="btn-add-missed">+ 补充漏掉的 Boundary</button>
+            <template id="missed-template">
+              <article class="missed-row">
+                <strong>HUMAN_ADD_new</strong>
+                <input type="hidden" data-name="group_id" value="">
+                <label>human_added_frame
+                  <input type="number" data-name="frame" value="" min="0" step="1">
+                </label>
+                <label>reason_code
+                  <select data-name="reason_code">
+                    <option value="">—</option>
+                    {% for opt in missed_reasons %}
+                    <option value="{{ opt }}">{{ dropdown_option_label(opt) }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+                <label class="comment-box">comment
+                  <textarea data-name="comment" rows="2"></textarea>
+                </label>
+              </article>
+            </template>
+          </section>
+
+          <section class="tab-panel{% if active_tab != 'diag' %} hidden{% endif %}" data-panel="diag" id="panel-diag">
+
+      <h3>Final Boundary</h3>
+      <div class="table-wrap">
+        <table id="tbl-final">
+          <thead>
+            <tr>
+              <th>boundary_id</th><th>frame</th><th>candidate_type</th><th>reason</th>
+              <th>member_candidate_ids</th><th>supporting_reasons</th><th>review_flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in view.boundaries %}
+            <tr class="sync-row" data-frame="{{ row.frame }}" data-boundary-id="{{ row.boundary_id }}" data-candidate-ids="{{ row.member_candidate_ids }}">
+              <td><code>{{ row.boundary_id }}</code></td>
+              <td>{{ row.frame }}</td>
+              <td>{{ vocab(row.candidate_type) }}</td>
+              <td>{{ row.reason }}</td>
+              <td>{{ row.member_candidate_ids }}</td>
+              <td>{{ row.supporting_reasons }}</td>
+              <td>{% if row.review_flags %}{{ display_code(row.review_flags) }}{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Candidate</h3>
+      <div class="table-wrap">
+        <table id="tbl-candidate">
+          <thead>
+            <tr>
+              <th>candidate_id</th><th>frame</th><th>candidate_type</th><th>primary_reason</th>
+              <th>supporting_reasons</th><th>evidence_value</th><th>persistence_status</th>
+              <th>source_signal</th><th>polarity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in view.candidates %}
+            <tr class="sync-row" data-frame="{{ row.frame }}" data-candidate-id="{{ row.candidate_id }}">
+              <td><code>{{ row.candidate_id }}</code></td>
+              <td>{{ row.frame }}</td>
+              <td>{{ vocab(row.candidate_type) }}</td>
+              <td>{{ row.primary_reason }}</td>
+              <td>{{ row.supporting_reasons }}</td>
+              <td>{{ row.evidence_value }}</td>
+              <td>{{ row.persistence_status }}</td>
+              <td>{{ row.source_signal }}</td>
+              <td>{{ row.polarity }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Decisions</h3>
+      <div class="table-wrap">
+        <table id="tbl-decision">
+          <thead>
+            <tr>
+              <th>candidate_id</th><th>frame</th><th>candidate_type</th>
+              <th>decision</th><th>reason</th><th>target_boundary_id</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in view.decisions %}
+            <tr class="sync-row" data-frame="{{ row.frame }}" data-candidate-id="{{ row.candidate_id }}" data-boundary-id="{{ row.target_boundary_id }}">
+              <td><code>{{ row.candidate_id }}</code></td>
+              <td>{{ row.frame }}</td>
+              <td>{{ vocab(row.candidate_type) }}</td>
+              <td>{{ vocab(row.decision) }}</td>
+              <td>{{ row.reason }}</td>
+              <td>
+                <code>{{ row.target_boundary_id }}</code>
+                {% if row.target_boundary_id and row.target_boundary_id not in view.final_ids %}
+                <span class="tag">not in final_boundaries.csv</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Segments</h3>
+      <div class="table-wrap">
+        <table id="tbl-segment">
+          <thead>
+            <tr>
+              <th>segment_id</th><th>start_frame</th><th>end_frame</th><th>duration_frames</th>
+              <th>left_boundary_id</th><th>right_boundary_id</th>
+              <th>short_segment_flag</th><th>long_segment_flag</th>
+              <th>review_required</th><th>review_flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in view.segments %}
+            <tr class="sync-row" data-start-frame="{{ row.start_frame }}" data-end-frame="{{ row.end_frame }}" data-boundary-id="{{ row.left_boundary_id }} {{ row.right_boundary_id }}" data-segment-id="{{ row.segment_id }}">
+              <td><code>{{ row.segment_id }}</code></td>
+              <td>{{ row.start_frame }}</td>
+              <td>{{ row.end_frame }}</td>
+              <td>{{ row.duration_frames }}</td>
+              <td>{{ row.left_boundary_id }}</td>
+              <td>{{ row.right_boundary_id }}</td>
+              <td>{{ row.short_segment_flag }}</td>
+              <td>{{ row.long_segment_flag }}</td>
+              <td>{{ row.review_required }}</td>
+              <td>{% if row.review_flags %}{{ display_code(row.review_flags) }}{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="media-plots p2-mode-plots" id="p2-mode-plots">
+        {% for item in view.media if item.present and item.key == "signal_boundary_plot" %}
+          <figure class="p2-primary-plot">
+            <figcaption>{{ vocab(item.key) }} · 点击放大</figcaption>
+            <img class="plot" src="{{ item.url }}" alt="{{ item.key }}" loading="lazy" data-media-key="{{ item.key }}" onclick="document.getElementById('plot-dialog').showModal(); document.getElementById('plot-dialog-img').src=this.src;">
+          </figure>
+        {% endfor %}
+        {% for item in view.media if item.present and item.key == "signal_plot" %}
+          <details class="secondary-plot">
+            <summary>{{ vocab(item.key) }}｜次级查看</summary>
+            <img class="plot" src="{{ item.url }}" alt="{{ item.key }}" loading="lazy" data-media-key="{{ item.key }}" onclick="document.getElementById('plot-dialog').showModal(); document.getElementById('plot-dialog-img').src=this.src;">
+          </details>
+        {% endfor %}
+      </div>
+      </div>
+      <p class="legend">
+        Candidate Boundary｜候选切分点
+        · Suppressed / Consolidated Boundary｜被抑制或聚合的候选
+        · Final Boundary｜最终探索性切分点
+      </p>
+
+      <div class="review-box">
+        <h3>Human Calibration Export</h3>
+        <dl class="meta-grid">
+          <div><dt>Source Run</dt><dd>{{ header.run_stage }}</dd></div>
+          <div><dt>Source Set Role</dt><dd>{{ view.episode.set_role }}</dd></div>
+          <div><dt>Export Intended Role</dt><dd>{{ export_assessment.intended_role or 'INELIGIBLE' }}</dd></div>
+          <div><dt>Evaluation Eligibility</dt><dd>FORBIDDEN</dd></div>
+        </dl>
+        {% if export_notice %}<p class="notice">Export created: {{ export_notice }}</p>{% endif %}
+        {% if export_assessment.ready %}
+          <p>Ready: {{ export_assessment.signal_rows // 6 }} Episodes · {{ export_assessment.signal_rows }} Signal Reviews · {{ export_assessment.predicted_rows }} Predicted Boundary Reviews · {{ export_assessment.added_rows }} Human Added Boundaries</p>
+          <button type="submit" class="btn" formnovalidate
+            formaction="/audit/{{ header.run_id }}/episode/{{ view.encoded_id }}/export"
+            onclick="return confirm('你将导出：\n{{ export_assessment.signal_rows // 6 }} Episodes\n{{ export_assessment.signal_rows }} Signal Reviews\n{{ export_assessment.predicted_rows }} Predicted Boundary Reviews\n{{ export_assessment.added_rows }} Human Added Boundaries\n\n用途：{{ export_assessment.intended_role }}\n禁止用于：EVALUATION');">Create Human Calibration Export</button>
+        {% else %}
+          <p class="error">EXPORT_BLOCKED: {{ export_assessment.errors|join(' · ') }}</p>
+          <span class="btn disabled">Create Human Calibration Export</span>
+        {% endif %}
+        <h4>Existing Exports</h4>
+        {% if existing_exports %}
+        <table><thead><tr><th>export_id</th><th>created_at</th><th>source_run_id</th><th>episodes</th><th>intended_role</th><th>validation</th></tr></thead>
+        <tbody>{% for item in existing_exports %}<tr><td>{{ item.export_id }}</td><td>{{ item.created_at }}</td><td>{{ item.source_run_id }}</td><td>{{ item.episode_count }}</td><td>{{ item.intended_role }}</td><td>{{ item.validation_status }}</td></tr>{% endfor %}</tbody></table>
+        {% else %}<p class="muted">No exports yet.</p>{% endif %}
+      </div>
+      </form>
+      {% endif %}
+    </section>
+  </div>
+  <dialog id="plot-dialog" onclick="if(event.target===this)this.close()">
+    <form method="dialog"><button class="btn">关闭</button></form>
+    <img id="plot-dialog-img" alt="enlarged plot">
+  </dialog>
+  <script src="/static/audit_sync.js?v=5"></script>
+  <script src="/static/review_ui.js?v=2"></script>
+</body>
+</html>

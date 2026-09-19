@@ -1,0 +1,75 @@
+# ============================================================
+# Project2 data-value — targeted .gitignore
+#
+# Scope decision (derived from the actual directory audit):
+#   TRACK  : src/  scripts/*.py  tests/*.py  configs/  0-doc/  .gitignore  README.md
+#   IGNORE : outputs/ (per-run generated artifacts), __pycache__,
+#            .pytest_cache, local secrets / logs / scratch
+#
+# .gitignore only keeps files OUT of Git. It never deletes anything.
+# Every ignored file stays on disk untouched.
+# ============================================================
+
+# ---------- Python bytecode / tool caches ----------
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---------- virtual environments ----------
+.venv/
+venv/
+env/
+
+# ---------- IDE / local editor state ----------
+.vscode/
+.idea/
+.cursor/
+.workbuddy-ai/
+
+# ---------- OS junk ----------
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# ---------- environment / secrets ----------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ---------- logs / scratch ----------
+*.log
+logs/
+.cache/
+tmp/
+temp/
+
+# ---------- generated run artifacts (this project) ----------
+# outputs/ holds per-run generated artifacts from the g1_* audit runs:
+# plots (.png), video proxies (.mp4), tables (.csv), run metadata (.json)
+# and local review databases (.sqlite3). All regenerable — not source.
+# 0-doc/README.md §6: "运行时自动生成的大体量报告：优先留在 outputs/".
+outputs/
+result/
+
+# ---------- local external dumps / nested clones (kept off-repo) ----------
+# These paths live outside this repo snapshot but are kept here so that a
+# broader local tree (if materialized) never leaks runtime/installers into Git.
+model_probe/.venv/
+model_probe/runtime/
+model_probe/third_party/installers/
+# Nested clone; do not record as a broken gitlink/submodule
+model_probe/third_party/act/
+# Full RoboTwin dump is not part of this repo snapshot
+scr/RoboTwin2.0-Plus-main/
+scr/rh20t_api-main/
+robomimic_runtime_audit/rgb_samples
+audit/

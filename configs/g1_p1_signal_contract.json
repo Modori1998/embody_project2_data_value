@@ -1,0 +1,46 @@
+{
+  "phase": "G1-P1",
+  "g1_design": "FROZEN",
+  "g1_implementation": "READY",
+  "g1_gate": "OPEN_FOR_CALIBRATION",
+  "boundary_engine": "NOT_IMPLEMENTED_THIS_PHASE",
+  "formal_numeric_status": "DATA_CALIBRATION_PENDING",
+  "control_frequency_hz": 20.0,
+  "nominal_dt_s": 0.05,
+  "eef_pos_unit": "meter",
+  "eef_pos_unit_provenance": "P1 M07 Can/MH v1 robosuite source freeze",
+  "action_unit": "NORMALIZED_CONTROLLER_INPUT",
+  "action_unit_provenance": "P1 RoboMimic Unified Source Contract / OSC_POSE adapter",
+  "calibration_placeholders": {
+    "status": "DATA_CALIBRATION_PENDING",
+    "not_formal": true,
+    "motion_speed_threshold": null,
+    "motion_persistence_frames": null,
+    "direction_angle_threshold": null,
+    "direction_persistence_frames": null,
+    "gripper_state_threshold": null,
+    "pause_bridge_duration": null,
+    "boundary_consolidation_window": null,
+    "min_segment_length": null,
+    "max_segment_length": null,
+    "tolerance_window": null
+  },
+  "exploratory_runtime_defaults": {
+    "status": "exploratory",
+    "not_formal": true,
+    "used_for_pass_fail": false,
+    "note": "Temporary values required for visualization / numerical stability only. Not Frozen Config.",
+    "smoothed_speed_window_frames": 5,
+    "direction_window_frames": 8,
+    "direction_min_window_displacement_m": 0.005,
+    "heading_min_step_m": 0.001,
+    "motion_speed_threshold_m_s": 0.02,
+    "motion_persistence_frames": 3,
+    "gripper_state_threshold": null
+  },
+  "smoke": {
+    "episode_count": 4,
+    "selection_rule": "demo_0 + length-stratified (short / ~p33 / ~p66); exclude extreme max-length episode from smoke to avoid large materialize",
+    "max_smoke_length_frames": 400
+  }
+}

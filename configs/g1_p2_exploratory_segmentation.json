@@ -1,0 +1,197 @@
+{
+  "phase": "G1-P2",
+  "g1_design": "FROZEN",
+  "g1_implementation_phase": "G1-P2 Boundary Engine + Postprocess",
+  "status": "EXPLORATORY",
+  "formal": false,
+  "not_formal": true,
+  "data_calibration_status": "DATA_CALIBRATION_PENDING",
+  "segmentation_status": "EXPLORATORY_ONLY",
+  "config_version": "g1_p2_exploratory_segmentation.v0",
+  "segmentation_version": "G1-P2-EXPLORATORY-v0",
+  "g1_p1_automated_audit": "PASS",
+  "g1_p1_human_visual_review": "DEFERRED",
+  "g1_p1_human_visual_review_reason": "REMOTE_ENVIRONMENT_LIMITATION",
+  "g1_gate": "OPEN_FOR_CALIBRATION",
+  "note": "Temporary defaults for pipeline smoke and audit-package generation only. Not Frozen Config. Not optimal. Not calibrated against Human Boundary GT.",
+  "do_not_claim": [
+    "FINAL",
+    "FROZEN",
+    "OPTIMAL",
+    "BEST"
+  ],
+  "parameters": {
+    "motion_speed_threshold": {
+      "value": 0.02,
+      "unit": "m/s",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Reuses G1-P1 exploratory visualization default. Applied to smoothed_translation_speed. Not a frozen moving/stationary definition."
+    },
+    "motion_persistence_frames": {
+      "value": 4,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "0.20s at 20 Hz. Both pre-change and post-change regimes must persist. Filters isolated speed spikes."
+    },
+    "direction_change_threshold": {
+      "value": 1.2,
+      "unit": "radian",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Large heading-change evidence (~69 deg). Consumes G1-P1 windowed 3D direction_change_evidence; does not recompute it."
+    },
+    "direction_persistence_frames": {
+      "value": 3,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Persistent high direction evidence required. Single-frame sign flips are not candidates."
+    },
+    "gripper_state_threshold": {
+      "value": 0.06,
+      "unit": "source-native aperture (qpos[0]-qpos[1])",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Smoke-init split between fully-open ~0.08 and in-hand/hold ~0.04. NOT a calibrated OPEN/CLOSED physical definition. NOT grasp success."
+    },
+    "gripper_persistence_frames": {
+      "value": 4,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Persistent open/close regime on both sides of the crossing. Instantaneous aperture flicker is not a Hard Boundary."
+    },
+    "debounce_frames": {
+      "value": 4,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Suppresses repeated same-type same-polarity candidates. Opposite gripper transitions are NOT debounced into one event."
+    },
+    "boundary_consolidation_window": {
+      "value": 8,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Nearby Hard+Motion candidates may share one physical transition. Opposite Hard Boundaries are never merged."
+    },
+    "pause_bridge_duration": {
+      "value": 10,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "0.50s at 20 Hz. Short idle may be bridged only with compatible gripper and heading and no Hard Boundary."
+    },
+    "min_segment_length": {
+      "value": 8,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Triggers SHORT_SEGMENT_CANDIDATE review/merge. Does not delete. Hard Boundaries are protected."
+    },
+    "max_segment_length": {
+      "value": 80,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Audit flag only. No equal-window forced split in G1-P2."
+    },
+    "boundary_tolerance_window": {
+      "value": 5,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Schema reserved for G1-P3 Human Boundary matching. Not used by the G1-P2 segmenter."
+    },
+    "rotation_support_threshold": {
+      "value": 0.015,
+      "unit": "radian (EEF geodesic delta per frame)",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Supporting evidence only. Rotation alone never creates a boundary."
+    },
+    "action_support_threshold": {
+      "value": 0.5,
+      "unit": "NORMALIZED_CONTROLLER_INPUT magnitude",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Supporting evidence only. Action spike alone never creates a boundary."
+    },
+    "support_window_frames": {
+      "value": 8,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Window used to attach ROTATION_SUPPORT / ACTION_SUPPORT onto existing Motion candidates."
+    },
+    "direction_compatibility_threshold": {
+      "value": 0.8,
+      "unit": "radian",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Pause-bridging heading compatibility. Not a frozen direction rule."
+    },
+    "direction_window_frames": {
+      "value": 8,
+      "unit": "frame",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Heading window for pause-bridge compatibility using existing delta_xyz. Does not recompute G1-P1 direction_change_evidence."
+    },
+    "direction_min_window_displacement_m": {
+      "value": 0.005,
+      "unit": "meter",
+      "status": "EXPLORATORY",
+      "formal": false,
+      "not_formal": true,
+      "data_calibration_status": "DATA_CALIBRATION_PENDING",
+      "note": "Minimum window displacement before pause-bridge heading is treated as defined."
+    }
+  },
+  "smoke": {
+    "status": "EXPLORATORY",
+    "formal": false,
+    "episode_count": 6,
+    "max_smoke_length_frames": 400,
+    "must_include_p1_demos": ["demo_0", "demo_32", "demo_179", "demo_278"],
+    "must_include_worse": true,
+    "preferred_worse_demo": "demo_242",
+    "selection_rule": "Reuse G1-P1 smoke demos plus at least one WORSE demo under the length cap. Do not materialize the full 300-episode set."
+  }
+}

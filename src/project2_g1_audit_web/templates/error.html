@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VALIDATION_FAILED</title>
+  <link rel="stylesheet" href="/static/audit.css">
+</head>
+<body>
+  <header class="top">
+    <h1>{{ title }}</h1>
+    <p><a href="/">返回可用 Run</a></p>
+  </header>
+  <main class="page">
+    {% if run_id %}<p>run_id = <code>{{ run_id }}</code></p>{% endif %}
+    <p class="fail">This run cannot enter Audit. No partial page is shown.</p>
+    <ul>
+      {% for err in errors %}
+      <li><code>{{ err }}</code></li>
+      {% endfor %}
+    </ul>
+  </main>
+</body>
+</html>

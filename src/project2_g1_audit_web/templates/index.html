@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>G1 Audit Web</title>
+  <link rel="stylesheet" href="/static/audit.css?v=8">
+</head>
+<body>
+  <header class="top">
+    <h1>Project 2 G1 审核 Web</h1>
+    <p class="muted">单次 Versioned Audit Run · 契约 {{ contract_version }} · Batch 1 只读浏览</p>
+  </header>
+  <main class="page">
+    <h2>可用 G1 Audit Runs</h2>
+    {% if enabled_runs %}
+    <table class="run-list">
+      <thead>
+        <tr>
+          <th>run_id</th>
+          <th>迭代说明</th>
+          <th>run_stage</th>
+          <th>created_at</th>
+          <th>config_version</th>
+          <th>config_hash</th>
+          <th>parent_run_id</th>
+          <th>episode_count</th>
+          <th>enabled</th>
+          <th>path_source</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for run in enabled_runs %}
+        <tr data-run-id="{{ run.run_id }}">
+          <td><code>{{ run.run_id }}</code></td>
+          <td class="iteration-note">{{ run.iteration_note }}</td>
+          <td>{{ display_code(run.run_stage) }}</td>
+          <td>{{ run.created_at }}</td>
+          <td>{{ run.config_version }}</td>
+          <td><code>{{ run.config_hash[:12] }}</code></td>
+          <td>{{ run.parent_run_id or "null" }}</td>
+          <td>{{ run.episode_count }}</td>
+          <td>true</td>
+          <td>{{ display_code(run.path_source) }}</td>
+          <td><a class="btn" href="/audit/{{ run.run_id }}">打开审核</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>Registry 中没有已启用的 G1 Audit Run。</p>
+    {% endif %}
+
+    {% if disabled_runs %}
+    <h3>已被 Owner 停用</h3>
+    <p class="muted">DISABLED_BY_OWNER · 恢复前不可打开</p>
+    <ul>
+      {% for run in disabled_runs %}
+      <li><code>{{ run.run_id }}</code> · {{ run.iteration_note }} · {{ display_code(run.run_stage) }} · {{ display_code(run.status) }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </main>
+</body>
+</html>
