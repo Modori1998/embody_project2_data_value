@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ header.run_id }} · Scoring 评分对照</title>
+  <link rel="stylesheet" href="/static/audit.css?v=9">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <a href="/">全部 Run</a>
+      <h1>Baseline Scoring 评分对照（只读）</h1>
+    </div>
+    <dl class="meta">
+      <div><dt>run_id</dt><dd><code>{{ header.run_id }}</code></dd></div>
+      <div><dt>score_id</dt><dd><code>{{ overview.score_id }}</code></dd></div>
+      <div><dt>canonical_gt_snapshot_id</dt><dd><code>{{ overview.canonical_gt_snapshot_id }}</code></dd></div>
+      <div><dt>matching_rule_id</dt><dd>{{ overview.meta['matching_rule_id'] }}</dd></div>
+      <div><dt>tolerance_frames</dt><dd>{{ overview.meta['tolerance_frames'] }}</dd></div>
+      <div><dt>scored_at</dt><dd>{{ overview.meta['scored_at'] }}</dd></div>
+      <div><dt>canonical_gt_count</dt><dd>{{ overview.canonical_gt_count }}</dd></div>
+      <div><dt>known_fp_anchor_count</dt><dd>{{ overview.known_fp_anchor_count }}</dd></div>
+    </dl>
+  </header>
+
+  <aside class="banner scoring-rules">
+    <strong>FP / FN 复核条例（只读对照）</strong>
+    <ul class="scoring-rules-list">
+      <li><strong>TP</strong>：预测边界与金标 GT 在 ±{{ overview.meta['tolerance_frames'] }} frames 容差内一对一匹配（EXACT Δ=0 或 NEAR 0&lt;|Δ|≤{{ overview.meta['tolerance_frames'] }}）。</li>
+      <li><strong>FP</strong>：预测了但未匹配到任何 GT（过切）。若命中 known FP anchor，说明是人工已标 REDUNDANT 的已知错误，属预期内残留；<strong>NEW_UNANCHORED_FP</strong> 才是新出现的未归类错误，需重点复核。</li>
+      <li><strong>FN</strong>：GT 存在但没有任何预测匹配（漏检），最危险，优先复核。</li>
+      <li>复核顺序：先 FN（漏检）→ 再 NEW_UNANCHORED_FP（新错误）→ 最后 known FP anchor（已知残留）。</li>
+      <li>本视图只读：不修改 review 数据、不改 Detector、不选阈值、不重跑 matching。</li>
+    </ul>
+  </aside>
+
+  <main class="page">
+    <h2>总体指标</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>TP</th><th>FP</th><th>FN</th>
+          <th>Precision</th><th>Recall</th><th>F1</th>
+          <th>MODE_01</th><th>MODE_02</th><th>MODE_03</th>
+          <th>UNASSIGNED</th><th>NEW_UNANCHORED_FP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ overview.totals.tp }}</td>
+          <td class="fail">{{ overview.totals.fp }}</td>
+          <td class="fail">{{ overview.totals.fn }}</td>
+          <td>{{ overview.metrics['Precision'] | default('—') }}</td>
+          <td>{{ overview.metrics['Recall'] | default('—') }}</td>
+          <td>{{ overview.metrics['F1'] | default('—') }}</td>
+          <td>{{ overview.metrics['MODE_01_REMAINING'] | default('—') }} rem</td>
+          <td>{{ overview.metrics['MODE_02_REMAINING'] | default('—') }} rem</td>
+          <td>{{ overview.metrics['MODE_03_REMAINING'] | default('—') }} rem</td>
+          <td>{{ overview.metrics['UNASSIGNED_KNOWN_FP_REMAINING'] | default('—') }} rem</td>
+          <td class="{% if overview.metrics['NEW_UNANCHORED_FP_COUNT'] %}fail{% endif %}">{{ overview.metrics['NEW_UNANCHORED_FP_COUNT'] | default('—') }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Episode 对照</h2>
+    <table class="run-list">
+      <thead>
+        <tr>
+          <th>episode_id</th><th>quality_group</th><th>n_gt</th><th>n_pred</th>
+          <th>TP</th><th>FP</th><th>FN</th><th>new_unanchored</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in overview.episodes %}
+        <tr>
+          <td><code>{{ row.episode_id }}</code></td>
+          <td>{{ display_code(row.quality_group) }}</td>
+          <td>{{ row.n_gt }}</td>
+          <td>{{ row.n_pred }}</td>
+          <td>{{ row.tp }}</td>
+          <td class="{% if row.fp %}fail{% endif %}">{{ row.fp }}</td>
+          <td class="{% if row.fn %}fail{% endif %}">{{ row.fn }}</td>
+          <td class="{% if row.new_unanchored_fp %}fail{% endif %}">{{ row.new_unanchored_fp }}</td>
+          <td><a class="btn" href="/audit/{{ header.run_id }}/scoring/{{ encode_episode_id(row.episode_id) }}">并排对照</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

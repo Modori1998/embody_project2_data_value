@@ -37,8 +37,15 @@ from .reviews import (
     parse_form,
     predicted_frames,
 )
+from .scoring_view import (
+    ScoringUnavailable,
+    build_episode_comparison,
+    build_run_overview,
+    load_bundle,
+)
 from .service import G1AuditWebInput, InvalidAuditRunError, OwnerPathError
 from .video_proxy import G1AuditVideoProxy
+from .input import load_csv_rows
 from .view import (
     QUEUE_FILTERS,
     AuditViewError,
@@ -442,6 +449,77 @@ def create_app(
             quote(str(result["export_id"]), safe=""),
         )
         return RedirectResponse(url=target, status_code=303)
+
+    @app.get("/audit/{run_id}/scoring", response_class=HTMLResponse)
+    def scoring_overview(request: Request, run_id: str):
+        try:
+            loaded = service.load_validated_run(unquote(run_id))
+            bundle = load_bundle(service.project_root, str(loaded["run_id"]))
+            overview = build_run_overview(bundle, loaded["episodes"])
+        except ScoringUnavailable as exc:
+            return render(
+                "error.html", request, HTTP_400_BAD_REQUEST,
+                title="SCORING_UNAVAILABLE", errors=[str(exc)], run_id=unquote(run_id),
+            )
+        except InvalidAuditRunError as exc:
+            return render(
+                "error.html", request, HTTP_400_BAD_REQUEST,
+                title="VALIDATION_FAILED", errors=exc.errors, run_id=exc.run_id,
+            )
+        except OwnerPathError as exc:
+            status = HTTP_403_FORBIDDEN if "DISABLED_BY_OWNER" in str(exc) else HTTP_404_NOT_FOUND
+            return render("error.html", request, status, title="Run not available", errors=[str(exc)])
+        return render(
+            "scoring.html",
+            request,
+            header=run_header(loaded),
+            overview=overview,
+        )
+
+    @app.get("/audit/{run_id}/scoring/{episode_id}", response_class=HTMLResponse)
+    def scoring_episode(request: Request, run_id: str, episode_id: str):
+        try:
+            loaded = service.load_validated_run(unquote(run_id))
+            wanted = decode_episode_id(unquote(episode_id))
+            episode = loaded["episodes_by_id"].get(wanted)
+            if episode is None:
+                raise AuditViewError(f"unknown episode_id: {wanted}")
+            bundle = load_bundle(service.project_root, str(loaded["run_id"]))
+            boundaries = load_csv_rows(episode.boundaries_path)
+            comparison = build_episode_comparison(
+                bundle,
+                episode_id=wanted,
+                boundaries=boundaries,
+                length=int(episode.length),
+            )
+        except ScoringUnavailable as exc:
+            return render(
+                "error.html", request, HTTP_400_BAD_REQUEST,
+                title="SCORING_UNAVAILABLE", errors=[str(exc)], run_id=unquote(run_id),
+            )
+        except AuditViewError as exc:
+            return render("error.html", request, HTTP_400_BAD_REQUEST, title="Invalid episode", errors=[str(exc)])
+        except InvalidAuditRunError as exc:
+            return render(
+                "error.html", request, HTTP_400_BAD_REQUEST,
+                title="VALIDATION_FAILED", errors=exc.errors, run_id=exc.run_id,
+            )
+        except OwnerPathError as exc:
+            status = HTTP_403_FORBIDDEN if "DISABLED_BY_OWNER" in str(exc) else HTTP_404_NOT_FOUND
+            return render("error.html", request, status, title="Run not available", errors=[str(exc)])
+        episode_links = [
+            {"episode_id": ep.episode_id, "quality_group": str(getattr(ep, "quality_group", "") or "")}
+            for ep in loaded["episodes"]
+        ]
+        return render(
+            "scoring_episode.html",
+            request,
+            header=run_header(loaded),
+            comparison=comparison,
+            episode=episode,
+            episode_links=episode_links,
+            current_episode_id=wanted,
+        )
 
     @app.get("/media/{run_id}/{episode_id}/{media_key}", response_model=None)
     def media(request: Request, run_id: str, episode_id: str, media_key: str) -> Response:

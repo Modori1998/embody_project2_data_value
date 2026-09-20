@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ header.run_id }} · {{ comparison.episode_id }} 评分对照</title>
+  <link rel="stylesheet" href="/static/audit.css?v=9">
+</head>
+<body>
+  {% macro vocab(code) -%}
+    {%- set t = ui_term(code) -%}
+    <span class="term{% if t.kind == 'unknown' %} unknown{% endif %}" title="{{ t.en }}：{{ t.description_zh }}">{{ display_code(code) }}</span>
+  {%- endmacro %}
+
+  <header class="top">
+    <div>
+      <a href="/">全部 Run</a>
+      <a href="/audit/{{ header.run_id }}">审核首页</a>
+      <a href="/audit/{{ header.run_id }}/scoring">评分对照首页</a>
+      <h1>Detector 预测 vs 金标 GT 并排对照（只读）</h1>
+    </div>
+    <dl class="meta">
+      <div><dt>episode_id</dt><dd><code>{{ comparison.episode_id }}</code></dd></div>
+      <div><dt>length</dt><dd>{{ comparison.length }}</dd></div>
+      <div><dt>n_gt</dt><dd>{{ comparison.counts.n_gt }}</dd></div>
+      <div><dt>n_pred</dt><dd>{{ comparison.counts.n_pred }}</dd></div>
+      <div><dt>TP</dt><dd>{{ comparison.counts.tp }}</dd></div>
+      <div><dt>FP</dt><dd class="fail">{{ comparison.counts.fp }}</dd></div>
+      <div><dt>FN</dt><dd class="fail">{{ comparison.counts.fn }}</dd></div>
+    </dl>
+  </header>
+
+  <aside class="banner scoring-rules">
+    <strong>FP / FN 复核条例（只读）</strong>
+    <ul class="scoring-rules-list">
+      <li><strong>TP</strong> = 预测 ↔ 金标 GT 一对一匹配；<strong>FP</strong> = 只有预测没有 GT（过切）；<strong>FN</strong> = 只有 GT 没有预测（漏检，最危险）。</li>
+      <li>FP 命中 known FP anchor 的是人工已标 REDUNDANT 的已知错误（预期内残留）；<strong>NEW_UNANCHORED_FP</strong> 才是新错误。</li>
+      <li>本视图只读：不改 review、不改 Detector、不选阈值。</li>
+    </ul>
+  </aside>
+
+  <main class="page">
+    <h2>逐帧并排对照（按 frame 排序）</h2>
+    <div class="table-wrap scoring-wrap">
+      <table id="tbl-timeline">
+        <thead>
+          <tr>
+            <th>frame</th>
+            <th>金标 GT（Gold Standard）</th>
+            <th>Detector 预测（Predicted）</th>
+            <th>状态</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in comparison.timeline %}
+          <tr class="{% if row.status == 'FP' %}scoring-fp{% elif row.status == 'FN' %}scoring-fn{% elif row.status == 'TP' %}scoring-tp{% endif %}">
+            <td>{{ row.frame }}</td>
+            <td>
+              {% if row.gt %}
+              <code>{{ row.gt['gt_id'] }}</code>
+              · {{ vocab(row.gt['protected_class']) }}
+              · <span class="muted">{{ display_code(row.gt['source_package']) }}</span>
+              {% else %}<span class="muted">—</span>{% endif %}
+            </td>
+            <td>
+              {% if row.pred %}
+              <code>{{ row.pred['boundary_id'] }}</code>
+              · {{ vocab(row.pred['candidate_type']) }}
+              {% else %}<span class="muted">—</span>{% endif %}
+            </td>
+            <td>
+              {% if row.status == 'TP' %}
+                <span class="tag tp-tag">TP</span>{% if row.delta is not none and row.delta != 0 %}<span class="muted"> Δ{{ row.delta }}</span>{% endif %}
+              {% elif row.status == 'FP' %}
+                <span class="tag fp-tag">FP</span>
+              {% else %}
+                <span class="tag fn-tag">FN</span>
+              {% endif %}
+            </td>
+            <td class="muted">{{ row.note }}</td>
+          </tr>
+          {% endfor %}
+          {% if not comparison.timeline %}
+          <tr><td colspan="5" class="muted">该 Episode 无 GT 也无预测。</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scoring-split">
+      <section>
+        <h2>金标 GT 列表（Gold Standard）</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>gt_id</th><th>gt_frame</th><th>protected_class</th><th>gt_source</th><th>package</th><th>human_decision</th><th>reason_code</th><th>状态</th></tr>
+            </thead>
+            <tbody>
+              {% for row in comparison.gt_list %}
+              <tr class="{% if row.status == 'FN' %}scoring-fn{% endif %}">
+                <td><code>{{ row.gt_id }}</code></td>
+                <td>{{ row.gt_frame }}</td>
+                <td>{{ vocab(row.protected_class) }}</td>
+                <td>{{ display_code(row.gt_source) }}</td>
+                <td>{{ display_code(row.source_package) }}</td>
+                <td>{{ display_code(row.human_decision) }}</td>
+                <td>{% if row.reason_code %}{{ display_code(row.reason_code) }}{% endif %}</td>
+                <td>
+                  {% if row.status == 'TP' %}<span class="tag tp-tag">TP</span><span class="muted"> → {{ row.matched_pred_id }}</span>
+                  {% else %}<span class="tag fn-tag">FN</span>{% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Detector 预测列表（Predicted）</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>boundary_id</th><th>frame</th><th>candidate_type</th><th>reason</th><th>状态</th></tr>
+            </thead>
+            <tbody>
+              {% for row in comparison.pred_list %}
+              <tr class="{% if row.status == 'FP' %}scoring-fp{% endif %}">
+                <td><code>{{ row.boundary_id }}</code></td>
+                <td>{{ row.frame }}</td>
+                <td>{{ vocab(row.candidate_type) }}</td>
+                <td>{{ display_code(row.reason) }}</td>
+                <td>
+                  {% if row.status == 'TP' %}<span class="tag tp-tag">TP</span><span class="muted"> → {{ row.matched_gt_id }}</span>
+                  {% else %}<span class="tag fp-tag">FP</span>{% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
