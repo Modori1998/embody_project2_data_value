@@ -151,9 +151,21 @@ def write_csv(
     ``format_values=False`` keeps source strings byte-faithful (artifact 1 is a
     normalization of a frozen artifact and must not be re-rounded).
     ``format_values=True`` renders numbers through :func:`fmt` (artifact 2).
+
+    ``lineterminator="\\n"`` is set explicitly so the written bytes are the
+    canonical LF form. Python's ``csv`` module defaults to ``\\r\\n``, which this
+    repository's ``core.autocrlf=true`` would silently rewrite to LF on commit —
+    making the committed GitHub blob differ from the hashed working-tree file.
+    Writing LF keeps the working tree, the git blob and the GitHub SSOT artifact
+    byte-identical, so the SHA256 recorded in README.md is verifiable.
     """
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(fieldnames), extrasaction="raise")
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(fieldnames),
+            extrasaction="raise",
+            lineterminator="\n",
+        )
         writer.writeheader()
         for row in rows:
             if format_values:

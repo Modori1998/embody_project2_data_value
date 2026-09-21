@@ -81,12 +81,32 @@ package              : SEED = 13, FRESH = 13
 
 | File | Rows | Columns | Size (bytes) | SHA256 |
 |---|---:|---:|---:|---|
-| `01_stage_a0_direction_event_analysis.csv` | 26 (+header) | 61 | 36,748 | `1ef4592ab469efac5f75588cf5ee3674e50780f5574b6e3c5522f251dd485769` |
-| `02_direction_event_window_trace.csv` | 645 (+header) | 43 | 411,343 | `809170913c44f7dbadab281591d324cd8d3137c189253fa577e28015fe527d25` |
-| `README.md` | — | — | 15,833 | (self; see export run log) |
+| `01_stage_a0_direction_event_analysis.csv` | 26 (+header) | 61 | 36,721 | `db6060e80ae0353e9d74d41ffca990d2d177027458ef65cca479e0cd239d760e` |
+| `02_direction_event_window_trace.csv` | 645 (+header) | 43 | 410,697 | `f4c081df2f83f3a3650361f5f5afb7cb3936569540571255305e13c5ce457fb6` |
+| `README.md` | — | — | 16,929 | (self; see export run log) |
 
 File size gate：event CSV < 1 MB ✅ ｜ trace CSV < 5 MB ✅ ｜ README < 100 KB ✅
 **No Git LFS.**
+
+### Canonical bytes / line endings
+
+上表的 size 与 SHA256 是 **canonical LF** 形式的字节数，即 **GitHub blob（SSOT artifact）的真实内容**。
+
+```text
+line endings = LF (\n) only, no CR
+no BOM
+encoding     = UTF-8
+```
+
+导出脚本显式使用 `lineterminator="\n"`。**必须如此**：本仓库 `core.autocrlf=true`，
+Python `csv` 模块默认写 `\r\n`，若不在脚本里固定 LF，`git commit` 会把 CRLF 静默改写成 LF，
+导致「本地被哈希的文件」与「GitHub 上的 blob」字节不同、README 记录的 SHA256 无法复核。
+固定 LF 后 working tree == git blob == GitHub artifact，SHA256 可独立验证。
+
+> 本地若重新 clone 且 `core.autocrlf=true`，checkout 会把这两个 CSV 还原为 CRLF 工作副本。
+> 复核 SHA256 时请以 **repo blob**（`git cat-file blob <oid>` / GitHub 原始文件）为准，或先
+> `git checkout -- .` 之外的方式取 LF 版本；`scripts/export_g1_p3_rule_analysis_evidence.py`
+> 重新生成的文件始终是 LF，可直接复核。
 
 ---
 
@@ -369,7 +389,7 @@ DETERMINISTIC = YES
 random sampling = NONE
 ```
 
-相同输入重复运行 → **CSV bytes 完全一致**（`--check` 已通过）。
+相同输入重复运行 → **CSV bytes 完全一致**（`--check` 已通过，byte-identical 含 LF 行尾）。
 
 ---
 
