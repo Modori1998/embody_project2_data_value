@@ -780,5 +780,232 @@ class TestRealUnblindedJoin(unittest.TestCase):
                 self.assertEqual(event.event_frame, event.run_boundary_frame)
 
 
+# ---------------------------------------------------------------------------
+# 3. Episode media on the unblinded surface
+# ---------------------------------------------------------------------------
+
+
+def _folder_fingerprint(root: Path) -> dict[str, tuple[int, int]]:
+    """Size + mtime for every file under ``root``, keyed by relative posix path."""
+
+    out: dict[str, tuple[int, int]] = {}
+    for path in sorted(root.rglob("*")):
+        if path.is_file():
+            stat = path.stat()
+            out[path.relative_to(root).as_posix()] = (stat.st_size, stat.st_mtime_ns)
+    return out
+
+
+class TestUnblindedMedia(unittest.TestCase):
+    """The unblinded page must carry the episode video and the frame axis.
+
+    Re-review is only meaningful if the Design Owner can actually watch the
+    episode. The page must therefore render the episode video, the frame
+    alignment axis, the frame navigation and the diagnostic plots -- all served
+    read-only out of the run folder, and only on the unblinded surface.
+    """
+
+    RUN_ID = "g1_design_diagnostic_unblinded_media"
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
+        self.root = Path(self._tmp.name)
+        self.registry = default_registry_path(self.root)
+        self.owner_db = default_owner_db_path(self.root)
+        self.run_root = write_synthetic_run(
+            self.root / "outputs" / "g1_audit_runs",
+            run_id=self.RUN_ID,
+            n_episodes=EPISODES,
+            run_stage=DESIGN_DIAGNOSTIC_RUN_STAGE,
+            set_role=DESIGN_DIAGNOSTIC_RUN_STAGE,
+        )
+        auto_register(self.registry, self.run_root, owner_db_path=self.owner_db)
+        self.source = write_unblind_source(
+            self.root / "0-doc" / "unblind" / "02_selection_internal.csv"
+        )
+        self.service = G1AuditWebInput(
+            project_root=self.root,
+            registry_path=self.registry,
+            owner_db_path=self.owner_db,
+        )
+        self.client = self._client()
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def _client(self, **kwargs) -> TestClient:
+        kwargs.setdefault("unblind_source_path", self.source)
+        proxy = Mock()
+        proxy.register_video.side_effect = lambda source, run_id, episode_id: _FakeIdent("e" * 64)
+        proxy.ensure_proxy_file.side_effect = lambda sha, profile: Path(
+            self.run_root / "media/demo_0/video.mp4"
+        )
+        return TestClient(
+            create_app(
+                project_root=self.root,
+                web_input=self.service,
+                video_proxy=proxy,
+                **kwargs,
+            )
+        )
+
+    def _episode_page(self, index: int = 0):
+        return self.client.get(
+            f"/audit/{self.RUN_ID}/unblinded/episode/data--demo_{index}"
+        )
+
+    def test_unblinded_ui_script_anchors_exist_on_the_page(self) -> None:
+        # Every DOM hook unblinded_ui.js + audit_sync.js query must exist, or the
+        # page silently renders without working media (the reported defect).
+        page = self._episode_page(0)
+        for marker in (
+            # unblinded_ui.js
+            'id="unblinded-media"',
+            "data-focus-frame=",
+            'id="btn-focus-frame"',
+            'id="unblinded-review-form"',
+            "data-bound-decision",
+            "cond-reason",
+            "cond-frame",
+            "data-reason-for",
+            "data-for=",
+            # audit_sync.js
+            'id="frame-strip"',
+            'id="strip-status"',
+            'id="strip-playhead"',
+            'id="strip-track"',
+            'id="cur-frame"',
+            'id="cur-time"',
+            'id="jump-frame"',
+            'id="btn-jump-frame"',
+            "data-frame-delta=",
+            "strip-mark",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, page.text)
+
+        pair_page = self.client.get(f"/audit/{self.RUN_ID}/unblinded/pair/P01")
+        for marker in (
+            'id="unblinded-pair-media"',
+            "data-pair-arm=",
+            'id="ub-pair-cur-frame-a"',
+            'id="ub-pair-cur-time-a"',
+            'id="ub-pair-cur-frame-b"',
+            'id="ub-pair-cur-time-b"',
+            'id="btn-pair-focus-a"',
+            'id="btn-pair-focus-b"',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, pair_page.text)
+
+    def test_unblinded_page_renders_the_episode_video(self) -> None:
+        page = self._episode_page(0)
+        self.assertEqual(page.status_code, 200, page.text[:400])
+        self.assertIn("<video", page.text)
+        self.assertIn('data-media-key="video"', page.text)
+        self.assertIn(f"/media/{self.RUN_ID}/data--demo_0/video", page.text)
+
+    def test_unblinded_page_renders_the_frame_alignment_axis(self) -> None:
+        page = self._episode_page(0)
+        for marker in (
+            'id="frame-strip"',
+            'data-fps="20.0"',
+            'data-length="10"',
+            'id="strip-status"',
+            'id="strip-playhead"',
+            'class="strip-col',
+            'data-frame="4"',
+            'data-boundary-id="demo_0-B0001"',
+            'class="strip-mark final"',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, page.text)
+
+    def test_unblinded_page_renders_the_frame_navigation(self) -> None:
+        page = self._episode_page(0)
+        for marker in (
+            'id="cur-frame"',
+            'id="cur-time"',
+            'id="jump-frame"',
+            'id="btn-jump-frame"',
+            'data-frame-delta="-1"',
+            'data-frame-delta="1"',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, page.text)
+
+    def test_unblinded_page_renders_the_diagnostic_plots(self) -> None:
+        page = self._episode_page(0)
+        self.assertIn(f"/media/{self.RUN_ID}/data--demo_0/signal_boundary_plot", page.text)
+        self.assertIn(f"/media/{self.RUN_ID}/data--demo_0/signal_plot", page.text)
+
+    def test_unblinded_page_focuses_the_diagnostic_frame(self) -> None:
+        page = self._episode_page(0)
+        self.assertIn('data-focus-frame="4"', page.text)
+        self.assertIn('id="ub-focus-frame">4<', page.text)
+        self.assertIn("ub-focus-col", page.text)
+
+    def test_unblinded_page_loads_the_frame_sync_script(self) -> None:
+        page = self._episode_page(0)
+        self.assertIn("/static/audit_sync.js", page.text)
+        self.assertIn("/static/unblinded_ui.js", page.text)
+
+    def test_unblinded_media_route_serves_the_episode_video(self) -> None:
+        response = self.client.get(f"/media/{self.RUN_ID}/data--demo_0/video")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"fake-mp4-bytes", response.content)
+
+    def test_unblinded_media_route_serves_the_diagnostic_plot(self) -> None:
+        response = self.client.get(f"/media/{self.RUN_ID}/data--demo_0/signal_boundary_plot")
+        self.assertEqual(response.status_code, 200)
+
+    def test_unblinded_pair_page_renders_both_arm_videos(self) -> None:
+        page = self.client.get(f"/audit/{self.RUN_ID}/unblinded/pair/P01")
+        self.assertEqual(page.status_code, 200, page.text[:400])
+        self.assertEqual(page.text.count("<video"), 2)
+        for marker in (
+            'data-pair-arm="A"',
+            'data-pair-arm="B"',
+            'id="btn-pair-focus-a"',
+            'id="btn-pair-focus-b"',
+            f"/media/{self.RUN_ID}/data--demo_0/video",
+            f"/media/{self.RUN_ID}/data--demo_1/video",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, page.text)
+
+    def test_unblinded_media_rendering_leaves_the_run_folder_untouched(self) -> None:
+        before = _folder_fingerprint(self.run_root)
+        for index in (0, 7, 19):
+            self._episode_page(index)
+        self.client.get(f"/audit/{self.RUN_ID}/unblinded/pair/P01")
+        self.client.get(f"/media/{self.RUN_ID}/data--demo_0/video")
+        self.assertEqual(before, _folder_fingerprint(self.run_root))
+
+    def test_blind_page_still_has_its_own_media(self) -> None:
+        page = self.client.get(
+            f"/audit/{self.RUN_ID}/episode/data--demo_0", follow_redirects=True
+        )
+        self.assertEqual(page.status_code, 200)
+        self.assertIn("<video", page.text)
+        self.assertIn('id="frame-strip"', page.text)
+        self.assertIn('id="strip-playhead"', page.text)
+
+    def test_unblinded_media_does_not_leak_into_the_blind_page(self) -> None:
+        blind = self.client.get(
+            f"/audit/{self.RUN_ID}/episode/data--demo_0", follow_redirects=True
+        )
+        for marker in (
+            "unblinded-media",
+            "unblinded-pair-media",
+            "unblinded_ui.js",
+            "ub-focus-frame",
+            "ub-arm",
+            "ub-c12",
+        ):
+            with self.subTest(marker=marker):
+                self.assertNotIn(marker, blind.text)
+
+
 if __name__ == "__main__":
     unittest.main()

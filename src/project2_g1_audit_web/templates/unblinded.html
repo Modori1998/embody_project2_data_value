@@ -24,6 +24,18 @@
     .ub-form { border: 2px solid #52525b; border-radius: 6px; padding: 12px; margin: 14px 0; }
     .ub-norec { color: #52525b; font-style: italic; }
     .ub-pair-table td, .ub-pair-table th { text-align: left; vertical-align: top; }
+    .ub-media { border: 1px solid #d4d4d8; border-radius: 6px; padding: 10px 12px; margin: 10px 0; }
+    .ub-media-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+    .ub-media-side { flex: 1 1 320px; min-width: 280px; }
+    .ub-plot-row { display: flex; flex-wrap: wrap; gap: 16px; margin: 10px 0 0 0; }
+    .ub-plot-figure { margin: 0; max-width: 100%; }
+    .ub-plot-figure img { max-width: 100%; height: auto; cursor: zoom-in; border: 1px solid #d4d4d8; border-radius: 4px; }
+    .ub-focus-col .strip-frame { color: #fbbf24; font-weight: 700; }
+    .swatch.ub-focus { background: #fbbf24; }
+    #ub-plot-dialog { max-width: 92vw; }
+    #ub-plot-dialog img { max-width: 90vw; max-height: 88vh; }
+    .ub-hidden { display: none; }
+    .ub-field-help { color: #52525b; font-size: .78rem; margin: 2px 0 0 0; }
   </style>
 </head>
 <body>
@@ -103,6 +115,95 @@
         {% endif %}
       </p>
 
+      {% if view %}
+      <h3>Episode Media｜视频与帧对齐</h3>
+      <div class="ub-media" id="unblinded-media"
+           data-focus-frame="{{ focus_frame }}"
+           data-episode-id="{{ view.episode.episode_id }}">
+        <div class="ub-media-row">
+          {% for item in view.media if item.present and item.kind == "video" %}
+          <figure class="media-video">
+            <figcaption>{{ vocab(item.key) }}</figcaption>
+            <video controls preload="none" width="128" height="128" src="{{ item.url }}"
+                   data-media-key="{{ item.key }}"
+                   data-source-sha256="{{ item.source_sha256 }}"
+                   data-needs-proxy="{% if item.needs_proxy %}true{% else %}false{% endif %}"
+                   data-proxy-profile="{{ item.proxy_profile_version }}">
+              当前浏览器无法播放该媒体。
+            </video>
+          </figure>
+          {% else %}
+          <p class="muted" id="ub-media-missing-video">当前 Episode 没有可播放的 video.mp4</p>
+          {% endfor %}
+
+          <div class="ub-media-side">
+            <section class="frame-context" id="frame-context">
+              <p><strong>Current Frame:</strong> <span id="cur-frame">0</span> / {{ view.episode.length }}</p>
+              <p><strong>Current Time:</strong> <span id="cur-time">0.00</span> s</p>
+              <p><strong>FPS:</strong> {% if view.control_hz == view.control_hz|int %}{{ view.control_hz|int }}{% else %}{{ view.control_hz }}{% endif %}</p>
+              <p><strong>Diagnostic Boundary Frame:</strong> <span id="ub-focus-frame">{{ focus_frame }}</span></p>
+            </section>
+            <div class="frame-nav" id="frame-nav">
+              <button type="button" class="btn" data-frame-delta="-5">-5</button>
+              <button type="button" class="btn" data-frame-delta="-1">-1</button>
+              <button type="button" class="btn" data-frame-delta="1">+1</button>
+              <button type="button" class="btn" data-frame-delta="5">+5</button>
+              <label class="jump-label">Jump to Frame
+                <input type="number" id="jump-frame" min="0" max="{{ view.episode.length - 1 if view.episode.length > 0 else 0 }}" step="1" value="{{ focus_frame }}">
+              </label>
+              <button type="button" class="btn" id="btn-jump-frame">跳转</button>
+              <button type="button" class="btn" id="btn-focus-frame">跳到诊断 Boundary 帧</button>
+            </div>
+            <p class="ub-field-help">解盲复核仍以视频与帧轴为准：请自行观看该 Episode 后再决定是否修改首次盲审结论。</p>
+          </div>
+        </div>
+
+        <section id="frame-strip" data-fps="{{ view.control_hz }}" data-length="{{ view.episode.length }}">
+          <div class="strip-head">
+            <strong>Frame 对齐轴</strong>
+            <span id="strip-status" class="muted">点标记或帧号 → 视频跳到该帧</span>
+          </div>
+          <div class="strip-track" id="strip-track">
+            <div id="strip-playhead" class="strip-playhead"></div>
+            {% for col in view.frame_groups %}
+            <button type="button" class="strip-col{% if col.frame == focus_frame %} ub-focus-col{% endif %}" style="left: {{ col.pct }}%" data-frame="{{ col.frame }}" title="frame {{ col.frame }}">
+              {% for item in col.marks %}
+              <span class="strip-mark {{ item.kind }}" data-id="{{ item.event_id }}" data-kind="{{ item.kind }}" data-members="{{ item.members }}" data-boundary-id="{{ item.boundary_id }}" title="{{ item.kind }} {{ item.event_id }} @ {{ col.frame }} {{ item.type }}">{{ item.short }}</span>
+              {% endfor %}
+              <span class="strip-frame">{{ col.frame }}</span>
+            </button>
+            {% endfor %}
+          </div>
+          <p class="legend strip-legend">
+            <span class="swatch final"></span> Final
+            <span class="swatch candidate"></span> Candidate
+            <span class="swatch suppressed"></span> Suppressed / Merged
+            <span class="swatch ub-focus"></span> 本次诊断 Boundary 帧
+          </p>
+        </section>
+
+        <div class="ub-plot-row">
+          {% for item in view.media if item.present and item.key == "signal_boundary_plot" %}
+          <figure class="ub-plot-figure">
+            <figcaption>{{ vocab(item.key) }} · 点击放大</figcaption>
+            <img class="plot" src="{{ item.url }}" alt="{{ item.key }}" data-media-key="{{ item.key }}"
+                 onclick="document.getElementById('ub-plot-dialog').showModal(); document.getElementById('ub-plot-dialog-img').src=this.src;">
+          </figure>
+          {% endfor %}
+          {% for item in view.media if item.present and item.key == "signal_plot" %}
+          <figure class="ub-plot-figure">
+            <figcaption>{{ vocab(item.key) }} · 点击放大</figcaption>
+            <img class="plot" src="{{ item.url }}" alt="{{ item.key }}" data-media-key="{{ item.key }}"
+                 onclick="document.getElementById('ub-plot-dialog').showModal(); document.getElementById('ub-plot-dialog-img').src=this.src;">
+          </figure>
+          {% endfor %}
+        </div>
+        <dialog id="ub-plot-dialog" onclick="this.close()">
+          <img id="ub-plot-dialog-img" alt="plot">
+        </dialog>
+      </div>
+      {% endif %}
+
       <h3>Case Identity｜当前案例</h3>
       <dl class="ub-grid">
         <div class="ub-cell"><dt>episode_id</dt><dd id="ub-episode-id">{{ event.episode_id }}</dd></div>
@@ -179,25 +280,25 @@
         <p class="muted">看完上述诊断信息后，请重新提交你的判断。系统不会给出推荐答案，也不会自动标注。</p>
         <p class="ub-norec" id="ub-no-recommendation">NO AUTO LABELLING · NO RECOMMENDED ANSWER</p>
         <label>human_review
-          <select name="ub_decision" id="ub-decision">
+          <select name="ub_decision" id="ub-decision" data-bound-decision>
             <option value="" {% if event.current_decision not in boundary_decisions %}selected{% endif %}>—（请选择）</option>
             {% for opt in boundary_decisions %}
             <option value="{{ opt }}" {% if event.current_decision == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
             {% endfor %}
           </select>
         </label>
-        <label>reason_code
-          <select name="ub_reason_code" id="ub-reason-code">
+        <label class="cond-reason" id="ub-reason-row">reason_code
+          <select name="ub_reason_code" id="ub-reason-code" data-reason-for>
             <option value="">—</option>
             {% for opt in redundant_reasons %}
-            <option value="{{ opt }}" {% if event.current_decision == 'REDUNDANT' and event.current_reason_code == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+            <option value="{{ opt }}" data-for="REDUNDANT" {% if event.current_decision == 'REDUNDANT' and event.current_reason_code == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
             {% endfor %}
             {% for opt in misaligned_reasons %}
-            <option value="{{ opt }}" {% if event.current_decision == 'MISALIGNED' and event.current_reason_code == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+            <option value="{{ opt }}" data-for="MISALIGNED" {% if event.current_decision == 'MISALIGNED' and event.current_reason_code == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
             {% endfor %}
           </select>
         </label>
-        <label>corrected_frame（仅 MISALIGNED）
+        <label class="cond-frame" id="ub-frame-row">corrected_frame（仅 MISALIGNED）
           <input type="number" name="ub_corrected_frame" id="ub-corrected-frame" min="0" step="1"
                  value="{{ current_corrected_frame }}">
         </label>
@@ -215,5 +316,7 @@
       </p>
     </section>
   </div>
+  <script src="/static/audit_sync.js?v=5"></script>
+  <script src="/static/unblinded_ui.js?v=1"></script>
 </body>
 </html>

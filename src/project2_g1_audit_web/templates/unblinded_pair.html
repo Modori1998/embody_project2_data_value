@@ -14,6 +14,13 @@
     .ub-pair-table { border-collapse: collapse; width: 100%; margin: 10px 0; }
     .ub-pair-table th, .ub-pair-table td { border: 1px solid #d4d4d8; padding: 6px 10px; text-align: left; vertical-align: top; }
     .ub-pair-table th { background: #f4f4f5; }
+    .ub-pair-media { display: flex; flex-wrap: wrap; gap: 16px; margin: 10px 0; }
+    .ub-arm-media { flex: 1 1 340px; min-width: 300px; border: 1px solid #d4d4d8; border-radius: 6px; padding: 10px 12px; }
+    .ub-arm-media h4 { margin: 0 0 8px 0; font-size: .95rem; }
+    .ub-arm-media .frame-context { margin: 6px 0; }
+    .ub-arm-media video { background: #000; }
+    .ub-arm-media .frame-nav { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+    .ub-arm-media img.plot { max-width: 100%; height: auto; margin-top: 8px; border: 1px solid #d4d4d8; border-radius: 4px; }
   </style>
 </head>
 <body>
@@ -64,6 +71,51 @@
     {% endif %}
   </p>
 
+  <h3>Pair Media｜配对视频对照</h3>
+  <div class="ub-pair-media" id="unblinded-pair-media">
+    {% for arm in (pair.arm_a, pair.arm_b) %}
+    {% set arm_view = view_a if arm.arm == 'A' else view_b %}
+    <section class="ub-arm-media {% if arm.arm == 'A' %}ub-arm-a{% else %}ub-arm-b{% endif %}"
+             id="ub-pair-arm-{{ arm.arm | lower }}"
+             data-pair-arm="{{ arm.arm }}"
+             data-focus-frame="{{ arm.event_frame }}"
+             data-fps="{{ arm_view.control_hz if arm_view else 20 }}">
+      <h4>Arm {{ arm.arm }} · {{ arm.episode_id }} · <code>{{ arm.boundary_id }}</code> · frame {{ arm.event_frame }}</h4>
+      {% if arm_view %}
+        {% for item in arm_view.media if item.present and item.kind == "video" %}
+        <figure class="media-video">
+          <figcaption>{{ vocab(item.key) }}</figcaption>
+          <video controls preload="none" width="128" height="128" src="{{ item.url }}"
+                 data-media-key="{{ item.key }}"
+                 data-source-sha256="{{ item.source_sha256 }}"
+                 data-needs-proxy="{% if item.needs_proxy %}true{% else %}false{% endif %}"
+                 data-proxy-profile="{{ item.proxy_profile_version }}">
+            当前浏览器无法播放该媒体。
+          </video>
+        </figure>
+        {% else %}
+        <p class="muted">当前 Arm 没有可播放的 video.mp4</p>
+        {% endfor %}
+        <section class="frame-context">
+          <p><strong>Current Frame:</strong> <span id="ub-pair-cur-frame-{{ arm.arm | lower }}">0</span> / {{ arm_view.episode.length }}</p>
+          <p><strong>Current Time:</strong> <span id="ub-pair-cur-time-{{ arm.arm | lower }}">0.00</span> s</p>
+        </section>
+        <div class="frame-nav">
+          <button type="button" class="btn" id="btn-pair-focus-{{ arm.arm | lower }}">跳到 Arm {{ arm.arm }} 诊断帧（{{ arm.event_frame }}）</button>
+        </div>
+        {% for item in arm_view.media if item.present and item.key == "signal_boundary_plot" %}
+        <figure class="ub-plot-figure">
+          <figcaption>{{ vocab(item.key) }}</figcaption>
+          <img class="plot" src="{{ item.url }}" alt="{{ item.key }}" data-media-key="{{ item.key }}">
+        </figure>
+        {% endfor %}
+      {% else %}
+        <p class="muted">无法载入该 Arm 的 Episode 媒体。</p>
+      {% endif %}
+    </section>
+    {% endfor %}
+  </div>
+
   <div class="table-wrap">
     <table class="ub-pair-table" id="ub-pair-table">
       <thead>
@@ -102,5 +154,6 @@
     说明：配对只是把同一 pair_id 的两个 Arm 并排展示，便于 Design Owner 对照判断；
     本页面不提供推荐答案，也不自动标注。复核请在各自的案例页面提交。
   </p>
+  <script src="/static/unblinded_ui.js?v=1"></script>
 </body>
 </html>

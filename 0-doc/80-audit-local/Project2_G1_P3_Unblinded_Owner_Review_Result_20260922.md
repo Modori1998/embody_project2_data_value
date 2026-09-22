@@ -5,6 +5,7 @@
 - 目标 Run：`g1_design_diagnostic_20260922_135647_69bf2a94`（`run_stage = DESIGN_DIAGNOSTIC`）
 - 事实源：`0-doc/80-audit-local/g1_p3_trajectory_mechanism_validation/02_selection_internal.csv`
 - 结论：`PASS_READY_FOR_OWNER_UNBLINDED_REVIEW`
+- 后续修订：**`FIX_UNBLINDED_MEDIA`（§8）** — 解盲页补齐 Episode 视频与帧对齐轴
 
 ---
 
@@ -27,8 +28,9 @@
 - 新增 `src/project2_g1_audit_web/unblinded.py` — 严格 1:1 join、C12/P12 中文解释、provenance
 - 新增 `src/project2_g1_audit_web/templates/unblinded.html`
 - 新增 `src/project2_g1_audit_web/templates/unblinded_pair.html`
+- 新增 `src/project2_g1_audit_web/templates/unblinded_ui.js`（§8：解盲页专用前端脚本）
 - 新增 `tests/test_g1_unblinded_owner_review.py`
-- 改 `src/project2_g1_audit_web/app.py`（+275）
+- 改 `src/project2_g1_audit_web/app.py`（+275，§8 再 +42）
 - 改 `src/project2_g1_audit_web/reviews.py`（+181 / −35）
 - 改 `src/project2_g1_audit_web/templates/audit.html`（+2，仅一个不含任何设计 token 的入口链接）
 
@@ -94,6 +96,25 @@ UNBLINDED OWNER REVIEW
 FIRST BLINDED RESULT IS PRESERVED
 ```
 
+### 4.1 Episode 媒体与帧对齐（§8 补齐）
+
+解盲复核若看不到视频就无法复核，因此解盲页与盲审页一样承载 Episode 媒体，
+且复用**同一条帧轴**（两侧都走 `build_episode_view()`，只有外层 chrome 不同）：
+
+| 元素 | 说明 |
+| --- | --- |
+| `<video>` | `src = /media/<run_id>/<episode_id>/video`，含 `data-source-sha256` / `data-needs-proxy` |
+| `#frame-strip` | `data-fps = 20.0`、`data-length = <episode.length>`，含 `#strip-playhead`、`.strip-col`、`.strip-mark` |
+| `#cur-frame` / `#cur-time` / `#jump-frame` / `#btn-jump-frame` / `[data-frame-delta]` | 帧读数与跳转 |
+| `signal_boundary_plot` / `signal_plot` | 诊断曲线图，可点击放大 |
+| `#ub-focus-frame` + `.ub-focus-col` | 当前事件的诊断 Boundary 帧，进页面即定位到该帧 |
+| `#unblinded-pair-media` | 配对页左右并排两个 Arm 的视频 + 各自诊断帧定位 |
+
+交互逻辑：帧 ↔ 视频 ↔ 标记轴同步仍由既有 `audit_sync.js` 承担（不复制一份 seek 算术）；
+解盲页新增的 `unblinded_ui.js` 只做三件事——进页面定位诊断帧、配对页各 Arm 独立 seek、
+按 decision 显隐 `reason_code` / `corrected_frame`。该脚本在盲审页不加载，
+且第一句就是 `#unblinded-media` 存在性守卫。
+
 ---
 
 ## 5. 验收证据
@@ -102,19 +123,21 @@ FIRST BLINDED RESULT IS PRESERVED
 
 ```
 python -m unittest discover -s tests -t tests
-Ran 400 tests
+Ran 413 tests
 FAILED (failures=6)      ← 全部为改动前既存失败，与本次改动无关（见 5.3）
 ```
 
-新增 `tests/test_g1_unblinded_owner_review.py`：**44 passed**，覆盖 join 全失败模式、
-盲审页零泄露、首次盲审保全、provenance 区分、append-only、字段可见性、禁用开关、非诊断 Run 拒绝。
+新增 `tests/test_g1_unblinded_owner_review.py`：**57 passed**，覆盖 join 全失败模式、
+盲审页零泄露、首次盲审保全、provenance 区分、append-only、字段可见性、禁用开关、非诊断 Run 拒绝，
+以及 §8 的媒体交付（视频 / 帧轴 / 帧跳转 / 诊断曲线 / 诊断帧定位 / 配对页双视频 /
+媒体路由可取 / **渲染不写 Run 目录** / 媒体不渗入盲审页 / **脚本 DOM 锚点契约**）。
 
 ### 5.2 真实数据端到端验收
 
 `outputs/_scratch_unblinded_acceptance.py`（生产 owner DB 只读，写路径在 DB 副本上验证）：
 
 ```
-UNBLINDED OWNER REVIEW ACCEPTANCE: 30/30 PASS
+UNBLINDED OWNER REVIEW ACCEPTANCE: 42/42 PASS
 EVENT_COUNT = 20
 PAIR_COUNT  = 10
 ```
@@ -123,7 +146,14 @@ PAIR_COUNT  = 10
 首次盲审 revision 逐字段保全（`review_id=78, decision=VALID, reviewer=DESIGN_OWNER`）、
 新 revision 归属 `DESIGN_OWNER_UNBLINDED`、Calibration Export 仍被阻断、kill switch 返回 403。
 
+§8 媒体部分（真实 Run）：`data/demo_211` 诊断帧 **169**、boundary `demo_211-B0007`，
+页面对该帧定位成功；三条媒体路由实测
+`video = 375570 B`、`signal_boundary_plot = 847203 B`、`signal_plot = 723718 B`；
+配对页 2 个 `<video>`；渲染前后 Run 目录指纹**逐文件一致**。
+
 生产库复核后仍为 **20 revisions / 20 episodes / 全部 `DESIGN_OWNER`**——即首次盲审未被改动。
+Run 目录 `audit_blinding_run_folder()` 复核后仍为 **0 违规**。
+
 
 ### 5.3 既存失败（与本次改动无关，已证明）
 
@@ -152,6 +182,9 @@ python outputs/_scratch_unblinded_acceptance.py
 py -3 scripts/run_g1_audit_web.py
 # 盲审入口  : http://127.0.0.1:8766/audit/<run_id>
 # 解盲复核  : http://127.0.0.1:8766/audit/<run_id>/unblinded
+
+# 若 8766 被旧进程占用（旧进程会 404 新路由），换端口起一个新实例：
+py -3 scripts/run_g1_audit_web.py --port 8770
 ```
 
 解盲模式默认开启（本地 Owner Web）；可用环境变量关闭：
@@ -179,3 +212,52 @@ G1_AUDIT_WEB_UNBLINDED_OWNER_REVIEW=0
   `b40218ecdea5035d58de05d84b28eaee9483755c`，**已提交内容全部安全**。
 - **教训**：本环境下不要用 `git stash`（需要写对象库）；比较改动一律用 `git diff --numstat`，
   `git status` 在 index stat 缓存失配时会给出大量假 `M`（本次 130 个假阳性 vs 真实 3 个）。
+
+---
+
+## 8. 后续修订：`FIX_UNBLINDED_MEDIA`
+
+### 8.1 问题
+
+Design Owner 反馈：**「新改的网页内容缺失，解盲没有相应的视频」**。
+
+复核确认属实，属 §3/§5 交付缺陷：解盲页只渲染了诊断字段，
+`unblinded.html` 中没有任何 `<video>`、没有帧对齐轴、没有诊断曲线，
+`unblinded_page_context()` 也从未返回媒体上下文，`load_unblinded()` 更没有调用 `bind_media()`。
+结果是**解盲复核在信息上不可执行**——Owner 拿不到视频，无法判断边界是否冗余或错位。
+
+### 8.2 修复
+
+| 位置 | 改动 |
+| --- | --- |
+| `app.py` | 新增 `load_unblinded_view(loaded, event)`：走 `build_episode_view()` 建视图并 `bind_media()`；案例页与配对页都调用 |
+| `app.py` | `unblinded_page_context()` 增加 `view` 与 `focus_frame`；媒体错误走 `UNBLINDED_MEDIA_ERROR`（400，不静默降级） |
+| `templates/unblinded.html` | 新增 Episode 媒体区块：视频、帧读数/跳转、`#frame-strip`、诊断曲线、诊断帧高亮 |
+| `templates/unblinded_pair.html` | 新增 `#unblinded-pair-media`：两 Arm 视频并排 + 各自诊断帧定位按钮 |
+| `templates/unblinded_ui.js` | **新增**：进页面定位诊断帧、配对页各 Arm 独立 seek、按 decision 显隐条件字段 |
+
+### 8.3 三条不变量仍然成立
+
+1. **盲审页仍盲。** 媒体只加在 `unblinded.html` / `unblinded_pair.html`。
+   测试 `test_unblinded_media_does_not_leak_into_the_blind_page` 断言盲审页不含
+   `unblinded-media` / `unblinded_ui.js` / `ub-focus-frame` / `ub-arm` / `ub-c12`；
+   既有 `test_reviewer_payload_leaks_no_diagnostic_token` 仍对 10 个探针零命中。
+2. **首次盲审结果仍保全。** 本次改动不触碰任何写路径；生产库复核后
+   该 Run 仍为 **20 revisions / 20 episodes / 全部 `DESIGN_OWNER`**。
+3. **Run 目录零写入。** `audit_blinding_run_folder()` 仍 **0 违规**；
+   新增测试 `test_unblinded_media_rendering_leaves_the_run_folder_untouched`
+   对渲染前后的 Run 目录做逐文件 `(size, mtime_ns)` 指纹比对，断言完全一致。
+
+### 8.4 顺带修正的可用性缺陷
+
+- `reason_code` / `corrected_frame` 原先**始终可见**，与盲审页「按 decision 显隐」的既有规则不一致；
+  现已对齐（`.cond-reason` / `.cond-frame` / `option[data-for]`，机制与盲审页同构）。
+- 进页面默认停在 frame 0；现定位到该事件的诊断 Boundary 帧（实测 `demo_211` → frame 169）。
+- 跳帧复用 `audit_sync.js` 的 `select()` 路径（对目标 `.strip-col` 派发 click），
+  不复制 seek 算术，避免两套帧轴实现漂移。
+
+### 8.5 未改动
+
+`unblinded.py`（join / provenance / 中文解释）、`reviews.py`（append-only 写路径）、
+`audit.html`（除 §1 已交付的入口链接）均**未改动**。
+`audit_sync.js` 亦未改动——它原本就对缺失锚点做 null 守卫，可直接复用。

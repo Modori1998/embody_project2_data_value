@@ -554,11 +554,25 @@ def create_app(
             )
         return loaded, join, None
 
+    def load_unblinded_view(loaded: dict[str, Any], event):
+        """Build the episode view (media + frame axis) for an unblinded event.
+
+        The unblinded page describes exactly the same episode, over exactly the
+        same frame axis, as the blind page. Both therefore go through
+        ``build_episode_view``; only the surrounding chrome differs. Media is
+        bound here so the video proxy is registered for the owner as well.
+        """
+
+        _, view = build_episode_view(loaded, episode_id=event.episode_id)
+        bind_media(str(loaded["run_id"]), view)
+        return view
+
     def unblinded_page_context(
         loaded: dict[str, Any],
         join,
         event,
         *,
+        view=None,
         review_error: str = "",
         review_notice: str = "",
     ) -> dict[str, Any]:
@@ -575,6 +589,8 @@ def create_app(
             "header": run_header(loaded),
             "join": join,
             "event": event,
+            "view": view,
+            "focus_frame": event.event_frame,
             "counterpart": counterpart,
             "previous_event": previous_event,
             "next_event": next_event,
@@ -632,6 +648,17 @@ def create_app(
                 run_id=unquote(run_id),
             )
         notice = _query_value(request, "saved")
+        try:
+            view = load_unblinded_view(loaded, event)
+        except (AuditViewError, MediaAccessError, VideoProxyError) as exc:
+            return render(
+                "error.html",
+                request,
+                HTTP_400_BAD_REQUEST,
+                title="UNBLINDED_MEDIA_ERROR",
+                errors=[str(exc)],
+                run_id=unquote(run_id),
+            )
         return render(
             "unblinded.html",
             request,
@@ -639,6 +666,7 @@ def create_app(
                 loaded,
                 join,
                 event,
+                view=view,
                 review_notice="Owner unblinded review appended." if notice == "1" else "",
             ),
         )
@@ -664,6 +692,18 @@ def create_app(
         index = next(
             (i for i, item in enumerate(join.pairs) if item.pair_id == pair.pair_id), 0
         )
+        try:
+            view_a = load_unblinded_view(loaded, pair.arm_a)
+            view_b = load_unblinded_view(loaded, pair.arm_b)
+        except (AuditViewError, MediaAccessError, VideoProxyError) as exc:
+            return render(
+                "error.html",
+                request,
+                HTTP_400_BAD_REQUEST,
+                title="UNBLINDED_MEDIA_ERROR",
+                errors=[str(exc)],
+                run_id=unquote(run_id),
+            )
         return render(
             "unblinded_pair.html",
             request,
@@ -671,6 +711,8 @@ def create_app(
             join=join,
             pair=pair,
             pair_index=index + 1,
+            view_a=view_a,
+            view_b=view_b,
             previous_pair=join.pairs[index - 1] if index > 0 else None,
             next_pair=join.pairs[index + 1] if index + 1 < len(join.pairs) else None,
         )
