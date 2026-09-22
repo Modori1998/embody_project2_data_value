@@ -206,28 +206,34 @@ pair_id, match_distance, selection_reason, expected
 
 ## 7. 运行环境说明
 
-本轮涉及两个解释器，原因是有意不污染既有环境：
+本机存在多个 Python 解释器，**Web 服务与渲染所需的依赖集不同**，混用会直接导致启动失败：
 
-| 用途 | 解释器 | 原因 |
-| --- | --- | --- |
-| Materialization | `C:\Users\95611\miniconda3\envs\project1_robomimic_audit_v150\python.exe` | 唯一具备冻结渲染栈（`robosuite` / `mujoco` / `robomimic` / `cv2`）的环境 |
-| Tests | managed venv (`fastapi` / `httpx` / `pytest`) | 隔离环境，不修改用户 conda env |
+| 解释器 | Web 依赖<br>(`fastapi`/`uvicorn`/`jinja2`/`httpx`/`multipart`) | 渲染栈<br>(`robosuite`/`mujoco`/`robomimic`/`cv2`) | 用途 |
+| --- | --- | --- | --- |
+| 系统 Python 3.13<br>`C:\Users\95611\AppData\Local\Programs\Python\Python313\python.exe`（即 `py -3`） | ✅ 具备 | ❌ | **启动 Web（推荐）**、跑测试 |
+| managed venv<br>`C:\Users\95611\.workbuddy-ai\binaries\python\envs\default\Scripts\python.exe` | ✅ 具备 | ❌ | 跑测试、启动 Web（备用） |
+| conda `project1_robomimic_audit_v150` | ❌ 缺 `fastapi`/`uvicorn`/`httpx`/`multipart` | ✅ 具备 | **仅**物化渲染 |
+| managed base `...\binaries\python\versions\3.13.12\python.exe` | ❌ 全缺 | ❌ | 无 |
+
+> 上表为实测结果。特别注意：**conda 渲染环境不能用来启动 Web**，
+> 反之 Web 环境也不能用来物化。两侧依赖刻意不互相污染。
 
 ---
 
 ## 8. Reproduce
 
 ```bash
-# 1) 物化（需要渲染栈）
+# 1) 物化（必须用渲染栈所在的 conda 环境）
 "C:/Users/95611/miniconda3/envs/project1_robomimic_audit_v150/python.exe" \
   scripts/materialize_g1_p3_trajectory_diagnostic_audit_run.py
 
-# 2) 测试
-python -m pytest tests/test_g1_trajectory_diagnostic_audit_web.py -q
+# 2) 测试（任一具备 fastapi/pytest 的解释器）
+py -3 -m pytest tests/test_g1_trajectory_diagnostic_audit_web.py -q
 
-# 3) 启动 Web
-python scripts/run_g1_audit_web.py
+# 3) 启动 Web（必须用具备 fastapi/uvicorn 的解释器，见 §7）
+py -3 scripts/run_g1_audit_web.py
 #   -> http://127.0.0.1:8766/
+#   -> 诊断 Run: /audit/g1_design_diagnostic_20260922_135647_69bf2a94
 ```
 
 ---
