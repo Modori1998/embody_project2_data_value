@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote, unquote
@@ -44,6 +45,15 @@ from .scoring_view import (
     load_bundle,
 )
 from .service import G1AuditWebInput, InvalidAuditRunError, OwnerPathError
+from .unblinded import (
+    C12_EXPLANATION_ZH,
+    P12_EXPLANATION_ZH,
+    UNBLIND_SOURCE_RELPATH,
+    UNBLINDED_REVIEWER,
+    UnblindedError,
+    UnblindedNotApplicable,
+    build_unblinded_join,
+)
 from .video_proxy import G1AuditVideoProxy
 from .input import load_csv_rows
 from .view import (
@@ -77,6 +87,24 @@ from project1_benchmark.m07_audit_web_video_proxy import (  # noqa: E402
 
 TEMPLATE_DIR = Path(__file__).resolve().parent / "templates"
 
+#: Kill switch for the owner-only unblinded review mode. The unblinded route is
+#: additionally gated on ``run_stage == DESIGN_DIAGNOSTIC`` and on a strict
+#: 20/20 join against the frozen internal selection table.
+UNBLINDED_ENV_FLAG = "G1_AUDIT_WEB_UNBLINDED_OWNER_REVIEW"
+
+#: Re-review labels offered in the unblinded mode. NOT_REVIEWED is deliberately
+#: excluded: this mode exists to re-decide, not to erase a decision.
+UNBLINDED_DECISIONS = tuple(item for item in BOUNDARY_DECISIONS if item != "NOT_REVIEWED")
+
+
+def unblinded_owner_review_enabled(explicit: bool | None = None) -> bool:
+    """Owner-only unblinded mode. On by default for the local owner web."""
+
+    if explicit is not None:
+        return bool(explicit)
+    raw = os.environ.get(UNBLINDED_ENV_FLAG, "1")
+    return str(raw).strip().lower() not in {"0", "false", "no", "off"}
+
 
 def _templates() -> Jinja2Templates:
     templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
@@ -104,6 +132,9 @@ def create_app(
     video_proxy: G1AuditVideoProxy | None = None,
     reviewer: str = DEFAULT_REVIEWER,
     review_store: ReviewStore | None = None,
+    unblinded_review_store: ReviewStore | None = None,
+    unblinded_owner_review: bool | None = None,
+    unblind_source_path: str | Path | None = None,
 ) -> FastAPI:
     root = Path(project_root or PROJECT2_ROOT).resolve()
     service = web_input or G1AuditWebInput(
@@ -114,6 +145,13 @@ def create_app(
     cache = Path(proxy_cache_root or (Path(service.owner_db_path).parent / "video_proxy_cache"))
     proxy = video_proxy or G1AuditVideoProxy(cache)
     reviews = review_store or ReviewStore(service.owner_db_path, reviewer=reviewer)
+    # Same append-only SSOT, distinct reviewer identity: provenance of every
+    # boundary revision stays derivable without a schema change.
+    unblinded_reviews = unblinded_review_store or ReviewStore(
+        reviews.sqlite_path, reviewer=UNBLINDED_REVIEWER
+    )
+    unblinded_enabled = unblinded_owner_review_enabled(unblinded_owner_review)
+    unblind_source = Path(unblind_source_path or (root / UNBLIND_SOURCE_RELPATH))
     exporter = HumanCalibrationExportService(
         project_root=root,
         owner_db_path=reviews.sqlite_path,
@@ -447,6 +485,243 @@ def create_app(
             quote(str(loaded["run_id"]), safe=""),
             encode_episode_id(wanted),
             quote(str(result["export_id"]), safe=""),
+        )
+        return RedirectResponse(url=target, status_code=303)
+
+    # ------------------------------------------------------------------
+    # Owner-only unblinded review mode (additive; DESIGN_DIAGNOSTIC only)
+    # ------------------------------------------------------------------
+
+    def unblinded_gate(request: Request, run_id: str):
+        """Return an error response when the unblinded mode must not open."""
+
+        if not unblinded_enabled:
+            return render(
+                "error.html",
+                request,
+                HTTP_403_FORBIDDEN,
+                title="UNBLINDED_DISABLED",
+                errors=[
+                    f"owner unblinded review is disabled (set {UNBLINDED_ENV_FLAG}=1 to enable)"
+                ],
+                run_id=unquote(run_id),
+            )
+        return None
+
+    def load_unblinded(request: Request, run_id: str):
+        """Resolve the strict join, or an error response to render instead."""
+
+        try:
+            loaded = service.load_validated_run(unquote(run_id))
+            join = build_unblinded_join(
+                loaded=loaded,
+                source_path=unblind_source,
+                boundary_history=unblinded_reviews.boundary_history_for_run(
+                    run_id=str(loaded["run_id"])
+                ),
+            )
+        except UnblindedNotApplicable as exc:
+            return None, None, render(
+                "error.html",
+                request,
+                HTTP_400_BAD_REQUEST,
+                title="UNBLINDED_NOT_APPLICABLE",
+                errors=exc.errors,
+                run_id=unquote(run_id),
+            )
+        except UnblindedError as exc:
+            return None, None, render(
+                "error.html",
+                request,
+                HTTP_400_BAD_REQUEST,
+                title="UNBLINDED_JOIN_FAILED",
+                errors=exc.errors,
+                run_id=unquote(run_id),
+            )
+        except InvalidAuditRunError as exc:
+            return None, None, render(
+                "error.html",
+                request,
+                HTTP_400_BAD_REQUEST,
+                title="VALIDATION_FAILED",
+                errors=exc.errors,
+                run_id=exc.run_id,
+            )
+        except OwnerPathError as exc:
+            status = HTTP_403_FORBIDDEN if "DISABLED_BY_OWNER" in str(exc) else HTTP_404_NOT_FOUND
+            return None, None, render(
+                "error.html", request, status, title="Run not available", errors=[str(exc)]
+            )
+        return loaded, join, None
+
+    def unblinded_page_context(
+        loaded: dict[str, Any],
+        join,
+        event,
+        *,
+        review_error: str = "",
+        review_notice: str = "",
+    ) -> dict[str, Any]:
+        previous_event, next_event = join.neighbour(event.episode_id)
+        counterpart = next(
+            (
+                item
+                for item in join.events
+                if item.pair_id == event.pair_id and item.episode_id != event.episode_id
+            ),
+            None,
+        )
+        return {
+            "header": run_header(loaded),
+            "join": join,
+            "event": event,
+            "counterpart": counterpart,
+            "previous_event": previous_event,
+            "next_event": next_event,
+            "event_index": join.index_of(event.episode_id) + 1,
+            "current_corrected_frame": event.current_corrected_frame,
+            "boundary_decisions": UNBLINDED_DECISIONS,
+            "redundant_reasons": REDUNDANT_REASONS,
+            "misaligned_reasons": MISALIGNED_REASONS,
+            "c12_explanation_zh": C12_EXPLANATION_ZH,
+            "p12_explanation_zh": P12_EXPLANATION_ZH,
+            "review_error": review_error,
+            "review_notice": review_notice,
+        }
+
+    @app.get("/audit/{run_id}/unblinded", response_model=None)
+    def open_unblinded(request: Request, run_id: str):
+        gated = unblinded_gate(request, run_id)
+        if gated is not None:
+            return gated
+        loaded, join, failure = load_unblinded(request, run_id)
+        if failure is not None:
+            return failure
+        if not join.events:
+            return render(
+                "error.html",
+                request,
+                HTTP_400_BAD_REQUEST,
+                title="EMPTY_UNBLINDED_JOIN",
+                errors=["no diagnostic events joined"],
+                run_id=unquote(run_id),
+            )
+        first = join.events[0]
+        target = "/audit/{}/unblinded/episode/{}".format(
+            quote(str(loaded["run_id"]), safe=""), encode_episode_id(first.episode_id)
+        )
+        return RedirectResponse(url=target, status_code=303)
+
+    @app.get("/audit/{run_id}/unblinded/episode/{episode_id}", response_class=HTMLResponse)
+    def unblinded_episode(request: Request, run_id: str, episode_id: str) -> HTMLResponse:
+        gated = unblinded_gate(request, run_id)
+        if gated is not None:
+            return gated
+        loaded, join, failure = load_unblinded(request, run_id)
+        if failure is not None:
+            return failure
+        wanted = decode_episode_id(unquote(episode_id))
+        event = join.event(wanted)
+        if event is None:
+            return render(
+                "error.html",
+                request,
+                HTTP_404_NOT_FOUND,
+                title="UNKNOWN_UNBLINDED_EVENT",
+                errors=[f"episode_id is not one of the joined diagnostic events: {wanted}"],
+                run_id=unquote(run_id),
+            )
+        notice = _query_value(request, "saved")
+        return render(
+            "unblinded.html",
+            request,
+            **unblinded_page_context(
+                loaded,
+                join,
+                event,
+                review_notice="Owner unblinded review appended." if notice == "1" else "",
+            ),
+        )
+
+    @app.get("/audit/{run_id}/unblinded/pair/{pair_id}", response_class=HTMLResponse)
+    def unblinded_pair(request: Request, run_id: str, pair_id: str) -> HTMLResponse:
+        gated = unblinded_gate(request, run_id)
+        if gated is not None:
+            return gated
+        loaded, join, failure = load_unblinded(request, run_id)
+        if failure is not None:
+            return failure
+        pair = join.pair(unquote(pair_id))
+        if pair is None:
+            return render(
+                "error.html",
+                request,
+                HTTP_404_NOT_FOUND,
+                title="UNKNOWN_MATCHED_PAIR",
+                errors=[f"pair_id is not one of the joined pairs: {unquote(pair_id)}"],
+                run_id=unquote(run_id),
+            )
+        index = next(
+            (i for i, item in enumerate(join.pairs) if item.pair_id == pair.pair_id), 0
+        )
+        return render(
+            "unblinded_pair.html",
+            request,
+            header=run_header(loaded),
+            join=join,
+            pair=pair,
+            pair_index=index + 1,
+            previous_pair=join.pairs[index - 1] if index > 0 else None,
+            next_pair=join.pairs[index + 1] if index + 1 < len(join.pairs) else None,
+        )
+
+    @app.post("/audit/{run_id}/unblinded/episode/{episode_id}/review", response_model=None)
+    async def save_unblinded_review(request: Request, run_id: str, episode_id: str):
+        gated = unblinded_gate(request, run_id)
+        if gated is not None:
+            return gated
+        form = await request.form()
+        loaded, join, failure = load_unblinded(request, run_id)
+        if failure is not None:
+            return failure
+        wanted = decode_episode_id(unquote(episode_id))
+        event = join.event(wanted)
+        if event is None:
+            return render(
+                "error.html",
+                request,
+                HTTP_404_NOT_FOUND,
+                title="UNKNOWN_UNBLINDED_EVENT",
+                errors=[f"episode_id is not one of the joined diagnostic events: {wanted}"],
+                run_id=unquote(run_id),
+            )
+        episode = loaded["episodes_by_id"][wanted]
+        try:
+            unblinded_reviews.save_boundary_review(
+                run_id=str(loaded["run_id"]),
+                episode_id=wanted,
+                predicted={event.boundary_id: event.run_boundary_frame},
+                boundary_id=event.boundary_id,
+                decision=str(form.get("ub_decision") or ""),
+                episode_length=int(episode.length),
+                reason_code=str(form.get("ub_reason_code") or ""),
+                corrected_frame=str(form.get("ub_corrected_frame") or ""),
+                comment=str(form.get("ub_comment") or ""),
+            )
+        except ValidationFailed as exc:
+            return render(
+                "unblinded.html",
+                request,
+                HTTP_400_BAD_REQUEST,
+                **unblinded_page_context(
+                    loaded,
+                    join,
+                    event,
+                    review_error="VALIDATION_FAILED: " + " | ".join(exc.errors),
+                ),
+            )
+        target = "/audit/{}/unblinded/episode/{}?saved=1".format(
+            quote(str(loaded["run_id"]), safe=""), encode_episode_id(wanted)
         )
         return RedirectResponse(url=target, status_code=303)
 

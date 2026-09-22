@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UNBLINDED · Matched Pair {{ pair.pair_id }}</title>
+  <link rel="stylesheet" href="/static/audit.css?v=7">
+  <style>
+    .ub-banner { border: 2px solid #b45309; background: #fffbeb; color: #78350f; padding: 12px 16px; border-radius: 6px; margin: 12px 0; }
+    .ub-banner h2 { margin: 0 0 4px 0; font-size: 1.05rem; letter-spacing: .04em; }
+    .ub-preserved { border: 2px solid #15803d; background: #f0fdf4; color: #14532d; padding: 10px 14px; border-radius: 6px; margin: 10px 0; font-weight: 600; }
+    .ub-arm-a { border-left: 5px solid #1d4ed8; }
+    .ub-arm-b { border-left: 5px solid #b91c1c; }
+    .ub-pair-table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+    .ub-pair-table th, .ub-pair-table td { border: 1px solid #d4d4d8; padding: 6px 10px; text-align: left; vertical-align: top; }
+    .ub-pair-table th { background: #f4f4f5; }
+  </style>
+</head>
+<body>
+  {% macro vocab(code) -%}
+    {%- set t = ui_term(code) -%}
+    <span class="term{% if t.kind == 'unknown' %} unknown{% endif %}" title="{{ t.en }}：{{ t.description_zh }}">{{ display_code(code) }}</span>
+  {%- endmacro %}
+
+  <header class="top">
+    <div>
+      <a href="/">全部 Run</a>
+      <h1>G1 Owner Unblinded Diagnostic Review｜配对复核</h1>
+      <p>
+        <a class="btn" href="/audit/{{ header.run_id }}/unblinded">解盲复核总览</a>
+        <a class="btn" href="/audit/{{ header.run_id }}/episode/{{ encode_episode_id(pair.arm_a.episode_id) }}">返回盲审页面（仍保持盲态）</a>
+      </p>
+    </div>
+    <dl class="meta">
+      <div><dt>run_id</dt><dd><code>{{ header.run_id }}</code></dd></div>
+      <div><dt>run_stage</dt><dd>{{ vocab(header.run_stage) }}</dd></div>
+      <div><dt>pair_id</dt><dd><code>{{ pair.pair_id }}</code></dd></div>
+      <div><dt>pair</dt><dd>{{ pair_index }} / {{ join.pair_count }}</dd></div>
+    </dl>
+  </header>
+
+  <aside class="ub-banner" id="unblinded-owner-review-banner">
+    <h2>UNBLINDED OWNER REVIEW</h2>
+    <p>本页面仅供 Design Owner 使用。这里会展示 Arm、C12 分组、C12 / P12 数值、pair_id 等设计诊断信息。</p>
+  </aside>
+
+  <aside class="ub-preserved" id="first-blinded-result-preserved">
+    FIRST BLINDED RESULT IS PRESERVED
+    <span class="muted">首次盲审结果不会被覆盖、删除或改写；复核只会以新 revision 追加。</span>
+  </aside>
+
+  <h2>Matched Pair {{ pair.pair_id }}</h2>
+
+  <p class="nav">
+    {% if previous_pair %}
+    <a class="btn" href="/audit/{{ header.run_id }}/unblinded/pair/{{ previous_pair.pair_id }}">上一对</a>
+    {% else %}
+    <span class="btn disabled">上一对</span>
+    {% endif %}
+    {% if next_pair %}
+    <a class="btn" href="/audit/{{ header.run_id }}/unblinded/pair/{{ next_pair.pair_id }}">下一对</a>
+    {% else %}
+    <span class="btn disabled">下一对</span>
+    {% endif %}
+  </p>
+
+  <div class="table-wrap">
+    <table class="ub-pair-table" id="ub-pair-table">
+      <thead>
+        <tr>
+          <th>field</th>
+          <th class="ub-arm-a">Arm A</th>
+          <th class="ub-arm-b">Arm B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><th>diagnostic_event_id</th><td>{{ pair.arm_a.diagnostic_event_id }}</td><td>{{ pair.arm_b.diagnostic_event_id }}</td></tr>
+        <tr><th>episode_id</th><td>{{ pair.arm_a.episode_id }}</td><td>{{ pair.arm_b.episode_id }}</td></tr>
+        <tr><th>boundary_id</th><td><code>{{ pair.arm_a.boundary_id }}</code></td><td><code>{{ pair.arm_b.boundary_id }}</code></td></tr>
+        <tr><th>frame</th><td>{{ pair.arm_a.event_frame }}</td><td>{{ pair.arm_b.event_frame }}</td></tr>
+        <tr><th>Arm</th><td>Arm {{ pair.arm_a.arm }}</td><td>Arm {{ pair.arm_b.arm }}</td></tr>
+        <tr><th>C12 Group</th><td>{{ pair.arm_a.c12_group }}</td><td>{{ pair.arm_b.c12_group }}</td></tr>
+        <tr><th>C12</th><td>{{ pair.arm_a.c12_display }}</td><td>{{ pair.arm_b.c12_display }}</td></tr>
+        <tr><th>P12</th><td>{{ pair.arm_a.p12_display }}</td><td>{{ pair.arm_b.p12_display }}</td></tr>
+        <tr><th>Direction Evidence</th><td>{{ pair.arm_a.direction_evidence_display }}</td><td>{{ pair.arm_b.direction_evidence_display }}</td></tr>
+        <tr><th>run_length</th><td>{{ pair.arm_a.run_length }}</td><td>{{ pair.arm_b.run_length }}</td></tr>
+        <tr><th>selection_reason</th><td><code>{{ pair.arm_a.selection_reason }}</code></td><td><code>{{ pair.arm_b.selection_reason }}</code></td></tr>
+        <tr><th>FIRST_BLINDED_DECISION</th><td>{{ vocab(pair.arm_a.first_blind_decision) }} {{ vocab(pair.arm_a.first_blind_reason_code) }}</td><td>{{ vocab(pair.arm_b.first_blind_decision) }} {{ vocab(pair.arm_b.first_blind_reason_code) }}</td></tr>
+        <tr><th>current_decision</th><td>{{ vocab(pair.arm_a.current_decision) }} {{ vocab(pair.arm_a.current_reason_code) }}</td><td>{{ vocab(pair.arm_b.current_decision) }} {{ vocab(pair.arm_b.current_reason_code) }}</td></tr>
+        <tr><th>provenance</th><td>{{ pair.arm_a.current_provenance }}</td><td>{{ pair.arm_b.current_provenance }}</td></tr>
+        <tr><th>revision_count</th><td>{{ pair.arm_a.revision_count }}</td><td>{{ pair.arm_b.revision_count }}</td></tr>
+        <tr>
+          <th>action</th>
+          <td><a class="btn" href="/audit/{{ header.run_id }}/unblinded/episode/{{ encode_episode_id(pair.arm_a.episode_id) }}">Open Arm A Case</a></td>
+          <td><a class="btn" href="/audit/{{ header.run_id }}/unblinded/episode/{{ encode_episode_id(pair.arm_b.episode_id) }}">Open Arm B Case</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="muted">
+    说明：配对只是把同一 pair_id 的两个 Arm 并排展示，便于 Design Owner 对照判断；
+    本页面不提供推荐答案，也不自动标注。复核请在各自的案例页面提交。
+  </p>
+</body>
+</html>

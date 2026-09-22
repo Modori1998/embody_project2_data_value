@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UNBLINDED · {{ event.episode_id }} · {{ event.boundary_id }}</title>
+  <link rel="stylesheet" href="/static/audit.css?v=7">
+  <style>
+    .ub-banner { border: 2px solid #b45309; background: #fffbeb; color: #78350f; padding: 12px 16px; border-radius: 6px; margin: 12px 0; }
+    .ub-banner h2 { margin: 0 0 4px 0; font-size: 1.05rem; letter-spacing: .04em; }
+    .ub-banner p { margin: 4px 0 0 0; }
+    .ub-preserved { border: 2px solid #15803d; background: #f0fdf4; color: #14532d; padding: 10px 14px; border-radius: 6px; margin: 10px 0; font-weight: 600; }
+    .ub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin: 10px 0; }
+    .ub-cell { border: 1px solid #d4d4d8; border-radius: 5px; padding: 8px 10px; }
+    .ub-cell dt { font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; color: #52525b; margin: 0 0 2px 0; }
+    .ub-cell dd { margin: 0; font-size: 1rem; font-weight: 600; }
+    .ub-arm-a { border-left: 5px solid #1d4ed8; }
+    .ub-arm-b { border-left: 5px solid #b91c1c; }
+    .ub-provenance-first { color: #1d4ed8; font-weight: 700; }
+    .ub-provenance-owner { color: #b45309; font-weight: 700; }
+    .ub-explain pre { white-space: pre-wrap; background: #f4f4f5; border-left: 4px solid #a1a1aa; padding: 8px 12px; border-radius: 4px; font-size: .82rem; line-height: 1.45; }
+    .ub-queue { max-height: 60vh; overflow: auto; }
+    .ub-queue li.current { background: #fef3c7; }
+    .ub-form { border: 2px solid #52525b; border-radius: 6px; padding: 12px; margin: 14px 0; }
+    .ub-norec { color: #52525b; font-style: italic; }
+    .ub-pair-table td, .ub-pair-table th { text-align: left; vertical-align: top; }
+  </style>
+</head>
+<body>
+  {% macro vocab(code) -%}
+    {%- set t = ui_term(code) -%}
+    <span class="term{% if t.kind == 'unknown' %} unknown{% endif %}" title="{{ t.en }}：{{ t.description_zh }}">{{ display_code(code) }}</span>
+  {%- endmacro %}
+
+  <header class="top">
+    <div>
+      <a href="/">全部 Run</a>
+      <h1>G1 Owner Unblinded Diagnostic Review｜解盲复核</h1>
+      <p>
+        <a class="btn" href="/audit/{{ header.run_id }}/episode/{{ encode_episode_id(event.episode_id) }}">返回盲审页面（仍保持盲态）</a>
+        <a class="btn" href="/audit/{{ header.run_id }}/unblinded">解盲复核总览</a>
+      </p>
+    </div>
+    <dl class="meta">
+      <div><dt>run_id</dt><dd><code>{{ header.run_id }}</code></dd></div>
+      <div><dt>run_stage</dt><dd>{{ vocab(header.run_stage) }}</dd></div>
+      <div><dt>event</dt><dd>{{ event_index }} / {{ join.event_count }}</dd></div>
+      <div><dt>join key</dt><dd><code>{{ join.join_key }}</code></dd></div>
+      <div><dt>unblind source</dt><dd><code>{{ join.source_path }}</code></dd></div>
+    </dl>
+  </header>
+
+  <aside class="ub-banner" id="unblinded-owner-review-banner">
+    <h2>UNBLINDED OWNER REVIEW</h2>
+    <p>本页面仅供 Design Owner 使用。这里会展示 Arm、C12 分组、C12 / P12 数值、pair_id 等设计诊断信息。</p>
+  </aside>
+
+  <aside class="ub-preserved" id="first-blinded-result-preserved">
+    FIRST BLINDED RESULT IS PRESERVED
+    <span class="muted">首次盲审结果不会被覆盖、删除或改写；本页面的复核只会以新 revision 追加。</span>
+  </aside>
+
+  {% if review_notice %}
+  <p class="banner saved" id="unblinded-review-notice">{{ review_notice }}</p>
+  {% endif %}
+  {% if review_error %}
+  <p class="banner eval" id="unblinded-review-error">{{ review_error }}</p>
+  {% endif %}
+
+  <div class="layout">
+    <aside class="queue">
+      <h2>解盲复核队列</h2>
+      <p class="muted">20 个诊断事件 · 按 (episode_id, boundary_id) 严格 1:1 关联</p>
+      <ol class="ub-queue">
+        {% for item in join.events %}
+        <li class="{% if item.episode_id == event.episode_id %}current{% endif %}">
+          <a href="/audit/{{ header.run_id }}/unblinded/episode/{{ encode_episode_id(item.episode_id) }}">
+            {{ item.diagnostic_event_id }}
+            <span class="tag">Arm {{ item.arm }}</span>
+            <span class="tag">{{ item.c12_group }}</span>
+            <span class="tag">{{ item.pair_id }}</span>
+            {% if item.has_owner_revision %}<span class="tag">已复核</span>{% endif %}
+          </a>
+          <p class="queue-progress muted">{{ item.episode_id }} · {{ item.boundary_id }} · {{ item.current_decision }}</p>
+        </li>
+        {% endfor %}
+      </ol>
+    </aside>
+
+    <section class="main">
+      <h2>{{ event.diagnostic_event_id }} · {{ event.episode_id }} · <code>{{ event.boundary_id }}</code></h2>
+
+      <p class="nav">
+        {% if previous_event %}
+        <a class="btn" href="/audit/{{ header.run_id }}/unblinded/episode/{{ encode_episode_id(previous_event.episode_id) }}">上一条</a>
+        {% else %}
+        <span class="btn disabled">上一条</span>
+        {% endif %}
+        {% if next_event %}
+        <a class="btn" href="/audit/{{ header.run_id }}/unblinded/episode/{{ encode_episode_id(next_event.episode_id) }}">下一条</a>
+        {% else %}
+        <span class="btn disabled">下一条</span>
+        {% endif %}
+      </p>
+
+      <h3>Case Identity｜当前案例</h3>
+      <dl class="ub-grid">
+        <div class="ub-cell"><dt>episode_id</dt><dd id="ub-episode-id">{{ event.episode_id }}</dd></div>
+        <div class="ub-cell"><dt>boundary_id</dt><dd id="ub-boundary-id"><code>{{ event.boundary_id }}</code></dd></div>
+        <div class="ub-cell"><dt>frame</dt><dd id="ub-frame">{{ event.event_frame }}</dd></div>
+        <div class="ub-cell"><dt>candidate_type</dt><dd>{{ vocab(event.candidate_type) }}</dd></div>
+        <div class="ub-cell"><dt>representative_candidate_id</dt><dd><code>{{ event.representative_candidate_id }}</code></dd></div>
+      </dl>
+
+      <h3>Unblinded Diagnostic Fields｜解盲诊断字段</h3>
+      <dl class="ub-grid">
+        <div class="ub-cell {% if event.arm == 'A' %}ub-arm-a{% else %}ub-arm-b{% endif %}">
+          <dt>Arm</dt><dd id="ub-arm">Arm {{ event.arm }}</dd>
+        </div>
+        <div class="ub-cell"><dt>C12 Group</dt><dd id="ub-c12-group">{{ event.c12_group }}</dd></div>
+        <div class="ub-cell"><dt>C12（约 4 位小数）</dt><dd id="ub-c12">{{ event.c12_display }}</dd></div>
+        <div class="ub-cell"><dt>P12（约 4 位小数）</dt><dd id="ub-p12">{{ event.p12_display }}</dd></div>
+        <div class="ub-cell"><dt>pair_id</dt><dd id="ub-pair-id">{{ event.pair_id }}</dd></div>
+        <div class="ub-cell"><dt>Direction Evidence</dt><dd id="ub-direction-evidence">{{ event.direction_evidence_display }}</dd></div>
+        <div class="ub-cell"><dt>run_length</dt><dd id="ub-run-length">{{ event.run_length }}</dd></div>
+        <div class="ub-cell"><dt>C12 percentile</dt><dd>{{ "%.6f"|format(event.c12_percentile) }}</dd></div>
+        <div class="ub-cell"><dt>P12 percentile</dt><dd>{{ "%.6f"|format(event.p12_percentile) }}</dd></div>
+        <div class="ub-cell"><dt>Direction Evidence percentile</dt><dd>{{ "%.6f"|format(event.direction_evidence_percentile) }}</dd></div>
+        <div class="ub-cell"><dt>run_length percentile</dt><dd>{{ "%.6f"|format(event.run_length_percentile) }}</dd></div>
+        <div class="ub-cell"><dt>match_distance</dt><dd>{{ "%.6f"|format(event.match_distance) }}</dd></div>
+        <div class="ub-cell"><dt>selection_reason</dt><dd><code>{{ event.selection_reason }}</code></dd></div>
+      </dl>
+
+      <h3>Field Explanations｜C12 与 P12 中文解释</h3>
+      <div class="ub-explain">
+        <h4>C12</h4>
+        <pre id="ub-c12-explanation">{{ c12_explanation_zh }}</pre>
+        <h4>P12</h4>
+        <pre id="ub-p12-explanation">{{ p12_explanation_zh }}</pre>
+      </div>
+
+      <h3>Matched Pair｜配对</h3>
+      <div class="ub-cell" id="ub-matched-pair-block">
+        <dl class="ub-grid">
+          <div class="ub-cell"><dt>pair_id</dt><dd>{{ event.pair_id }}</dd></div>
+          <div class="ub-cell"><dt>本案例</dt><dd>Arm {{ event.arm }} · {{ event.c12_group }} · C12={{ event.c12_display }}</dd></div>
+          <div class="ub-cell"><dt>配对案例</dt><dd>Arm {{ counterpart.arm }} · {{ counterpart.c12_group }} · C12={{ counterpart.c12_display }} · {{ counterpart.episode_id }}</dd></div>
+        </dl>
+        <p>
+          <a class="btn" id="btn-open-matched-pair" href="/audit/{{ header.run_id }}/unblinded/pair/{{ event.pair_id }}">Open Matched Pair</a>
+          <a class="btn" href="/audit/{{ header.run_id }}/unblinded/episode/{{ encode_episode_id(counterpart.episode_id) }}">打开配对案例（Arm {{ counterpart.arm }}）</a>
+        </p>
+      </div>
+
+      <h3>First Blinded Decision｜首次盲审结果（保留）</h3>
+      <dl class="ub-grid" id="ub-first-blind-block">
+        <div class="ub-cell"><dt>FIRST_BLINDED_DECISION</dt><dd id="ub-first-blind-decision">{{ vocab(event.first_blind_decision) }}</dd></div>
+        <div class="ub-cell"><dt>reason_code</dt><dd id="ub-first-blind-reason">{{ vocab(event.first_blind_reason_code) }}</dd></div>
+        <div class="ub-cell"><dt>review_id</dt><dd>{{ event.first_blind_review_id if event.first_blind_review_id is not none else '—' }}</dd></div>
+        <div class="ub-cell"><dt>reviewed_at</dt><dd>{{ event.first_blind_reviewed_at or '—' }}</dd></div>
+        <div class="ub-cell"><dt>provenance</dt><dd class="ub-provenance-first">FIRST_BLINDED_REVIEW</dd></div>
+      </dl>
+      <p class="muted">comment：{{ event.first_blind_comment or '（空）' }}</p>
+
+      <h3>Current Review State｜当前复核状态</h3>
+      <dl class="ub-grid" id="ub-current-block">
+        <div class="ub-cell"><dt>current_decision</dt><dd id="ub-current-decision">{{ vocab(event.current_decision) }}</dd></div>
+        <div class="ub-cell"><dt>reason_code</dt><dd>{{ vocab(event.current_reason_code) }}</dd></div>
+        <div class="ub-cell"><dt>review_id</dt><dd>{{ event.current_review_id if event.current_review_id is not none else '—' }}</dd></div>
+        <div class="ub-cell"><dt>reviewed_at</dt><dd>{{ event.current_reviewed_at or '—' }}</dd></div>
+        <div class="ub-cell"><dt>provenance</dt><dd id="ub-current-provenance" class="{% if event.has_owner_revision %}ub-provenance-owner{% else %}ub-provenance-first{% endif %}">{{ event.current_provenance }}</dd></div>
+        <div class="ub-cell"><dt>revision_count</dt><dd id="ub-revision-count">{{ event.revision_count }}</dd></div>
+      </dl>
+      <p class="muted">comment：{{ event.current_comment or '（空）' }}</p>
+
+      <form class="ub-form" method="post" id="unblinded-review-form"
+            action="/audit/{{ header.run_id }}/unblinded/episode/{{ encode_episode_id(event.episode_id) }}/review">
+        <h3>Owner Re-review｜解盲复核提交</h3>
+        <p class="muted">看完上述诊断信息后，请重新提交你的判断。系统不会给出推荐答案，也不会自动标注。</p>
+        <p class="ub-norec" id="ub-no-recommendation">NO AUTO LABELLING · NO RECOMMENDED ANSWER</p>
+        <label>human_review
+          <select name="ub_decision" id="ub-decision">
+            <option value="" {% if event.current_decision not in boundary_decisions %}selected{% endif %}>—（请选择）</option>
+            {% for opt in boundary_decisions %}
+            <option value="{{ opt }}" {% if event.current_decision == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>reason_code
+          <select name="ub_reason_code" id="ub-reason-code">
+            <option value="">—</option>
+            {% for opt in redundant_reasons %}
+            <option value="{{ opt }}" {% if event.current_decision == 'REDUNDANT' and event.current_reason_code == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+            {% endfor %}
+            {% for opt in misaligned_reasons %}
+            <option value="{{ opt }}" {% if event.current_decision == 'MISALIGNED' and event.current_reason_code == opt %}selected{% endif %}>{{ dropdown_option_label(opt) }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>corrected_frame（仅 MISALIGNED）
+          <input type="number" name="ub_corrected_frame" id="ub-corrected-frame" min="0" step="1"
+                 value="{{ current_corrected_frame }}">
+        </label>
+        <label class="comment-box">comment
+          <textarea name="ub_comment" id="ub-comment" rows="3" placeholder="OPTIONAL">{{ event.current_comment }}</textarea>
+        </label>
+        <p>
+          <button class="btn" type="submit" id="btn-save-unblinded">提交解盲复核（追加新 revision）</button>
+        </p>
+      </form>
+
+      <p class="muted">
+        说明：本页面提交的结果会作为 OWNER_UNBLINDED_REVIEW 追加到 append-only 审核历史；
+        原 FIRST_BLINDED_REVIEW 不会被覆盖。本 Run 仍为 DESIGN_DIAGNOSTIC，不得进入 Calibration Export / Canonical GT / Evaluation。
+      </p>
+    </section>
+  </div>
+</body>
+</html>

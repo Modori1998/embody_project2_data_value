@@ -93,6 +93,54 @@ def _same(left: Any, right: Any) -> bool:
     return _text(left) == _text(right)
 
 
+def validate_boundary_decision(
+    *,
+    boundary_id: str,
+    episode_length: int,
+    decision: str,
+    reason_code: str,
+    corrected_frame_raw: Any,
+    comment: str,
+) -> tuple[str, int | None, list[str]]:
+    """Frozen single-boundary rules, shared by every write path.
+
+    Returns ``(store_reason, corrected_frame, errors)``. Callers decide what to
+    do with the errors; this function never raises so that callers can
+    accumulate a complete error list before failing.
+    """
+
+    errors: list[str] = []
+    if decision == "VALID":
+        return "", None, errors
+    if decision == "REDUNDANT":
+        if reason_code not in REDUNDANT_REASONS:
+            errors.append(f"REDUNDANT requires a compatible reason_code for {boundary_id}")
+        elif reason_code == "OTHER" and _text(comment) == "":
+            errors.append(f"OTHER requires comment for {boundary_id}")
+        else:
+            return reason_code, None, errors
+        return "", None, errors
+    if decision == "MISALIGNED":
+        try:
+            corrected = _parse_int(
+                corrected_frame_raw, field_name=f"corrected_frame:{boundary_id}"
+            )
+        except ValidationFailed as exc:
+            return "", None, list(exc.errors)
+        if corrected is None:
+            errors.append(f"MISALIGNED requires corrected_frame for {boundary_id}")
+        elif not (0 <= corrected < int(episode_length)):
+            errors.append(f"corrected_frame out of range for {boundary_id}")
+        if reason_code not in MISALIGNED_REASONS:
+            errors.append(f"MISALIGNED requires a compatible reason_code for {boundary_id}")
+        elif reason_code == "OTHER" and _text(comment) == "":
+            errors.append(f"OTHER requires comment for {boundary_id}")
+        else:
+            return reason_code, corrected, errors
+        return "", corrected, errors
+    return "", None, errors
+
+
 @dataclass(frozen=True)
 class SignalReview:
     review_id: int
@@ -444,6 +492,33 @@ class ReviewStore:
                 out[item.boundary_id] = item
         return out
 
+    def boundary_history_for_run(
+        self, *, run_id: str
+    ) -> dict[str, dict[str, list[BoundaryReview]]]:
+        """Full append-only boundary history for a run, oldest revision first.
+
+        Read-only. Used by the owner unblinded view to keep the first blinded
+        decision distinguishable from any later owner revision.
+        """
+
+        connection = self.connect()
+        try:
+            rows = connection.execute(
+                f"""
+                SELECT * FROM {BOUNDARY_TABLE}
+                WHERE run_id = ?
+                ORDER BY review_id
+                """,
+                (run_id,),
+            ).fetchall()
+        finally:
+            connection.close()
+        out: dict[str, dict[str, list[BoundaryReview]]] = {}
+        for row in rows:
+            item = _row_boundary(row)
+            out.setdefault(item.episode_id, {}).setdefault(item.boundary_id, []).append(item)
+        return out
+
     def current_added(self, *, run_id: str, episode_id: str) -> list[AddedBoundary]:
         connection = self.connect()
         try:
@@ -711,41 +786,15 @@ class ReviewStore:
                 errors.append(f"illegal boundary decision for {bid}: {decision}")
                 continue
             predicted_frame = int(predicted[bid])
-            corrected: int | None = None
-            store_reason = ""
-            try:
-                if decision == "VALID":
-                    store_reason = ""
-                    corrected = None
-                elif decision == "REDUNDANT":
-                    if reason_code not in REDUNDANT_REASONS:
-                        errors.append(f"REDUNDANT requires a compatible reason_code for {bid}")
-                    elif reason_code == "OTHER" and _text(comment) == "":
-                        errors.append(f"OTHER requires comment for {bid}")
-                    else:
-                        store_reason = reason_code
-                elif decision == "MISALIGNED":
-                    try:
-                        corrected = _parse_int(payload.get("corrected_frame"), field_name=f"corrected_frame:{bid}")
-                    except ValidationFailed as exc:
-                        errors.extend(exc.errors)
-                        continue
-                    if corrected is None:
-                        errors.append(f"MISALIGNED requires corrected_frame for {bid}")
-                    elif not (0 <= corrected < int(episode_length)):
-                        errors.append(f"corrected_frame out of range for {bid}")
-                    if reason_code not in MISALIGNED_REASONS:
-                        errors.append(f"MISALIGNED requires a compatible reason_code for {bid}")
-                    elif reason_code == "OTHER" and _text(comment) == "":
-                        errors.append(f"OTHER requires comment for {bid}")
-                    else:
-                        store_reason = reason_code
-                else:
-                    store_reason = ""
-                    corrected = None
-            except ValidationFailed as exc:
-                errors.extend(exc.errors)
-                continue
+            store_reason, corrected, boundary_errors = validate_boundary_decision(
+                boundary_id=bid,
+                episode_length=episode_length,
+                decision=decision,
+                reason_code=reason_code,
+                corrected_frame_raw=payload.get("corrected_frame"),
+                comment=comment,
+            )
+            errors.extend(boundary_errors)
             existing = current_bounds.get(bid)
             existing_corrected = "" if existing is None or existing.corrected_frame is None else str(existing.corrected_frame)
             new_corrected = "" if corrected is None else str(corrected)
@@ -924,6 +973,103 @@ class ReviewStore:
             raise
         finally:
             connection.close()
+
+    def save_boundary_review(
+        self,
+        *,
+        run_id: str,
+        episode_id: str,
+        predicted: Mapping[str, int],
+        boundary_id: str,
+        decision: str,
+        episode_length: int,
+        reason_code: str = "",
+        corrected_frame: Any = "",
+        comment: str = "",
+    ) -> int | None:
+        """Append exactly one predicted-boundary revision. Returns its review_id.
+
+        Deliberately narrow: this path never writes ``signal_review_history``,
+        ``human_added_boundary_history`` or ``episode_note_history``, so a
+        boundary-only re-review cannot disturb any other review surface.
+
+        Returns ``None`` when the submission is byte-identical to a revision
+        already authored by this same reviewer identity — a repeat submission is
+        a no-op, but a *different* decision (including one that happens to match
+        the first blinded decision) is always appended as a new revision.
+        """
+
+        bid = _text(boundary_id)
+        if bid not in predicted:
+            raise ValidationFailed([f"boundary_id not in final_boundaries.csv: {bid}"])
+        decision_text = _text(decision)
+        if decision_text not in BOUNDARY_DECISIONS:
+            raise ValidationFailed([f"illegal boundary decision for {bid}: {decision_text}"])
+        if decision_text not in REVIEWED_BOUNDARY:
+            raise ValidationFailed(
+                [f"NOT_REVIEWED is not a re-review decision for {bid}"]
+            )
+        reason_text = _text(reason_code)
+        comment_text = str(comment or "")
+        store_reason, corrected, errors = validate_boundary_decision(
+            boundary_id=bid,
+            episode_length=episode_length,
+            decision=decision_text,
+            reason_code=reason_text,
+            corrected_frame_raw=corrected_frame,
+            comment=comment_text,
+        )
+        if errors:
+            raise ValidationFailed(errors)
+
+        current = self.current_boundaries(run_id=run_id, episode_id=episode_id).get(bid)
+        existing_corrected = (
+            "" if current is None or current.corrected_frame is None else str(current.corrected_frame)
+        )
+        new_corrected = "" if corrected is None else str(corrected)
+        unchanged = (
+            current is not None
+            and _text(current.reviewer) == _text(self.reviewer)
+            and current.decision == decision_text
+            and _text(current.reason_code) == store_reason
+            and existing_corrected == new_corrected
+            and current.comment == comment_text
+        )
+        if unchanged:
+            return None
+
+        reviewed_at = _now()
+        connection = self.connect()
+        try:
+            connection.execute("BEGIN")
+            cursor = connection.execute(
+                f"""
+                INSERT INTO {BOUNDARY_TABLE} (
+                    run_id, episode_id, boundary_id, predicted_frame,
+                    decision, reason_code, corrected_frame, comment, reviewer, reviewed_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    run_id,
+                    episode_id,
+                    bid,
+                    int(predicted[bid]),
+                    decision_text,
+                    store_reason,
+                    corrected,
+                    comment_text,
+                    self.reviewer,
+                    reviewed_at,
+                ),
+            )
+            new_id = int(cursor.lastrowid)
+            connection.commit()
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.close()
+        return new_id
 
 
 def predicted_frames(boundaries: Iterable[Mapping[str, str]]) -> dict[str, int]:
