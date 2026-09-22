@@ -1,0 +1,193 @@
+{
+  "export_contract": "P2_G1_REVIEW_AUDIT_TABLE_V1",
+  "generated_at": "2026-09-22T16:32:15.369267+08:00",
+  "scope": {
+    "tabs_included": [
+      "P2"
+    ],
+    "tabs_excluded": [
+      "P1"
+    ],
+    "note": "P2 = per-boundary human review. P1 (per-signal) rows are excluded by request; they are uniformly PASS and carry no discriminating information.",
+    "runs": "all runs registered in the G1 Audit Web registry"
+  },
+  "blinding": {
+    "unblinded": false,
+    "arm_or_cohort_column_present": false,
+    "redundant_rate_computed": false,
+    "gate_verdict_computed": false
+  },
+  "source_owner_db": "outputs/g1_audit_web/g1_audit_web_owner.sqlite3",
+  "source_owner_db_sha256": "8e6f47657d4987a314ff7a5b50c8bbc8ec443e60711834ee579d5cdf68e01b6b",
+  "source_registry": "outputs/g1_audit_web/g1_audit_run_registry.json",
+  "source_registry_sha256": "c39dc177eef21848c7ca7d20591054388f640c01f4869997970416d183670b7c",
+  "table_encoding": "utf-8-sig",
+  "table_encoding_note": "UTF-8 with BOM so spreadsheet apps decode the Chinese review comments correctly; rows and quoting are otherwise plain CSV.",
+  "row_count": 89,
+  "episode_count": 33,
+  "run_count": 4,
+  "decision_counts": {
+    "REDUNDANT": 12,
+    "VALID": 77
+  },
+  "reason_code_counts": {
+    "REDUNDANT_DIRECTION_JITTER": 5,
+    "REDUNDANT_SHORT_PAUSE": 7
+  },
+  "per_run": [
+    {
+      "run_id": "g1_calibration_20260917_222604_d4425fc3",
+      "run_stage": "CALIBRATION",
+      "boundaries_in_run": null,
+      "reviewed_rows": 0,
+      "episodes_reviewed": 0,
+      "decision_counts": {},
+      "boundary_table_columns": []
+    },
+    {
+      "run_id": "g1_calibration_20260918_094455_df2ce8b2",
+      "run_stage": "CALIBRATION",
+      "boundaries_in_run": 35,
+      "reviewed_rows": 35,
+      "episodes_reviewed": 6,
+      "decision_counts": {
+        "REDUNDANT": 3,
+        "VALID": 32
+      },
+      "boundary_table_columns": [
+        "boundary_id",
+        "episode_id",
+        "frame",
+        "candidate_type",
+        "reason",
+        "representative_candidate_id",
+        "member_candidate_ids",
+        "member_candidate_types",
+        "member_candidate_frames",
+        "member_candidate_count",
+        "supporting_reasons",
+        "review_flags",
+        "polarity",
+        "config_version",
+        "segmentation_version"
+      ]
+    },
+    {
+      "run_id": "g1_calibration_20260918_141032_781e5d8b",
+      "run_stage": "CALIBRATION",
+      "boundaries_in_run": 66,
+      "reviewed_rows": 0,
+      "episodes_reviewed": 0,
+      "decision_counts": {},
+      "boundary_table_columns": [
+        "boundary_id",
+        "episode_id",
+        "frame",
+        "candidate_type",
+        "reason",
+        "representative_candidate_id",
+        "member_candidate_ids",
+        "member_candidate_types",
+        "member_candidate_frames",
+        "member_candidate_count",
+        "supporting_reasons",
+        "review_flags",
+        "polarity",
+        "config_version",
+        "segmentation_version"
+      ]
+    },
+    {
+      "run_id": "g1_design_diagnostic_20260922_135647_69bf2a94",
+      "run_stage": "DESIGN_DIAGNOSTIC",
+      "boundaries_in_run": 20,
+      "reviewed_rows": 20,
+      "episodes_reviewed": 20,
+      "decision_counts": {
+        "REDUNDANT": 2,
+        "VALID": 18
+      },
+      "boundary_table_columns": [
+        "boundary_id",
+        "episode_id",
+        "frame",
+        "candidate_type",
+        "reason",
+        "representative_candidate_id",
+        "member_candidate_ids",
+        "member_candidate_types",
+        "member_candidate_frames",
+        "member_candidate_count",
+        "supporting_reasons",
+        "review_flags",
+        "polarity",
+        "config_version",
+        "segmentation_version"
+      ]
+    },
+    {
+      "run_id": "g1_exploratory_audit_20260916_214523_1ba11d9d",
+      "run_stage": "EXPLORATORY_AUDIT",
+      "boundaries_in_run": 31,
+      "reviewed_rows": 3,
+      "episodes_reviewed": 1,
+      "decision_counts": {
+        "VALID": 3
+      },
+      "boundary_table_columns": [
+        "boundary_id",
+        "episode_id",
+        "frame",
+        "candidate_type",
+        "reason",
+        "member_candidate_ids",
+        "supporting_reasons",
+        "review_flags",
+        "polarity",
+        "config_version",
+        "segmentation_version"
+      ]
+    },
+    {
+      "run_id": "g1_exploratory_audit_20260917_141541_fe251439",
+      "run_stage": "EXPLORATORY_AUDIT",
+      "boundaries_in_run": 31,
+      "reviewed_rows": 31,
+      "episodes_reviewed": 6,
+      "decision_counts": {
+        "REDUNDANT": 7,
+        "VALID": 24
+      },
+      "boundary_table_columns": [
+        "boundary_id",
+        "episode_id",
+        "frame",
+        "candidate_type",
+        "reason",
+        "representative_candidate_id",
+        "member_candidate_ids",
+        "member_candidate_types",
+        "member_candidate_frames",
+        "member_candidate_count",
+        "supporting_reasons",
+        "review_flags",
+        "polarity",
+        "config_version",
+        "segmentation_version"
+      ]
+    }
+  ],
+  "legacy_schema_runs": [
+    "g1_exploratory_audit_20260916_214523_1ba11d9d"
+  ],
+  "unreadable_runs": [
+    {
+      "run_id": "g1_calibration_20260917_222604_d4425fc3",
+      "reason": "[WinError 5] 拒绝访问。: 'C:\\\\Users\\\\95611\\\\embody\\\\4-Project2_data_value\\\\outputs\\\\g1_audit_runs\\\\g1_calibration_20260917_222604_d4425fc3\\\\episode_manifest.csv'"
+    }
+  ],
+  "reviews_missing_boundary_context": [],
+  "files_sha256": {
+    "p2_review_audit.csv": "ceaa5294de1dad9acc9bae6a38fcac57764fd1604ef5c799efc8e1044acee8f5"
+  }
+}
