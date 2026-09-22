@@ -20,6 +20,7 @@ from typing import Any, Iterable, Mapping
 
 from project2_g1.final_semantics import SEMANTICS_MATERIALIZED
 
+from .contract import is_design_diagnostic
 from .hashes import sha256_file, tree_fingerprint
 from .input import load_csv_rows
 from .reviews import (
@@ -126,6 +127,12 @@ def resolve_export_role(loaded: Mapping[str, Any]) -> str | None:
 
     identity = _source_identity(loaded)
     if identity is None:
+        return None
+    # Design Diagnostic runs are human-reviewable but permanently barred from
+    # Human Calibration Export (additive hard block; other stages unchanged).
+    if is_design_diagnostic(identity["run_stage"]) or is_design_diagnostic(
+        identity["set_role"]
+    ):
         return None
     if identity["run_stage"] == "EXPLORATORY_AUDIT" and identity["set_role"] == "EXPLORATORY":
         return EXPORT_INTENDED_ROLE

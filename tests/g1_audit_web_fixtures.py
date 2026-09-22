@@ -47,6 +47,8 @@ def write_synthetic_run(
     extra_episode_path: str | None = None,
     signal_hash: str | None = None,
     signal_contract_version: str = SIGNAL_CONTRACT_VERSION,
+    run_stage: str = "EXPLORATORY_AUDIT",
+    set_role: str = "EXPLORATORY",
 ) -> Path:
     snapshot = config_payload or {"config_version": "g1_p2_exploratory_segmentation.v0", "parameters": {"motion_speed_threshold": {"value": 0.02}}}
     config_hash = config_hash_from_payload(snapshot)
@@ -109,7 +111,7 @@ def write_synthetic_run(
                 "demo_key": native,
                 "source_hdf5": "demo_v15.hdf5",
                 "source_dataset_id": "robomimic_v15_can_mh",
-                "set_role": "EXPLORATORY",
+                "set_role": set_role,
                 "config_hash": declared_hash,
                 "signal_contract_version": signal_version,
                 "signal_contract_hash": signal_hash,
@@ -142,7 +144,7 @@ def write_synthetic_run(
     meta = {
         "contract_version": contract_version,
         "run_id": run_id,
-        "run_stage": "EXPLORATORY_AUDIT",
+        "run_stage": run_stage,
         "created_at": "2026-09-16T00:00:00+08:00",
         "parent_run_id": None,
         "config_version": snapshot.get("config_version"),

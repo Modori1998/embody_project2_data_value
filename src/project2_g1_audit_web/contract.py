@@ -20,13 +20,47 @@ from project2_g1.final_semantics import (
 
 CONTRACT_VERSION = "P2_G1_AUDIT_FOLDER_V1"
 
-ALLOWED_RUN_STAGES = frozenset({"EXPLORATORY_AUDIT", "CALIBRATION", "EVALUATION"})
-ALLOWED_SET_ROLES = frozenset({"EXPLORATORY", "CALIBRATION", "EVALUATION"})
+ALLOWED_RUN_STAGES = frozenset(
+    {"EXPLORATORY_AUDIT", "CALIBRATION", "EVALUATION", "DESIGN_DIAGNOSTIC"}
+)
+ALLOWED_SET_ROLES = frozenset(
+    {"EXPLORATORY", "CALIBRATION", "EVALUATION", "DESIGN_DIAGNOSTIC"}
+)
 STAGE_TO_SET_ROLE = {
     "EXPLORATORY_AUDIT": "EXPLORATORY",
     "CALIBRATION": "CALIBRATION",
     "EVALUATION": "EVALUATION",
+    "DESIGN_DIAGNOSTIC": "DESIGN_DIAGNOSTIC",
 }
+
+# --- Design Diagnostic (additive, frozen) ---------------------------------
+# A DESIGN_DIAGNOSTIC run is human-reviewable exactly like the other stages but
+# is permanently barred from every downstream consumption path. This block is
+# additive only: it does not change EXPLORATORY_AUDIT / CALIBRATION / EVALUATION
+# behaviour in any way.
+DESIGN_DIAGNOSTIC_RUN_STAGE = "DESIGN_DIAGNOSTIC"
+DESIGN_DIAGNOSTIC_SET_ROLE = "DESIGN_DIAGNOSTIC"
+DESIGN_DIAGNOSTIC_BLOCKED_DOWNSTREAMS = (
+    "CALIBRATION_EXPORT_ELIGIBLE",
+    "CANONICAL_GT_ELIGIBLE",
+    "EVALUATION_ELIGIBLE",
+)
+
+
+def is_design_diagnostic(stage_or_role: str | None) -> bool:
+    """True for the DESIGN_DIAGNOSTIC run_stage or set_role."""
+
+    return str(stage_or_role or "").strip() == DESIGN_DIAGNOSTIC_RUN_STAGE
+
+
+def blocked_downstreams(run_stage: str | None) -> tuple[str, ...]:
+    """Downstream paths that are hard-blocked for a given run_stage."""
+
+    return (
+        DESIGN_DIAGNOSTIC_BLOCKED_DOWNSTREAMS
+        if is_design_diagnostic(run_stage)
+        else ()
+    )
 
 REQUIRED_RUN_META_FIELDS = (
     "contract_version",

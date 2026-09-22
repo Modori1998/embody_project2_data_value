@@ -53,6 +53,20 @@ UI_VOCABULARY: dict[str, VocabTerm] = {
     "EXPLORATORY_AUDIT": VocabTerm("EXPLORATORY_AUDIT", "探索审核", "Exploratory audit", "用于形成第一批 Human GT。"),
     "CALIBRATION": VocabTerm("CALIBRATION", "校准集运行", "Calibration", "正式 Calibration Set Run；具体用途由 calibration_role 标明，不等于已经调参。"),
     "EVALUATION": VocabTerm("EVALUATION", "独立评测", "Evaluation", "Final Config Freeze 后运行，不得继续调参。"),
+    "DESIGN_DIAGNOSTIC": VocabTerm(
+        "DESIGN_DIAGNOSTIC",
+        "设计诊断",
+        "Design diagnostic",
+        # Reviewer-facing tooltip. Deliberately free of any diagnostic-design
+        # token (see the blinding contract in trajectory_diagnostic_run.py).
+        "Design Diagnostic｜设计诊断，只用于设计机制盲审。可人工审核，但不得进入 Calibration Export、Canonical GT 或 Evaluation。",
+    ),
+    "DESIGN_DIAGNOSTIC_ONLY": VocabTerm(
+        "DESIGN_DIAGNOSTIC_ONLY",
+        "仅用于机制诊断",
+        "Design diagnostic only",
+        "该 Run 只用于设计机制诊断，不可作为 GT、不可用于阈值选择、不进入正式 Detector 输入。",
+    ),
     "EXPLORATORY_ONLY": VocabTerm("EXPLORATORY_ONLY", "探索性切分", "Exploratory only", "当前切分未校准、未冻结。"),
     "THRESHOLD_NOT_FROZEN": VocabTerm("THRESHOLD_NOT_FROZEN", "阈值未冻结", "Threshold not frozen", "当前 threshold 只是探索默认值。"),
     "NO_TUNING": VocabTerm("NO_TUNING", "禁止继续调参", "No tuning", "Evaluation Run 不得回灌 Calibration。"),

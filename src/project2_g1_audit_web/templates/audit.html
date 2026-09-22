@@ -59,6 +59,13 @@
     <p class="muted">禁止将本 Run 的人工结果继续用于 threshold / strategy tuning。</p>
   </aside>
   {% endif %}
+  {% if header.design_diagnostic_only %}
+  <aside class="banner" id="design-diagnostic-banner">
+    <strong>{{ display_code("DESIGN_DIAGNOSTIC") }}</strong>
+    · {{ display_code("DESIGN_DIAGNOSTIC_ONLY") }}
+    <p class="muted">本 Run 只用于设计机制诊断的人工盲审。不得作为 Canonical GT，不得进入 Calibration Export 或 Evaluation，不得用于阈值选择。</p>
+  </aside>
+  {% endif %}
 
   <nav class="filters">
     {% for name in filters %}

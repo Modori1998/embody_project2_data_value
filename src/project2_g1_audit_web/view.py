@@ -11,6 +11,7 @@ from urllib.parse import quote
 from .input import EpisodeRecord, load_csv_rows
 from .media import media_url
 from .reviews import EpisodeProgress, empty_progress
+from .contract import DESIGN_DIAGNOSTIC_RUN_STAGE
 
 QUEUE_FILTERS = (
     "ALL",
@@ -166,6 +167,7 @@ class RunHeader:
     contract_version: str
     exploratory_only: bool
     evaluation_no_tuning: bool
+    design_diagnostic_only: bool
     calibration_role: str
     calibration_config_role: str
     human_review_status: str
@@ -204,6 +206,7 @@ def run_header(loaded: dict[str, Any]) -> RunHeader:
         contract_version=str(meta.get("contract_version") or ""),
         exploratory_only=stage == "EXPLORATORY_AUDIT",
         evaluation_no_tuning=stage == "EVALUATION",
+        design_diagnostic_only=stage == DESIGN_DIAGNOSTIC_RUN_STAGE,
         calibration_role=str(meta.get("calibration_role") or ""),
         calibration_config_role=str(meta.get("calibration_config_role") or ""),
         human_review_status=str(meta.get("human_review_status") or ""),
