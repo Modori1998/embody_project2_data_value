@@ -167,6 +167,36 @@ Run 目录 `audit_blinding_run_folder()` 复核后仍为 **0 违规**。
 **证明方式**：把本次改动的 3 个文件临时还原到 `HEAD`（`git diff --numstat` 为空确认 pristine），
 单独运行这 6 个测试 → 同样 **6 FAILED**。随后从校验过的备份恢复（3 个文件 sha256 与改动前完全一致）。
 
+### 5.4 浏览器 DOM 行为验证（§8 媒体）
+
+Python 测试只能证明媒体标记**存在**，不能证明它**能用**。因此对真实渲染页面做了一次
+DOM 级行为验证：把线上页面载入 jsdom，在页面上下文里按顺序执行 `audit_sync.js` 与
+`unblinded_ui.js`，断言帧 ↔ 视频 ↔ 标记轴的实际行为。
+
+```
+UNBLINDED DOM BEHAVIOUR CHECK: 35/35 PASS
+```
+
+关键结论（真实 Run，`data/demo_211`）：
+
+| 断言 | 实测 |
+| --- | --- |
+| 进页面定位诊断帧（不是 frame 0） | `cur-frame = 169` |
+| 时间读数 = frame / fps | `cur-time = 8.45` s（fps = 20） |
+| 播放头位置 | `left = 47.606%`（= 169/355） |
+| 标记轴状态文案 | `frame 169 · demo_211-B0007, demo_211-C0008 · 8.45s` |
+| 诊断帧列被标记 + 选中 | `.ub-focus-col` + `.sync-on` 同时成立 |
+| `video.load()` 确实被调用 | jsdom 报 `HTMLMediaElement's load() method` 未实现 → 反证已调用 |
+| `loadedmetadata` 后完成 seek | `currentTime = 8.45` |
+| 帧导航 / 跳转 / 点标记列 / 回到诊断帧 | 168 → 10 → 4 → 169 全部正确 |
+| 条件字段随 decision 显隐 | `VALID` 全隐；`MISALIGNED` 显两项；`REDUNDANT` 仅显 reason_code；选项按 `data-for` 互斥启用 |
+| 配对页两 Arm **独立** seek | Arm A `169` (8.45 s)、Arm B `808` (40.40 s)，互不影响 |
+| 无意外 JS 异常 | 除 jsdom 未实现 `load()` 外零错误 |
+
+> `preload="none"` 下 `readyState` 恒为 0、`loadedmetadata` 永不自动触发，
+> 故 `video.load()` 是必需的；jsdom 的"未实现"报错恰好成为该调用的**正向证据**。
+> jsdom 不实现媒体解码，因此"能否真正播放"以 5.2 的代理路由实测（`video/mp4`, 167465 B）为准。
+
 ---
 
 ## 6. 复现
@@ -177,6 +207,10 @@ python -m unittest discover -s tests -t tests
 
 # 端到端验收（只读生产库）
 python outputs/_scratch_unblinded_acceptance.py
+
+# DOM 行为验证（需先起 Web；见 §5.4）
+NODE_PATH="$HOME/.workbuddy-ai/binaries/node/workspace/node_modules" \
+  node outputs/_scratch_dom_check.cjs
 
 # 启动 Web（本地 Owner 使用）
 py -3 scripts/run_g1_audit_web.py
@@ -261,3 +295,14 @@ Design Owner 反馈：**「新改的网页内容缺失，解盲没有相应的�
 `unblinded.py`（join / provenance / 中文解释）、`reviews.py`（append-only 写路径）、
 `audit.html`（除 §1 已交付的入口链接）均**未改动**。
 `audit_sync.js` 亦未改动——它原本就对缺失锚点做 null 守卫，可直接复用。
+
+### 8.6 验证
+
+| 层 | 手段 | 结果 |
+| --- | --- | --- |
+| 标记存在 | Python：`test_g1_unblinded_owner_review.py` | 57 passed（13 个媒体用例） |
+| 端到端 + 路由 + Run 目录只读 | Python：`_scratch_unblinded_acceptance.py` | 42/42 PASS |
+| **行为可用** | **jsdom：`_scratch_dom_check.cjs`** | **35/35 PASS**（见 §5.4） |
+| 不回归 | 全量 `unittest discover` | 413 tests，仍是同一批 6 个既存失败 |
+| 盲态未破 | `audit_blinding_run_folder()` | 0 违规 |
+| 首次盲审未破 | 生产 owner DB 直查 | 20 revisions / 20 episodes / 全 `DESIGN_OWNER` |
