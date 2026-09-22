@@ -760,18 +760,58 @@ class TestRealUnblindedJoin(unittest.TestCase):
         self.assertEqual(self.join.low_count, 10)
         self.assertEqual(self.join.high_count, 10)
 
+    # The four events the Design Owner adjudicated after unblinding, with the
+    # frozen first-blind decision and the resulting current decision. This
+    # mirrors ``05_owner_adjudication_result.md``; the first-blinded revision of
+    # each must survive as the earliest revision of the append-only history.
+    ADJUDICATED = {
+        "data/demo_211": ("VALID", "REDUNDANT"),
+        "data/demo_217": ("VALID", "REDUNDANT"),
+        "data/demo_220": ("VALID", "REDUNDANT"),
+        "data/demo_296": ("REDUNDANT", "VALID"),
+    }
+
     def test_real_first_blinded_reviews_are_preserved(self) -> None:
-        # The Design Owner's blinded pass must still be the first revision, and
-        # no owner unblinded revision may exist until the owner submits one.
+        # The Design Owner's blinded pass must remain the *earliest* revision of
+        # every event, whatever the owner later adjudicated. The adjudication
+        # appends revisions; it must never overwrite the blinded one.
         self.assertTrue(self.join.first_blind_review_preserved)
         for event in self.join.events:
             with self.subTest(episode=event.episode_id):
                 self.assertIsNotNone(event.first_blind_review_id)
-                self.assertEqual(event.revision_count, 1)
-                self.assertEqual(event.first_blind_review_id, event.current_review_id)
-                self.assertEqual(event.first_blind_decision, event.current_decision)
-                self.assertEqual(event.current_provenance, REVIEW_PROVENANCE_FIRST_BLIND)
-                self.assertFalse(event.has_owner_revision)
+                expected = self.ADJUDICATED.get(event.episode_id)
+                if expected is None:
+                    # Not adjudicated: the blinded revision is still the current
+                    # one, and no owner revision exists.
+                    self.assertEqual(event.revision_count, 1)
+                    self.assertEqual(event.first_blind_review_id, event.current_review_id)
+                    self.assertEqual(event.first_blind_decision, event.current_decision)
+                    self.assertEqual(
+                        event.current_provenance, REVIEW_PROVENANCE_FIRST_BLIND
+                    )
+                    self.assertFalse(event.has_owner_revision)
+                else:
+                    first_decision, current_decision = expected
+                    self.assertGreater(event.revision_count, 1)
+                    self.assertNotEqual(
+                        event.first_blind_review_id, event.current_review_id
+                    )
+                    self.assertEqual(event.first_blind_decision, first_decision)
+                    self.assertEqual(event.current_decision, current_decision)
+                    self.assertEqual(
+                        event.current_provenance,
+                        REVIEW_PROVENANCE_OWNER_UNBLINDED,
+                    )
+                    self.assertTrue(event.has_owner_revision)
+
+    def test_real_owner_adjudicated_set_matches_the_frozen_record(self) -> None:
+        # Exactly the four recorded events carry an owner revision. If the owner
+        # adjudicates more, this freeze must be re-issued rather than silently
+        # drifting.
+        adjudicated = {
+            event.episode_id for event in self.join.events if event.has_owner_revision
+        }
+        self.assertEqual(adjudicated, set(self.ADJUDICATED))
 
     def test_real_events_are_all_in_the_frozen_quartile_arms(self) -> None:
         for event in self.join.events:

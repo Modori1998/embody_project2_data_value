@@ -462,5 +462,53 @@ NO PROTOCOL PATCH
 NO MASTER / ROADMAP UPDATE
 ```
 
-本目录**不**给出 C12 supported / not supported 的结论。
-人工审核完成后才能进入 `REDUNDANT_RATE_ARM_A vs REDUNDANT_RATE_ARM_B` 比较。
+本目录在**设计阶段**不给出 C12 supported / not supported 的结论；该结论只能在
+人工审核完成后，由 `REDUNDANT_RATE_ARM_A vs REDUNDANT_RATE_ARM_B` 比较给出。
+该审核已完成，结果见 §17。
+
+---
+
+## 17. Review Result & Frozen History
+
+人工审核已完成，两套读数与完整追加历史已冻结：
+
+| 文件 | 角色 |
+| --- | --- |
+| `05_review_history.csv` | 20 个 boundary 的**完整** append-only 审核历史（保留每一个 revision） |
+| `05_owner_adjudication_result.md` | 官方结果记录（blinded 与 owner-adjudicated 两套读数 + 冻结门逐项判定） |
+
+关键读数：
+
+```text
+BLINDED_GATE_RESULT           = NOT_SUPPORTED_AS_GENERAL_ACCEPTANCE_COMPONENT
+                                (LOW 1/10 = 10%, HIGH 1/10 = 10%)
+OWNER_ADJUDICATED_GATE_RESULT = SUPPORTED_FOR_PROTOCOL_PATCH_REVIEW
+                                (LOW 4/10 = 40%, HIGH 0/10 = 0%)
+```
+
+`05_review_history.csv` 由以下脚本生成，可确定性重建：
+
+```text
+python scripts/export_g1_p3_diagnostic_review_history.py
+python scripts/export_g1_p3_diagnostic_review_history.py --check   # 只校验不写
+```
+
+冻结约定：
+
+```text
+SORT_ORDER   = diagnostic_event_id ASC, review_id ASC
+ENCODING     = UTF-8 (no BOM), LF
+COLUMN_ORDER = diagnostic_event_id, episode_id, boundary_id, event_frame,
+               arm, pair_id, P12, C12,
+               review_id, reviewer, reviewed_at,
+               human_decision, reason_code, corrected_frame, comment, review_phase
+PROVENANCE   = reviewer=DESIGN_OWNER           -> FIRST_BLINDED_REVIEW
+               reviewer=DESIGN_OWNER_UNBLINDED  -> OWNER_UNBLINDED_ADJUDICATION
+```
+
+`review_phase` 只由存储的 reviewer 身份推导，**不**由时间戳猜测；未登记的
+reviewer 直接报错而非静默导出。`arm` / `pair_id` / `P12` / `C12` 来自
+`02_selection_internal.csv`，**不**来自人工审核数据库。
+
+本目录仍**不**构成 threshold、detector 或 evaluation 结论；详见
+`05_owner_adjudication_result.md` §8 Interpretation Boundary。
