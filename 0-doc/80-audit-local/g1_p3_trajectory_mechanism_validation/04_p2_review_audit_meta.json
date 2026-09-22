@@ -1,6 +1,6 @@
 {
   "export_contract": "P2_G1_REVIEW_AUDIT_TABLE_V1",
-  "generated_at": "2026-09-22T16:32:15.369267+08:00",
+  "generated_at": "2026-09-22T20:39:30.170714+08:00",
   "scope": {
     "tabs_included": [
       "P2"
@@ -18,7 +18,7 @@
     "gate_verdict_computed": false
   },
   "source_owner_db": "outputs/g1_audit_web/g1_audit_web_owner.sqlite3",
-  "source_owner_db_sha256": "8e6f47657d4987a314ff7a5b50c8bbc8ec443e60711834ee579d5cdf68e01b6b",
+  "source_owner_db_sha256": "83e32b075f6d94ca117ad930a563e1152bb446174a1a84e7870a774978a39430",
   "source_registry": "outputs/g1_audit_web/g1_audit_run_registry.json",
   "source_registry_sha256": "c39dc177eef21848c7ca7d20591054388f640c01f4869997970416d183670b7c",
   "table_encoding": "utf-8-sig",
@@ -27,11 +27,11 @@
   "episode_count": 33,
   "run_count": 4,
   "decision_counts": {
-    "REDUNDANT": 12,
-    "VALID": 77
+    "REDUNDANT": 14,
+    "VALID": 75
   },
   "reason_code_counts": {
-    "REDUNDANT_DIRECTION_JITTER": 5,
+    "REDUNDANT_DIRECTION_JITTER": 7,
     "REDUNDANT_SHORT_PAUSE": 7
   },
   "per_run": [
@@ -104,8 +104,8 @@
       "reviewed_rows": 20,
       "episodes_reviewed": 20,
       "decision_counts": {
-        "REDUNDANT": 2,
-        "VALID": 18
+        "REDUNDANT": 4,
+        "VALID": 16
       },
       "boundary_table_columns": [
         "boundary_id",
@@ -188,6 +188,6 @@
   ],
   "reviews_missing_boundary_context": [],
   "files_sha256": {
-    "p2_review_audit.csv": "ceaa5294de1dad9acc9bae6a38fcac57764fd1604ef5c799efc8e1044acee8f5"
+    "p2_review_audit.csv": "173f12bfa45f38b61b8bb3c2a08ec0c62b77b8ce384bcbe96067e131cb3397ed"
   }
 }
