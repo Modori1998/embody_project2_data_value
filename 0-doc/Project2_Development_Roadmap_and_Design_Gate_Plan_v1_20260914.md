@@ -11,6 +11,7 @@
 | 2026-09-14 | **G1-C LENGTH GUARD & MERGE FREEZE** | 冻结 Event-aware Merge：Boundary Consolidation 与 Segment Merge 分离；confirmed gripper transition 受 Hard Boundary Protection；min length 只触发 review/merge；short pause 仅在前后 gripper 与 motion compatible 时桥接；max length 首版只做 audit，不做 fixed-window forced split。 | 用户 Design Owner + ChatGPT |
 | 2026-09-14 | **G1-D HUMAN CALIBRATION LOOP FREEZE** | 冻结 Boundary-level Human Review 为主标注粒度；Episode-level 仅作自动聚合。审查必须提供 video path、完整 Formal Signal Set plot、Candidate/Suppressed/Final Boundary 与 reason。人工标签进入 threshold/strategy calibration loop；Calibration Set 与 Independent Evaluation Set 严格隔离。 | 用户 Design Owner + ChatGPT |
 | 2026-09-14 | **G1 IMPLEMENTATION REBASELINE** | G1-A～D 架构级设计已冻结。G1 状态从“等待设计讨论”切换为 `DESIGN_FROZEN / IMPLEMENTATION_READY / OPEN_FOR_CALIBRATION`。Roadmap 将 G1 实施拆为 4 个带验收点的 phase；G2 Design 可并行讨论，但 G2 Formal implementation 仍等待 G1 Final Config / Evaluation 关闭。 | 用户 Design Owner + ChatGPT |
+| 2026-09-23 | **G1-P3 CALIBRATION PROTOCOL v1.2 FREEZE** | 基于 Stage A0、P12/C12 operationalization、20-event Design Diagnostic 与 Owner Adjudication，冻结当前 Calibration Search：保持 baseline Direction Candidate Generation，不再机械搜索 direction threshold × persistence；Stage A1 搜索 P12-only，Stage A2 仅把 C12 作为 conditional strategy candidate，随后进入既有 Stage B consolidation / Stage C regression。20-event Diagnostic Set 永久禁止参与 threshold selection / Calibration GT / Evaluation。 | 用户 Design Owner + ChatGPT |
 
 ---
 
@@ -38,6 +39,8 @@ G0 = CLOSED
 G1_DESIGN = FROZEN
 G1_IMPLEMENTATION = READY
 G1_GATE = OPEN_FOR_CALIBRATION
+G1_P3_CALIBRATION_PROTOCOL = FROZEN_v1.2
+G1_P3_NEXT_GATE = STAGE_A1_P12_ONLY_CALIBRATION_IMPLEMENTATION
 G1_FINAL_CONFIG = NOT_FROZEN
 G2_DESIGN = MAY_PROCEED_IN_PARALLEL
 G2_FORMAL_IMPLEMENTATION = BLOCKED_BY_G1_CLOSE
@@ -376,39 +379,44 @@ error reason distribution
 
 Boundary matching 使用 `Tolerance Window（容忍时间窗）`；最终 frame tolerance 仍为 `DATA_CALIBRATION_PENDING`。
 
-#### Calibration Search
+#### Calibration Search — v1.2 Active Override
 
-人工 GT 必须能直接进入：
+当前 G1-P3 Calibration Search 以：
 
-```text
-Numeric Threshold Search
-+ limited Strategy Search
-```
+`0-doc/10-design-review/Project2_G1_P3_Calibration_Protocol_FROZEN_v1_2_PATCH_20260923.md`
 
-首版 numeric search 至少允许：
+为有效协议。它覆盖本 Roadmap 早期的通用 numeric-search 列表；未被 v1.2 明确覆盖的 matching、GT、guardrail、Stage B/C、Evaluation 隔离继续沿用 v1.0/v1.1。
 
-```text
-motion_speed_threshold
-motion_persistence
-direction_change_threshold
-direction_persistence
-pause_bridge_duration
-boundary_consolidation_window
-min_segment_length
-```
-
-搜索采用可解释的 coarse → fine 方式，不要求复杂 optimizer。
-
-有限 Strategy Search 只能比较已冻结设计边界内的组合，例如：
+当前执行顺序冻结为：
 
 ```text
-A: move/stop + gripper
-B: A + direction
-C: B + pause bridging
-D: C + boundary consolidation
+Baseline Direction Candidate Generation
+(direction evidence + persistence; 当前 baseline 参数固定，不作为本轮主搜索轴)
+        ↓
+Stage A1 — P12-only Candidate Acceptance
+        ↓
+Stage A2 — P12 + Conditional C12 Tail Guard
+             C12 只有在相对 P12-only 有增量收益且 guardrail 全通过时才可晋级
+        ↓
+Stage B — Limited Consolidation {8,10,12}（仅在仍有必要时）
+        ↓
+Stage C — Regression / Guardrail
+        ↓
+Design Owner Config Freeze
+        ↓
+Independent Evaluation
 ```
 
-不得通过 search 静默引入 RGB/object GT/learned segmentation model。
+其中：
+
+- **P12 — Sustained Post-motion Context｜持续后段运动上下文**：进入正式 Calibration search component；
+- **C12 — Trajectory Coherence｜轨迹一致性**：仅为 `CONDITIONAL_STRATEGY_CANDIDATE`，不得因 Owner-adjudicated diagnostic result 直接升级成 unconditional hard gate；
+- 旧 `direction_change_threshold × direction_persistence_frames` 路线已由 Stage A0 判定为缺乏可解释分离力，本轮保持 baseline，不再机械二维扫参；
+- 20-event `DESIGN_DIAGNOSTIC_SET` 只提供机制证据，`MUST_NOT_BE_USED_FOR_THRESHOLD_SELECTION = YES`；
+- numeric threshold 只能使用既有 12-Episode Calibration GT 选择；
+- Evaluation Set 继续完全隔离，Config Freeze 前不得触碰。
+
+具体 operational definition、bounded lookahead、edge fallback、threshold candidate construction 与 C12 promotion gate 以 v1.2 Patch 为准。
 
 #### Error Attribution → Strategy Feedback
 

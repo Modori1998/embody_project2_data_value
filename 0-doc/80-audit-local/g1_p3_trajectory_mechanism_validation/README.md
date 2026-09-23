@@ -10,7 +10,7 @@ SOURCE_OF_TRUTH = GITHUB_MAIN
 MUST_NOT_ENTER_CALIBRATION_GT            = YES
 MUST_NOT_ENTER_EVALUATION_GT             = YES
 MUST_NOT_BE_USED_FOR_THRESHOLD_SELECTION = YES
-NO HUMAN LABEL YET                       = YES
+HUMAN_REVIEW_STATUS                     = COMPLETED_WITH_OWNER_ADJUDICATION
 FORMAL_DETECTOR_INPUT                    = NO
 ```
 
@@ -42,7 +42,9 @@ Design §2 的唯一主问题：
 PRIMARY_HYPOTHESIS = LOW_C12_ENRICHES_REDUNDANT_GIVEN_HIGH_P12
 ```
 
-本目录**没有任何人工标签**，也不包含任何 review 结果。
+本目录中的 `01_candidate_pool.csv / 02_selection_internal.csv / 03_selection_blinded.csv`
+保持**无人工标签**；人工审核与 Owner Adjudication 已完成，其 current-state 与完整
+append-only history 分别冻结在 `04_*` 与 `05_*` 证据文件中。
 
 ---
 
@@ -440,7 +442,7 @@ python -m unittest tests.test_g1_trajectory_mechanism_diagnostic_set
 
 ---
 
-## 16. Non-Scope
+## 16. Build-Time Non-Scope / Current Restrictions
 
 ```text
 NO DETECTOR MODIFICATION
@@ -454,8 +456,9 @@ NO CALIBRATION VALID_FLOOR USAGE
 NO CLASSIFIER / NO DECISION TREE / NO AUTO FEATURE SEARCH
 NO PRIVILEGED SIMULATOR STATE
 NO WEB SQLITE AS CANDIDATE SOURCE
-NO HUMAN LABEL
-NO HUMAN REVIEW EXECUTED
+SELECTION_ARTIFACTS_01_03_HAVE_NO_HUMAN_LABEL
+HUMAN_REVIEW_EXECUTED = YES
+OWNER_ADJUDICATION_FROZEN_IN_05 = YES
 NO CALIBRATION GT CHANGE
 NO EVALUATION GT CHANGE
 NO PROTOCOL PATCH
