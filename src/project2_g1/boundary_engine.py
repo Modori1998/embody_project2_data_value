@@ -10,7 +10,7 @@ DATA_CALIBRATION_PENDING. Outputs are Unlabeled Behavior Segments.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 
 import numpy as np
 
@@ -37,6 +37,7 @@ DECISION_MERGE_LEFT = "MERGE_LEFT"
 DECISION_MERGE_RIGHT = "MERGE_RIGHT"
 DECISION_RETAIN_HARD = "RETAIN_HARD"
 DECISION_REVIEW_REQUIRED = "REVIEW_REQUIRED"
+DECISION_REJECT_ACCEPTANCE = "REJECT_ACCEPTANCE"
 
 FLAG_MICRO_INTERACTION = "MICRO_INTERACTION"
 FLAG_REVIEW_REQUIRED = "REVIEW_REQUIRED"
@@ -1016,7 +1017,16 @@ def apply_max_length_audit(
         # Audit only: no forced split.
 
 
-def run_boundary_engine(signals: FormalSignals, config: G1P2Config) -> EngineResult:
+CandidateAcceptance = Callable[
+    [list[BoundaryCandidate], dict[str, BoundaryDecision], FormalSignals], None
+]
+
+
+def run_boundary_engine(
+    signals: FormalSignals,
+    config: G1P2Config,
+    candidate_acceptance: CandidateAcceptance | None = None,
+) -> EngineResult:
     motion_state = binarize_motion_state(
         signals.translation_speed, config.motion_speed_threshold
     )
@@ -1044,6 +1054,8 @@ def run_boundary_engine(signals: FormalSignals, config: G1P2Config) -> EngineRes
         )
 
     decisions = debounce_candidates(candidates, config)
+    if candidate_acceptance is not None:
+        candidate_acceptance(candidates, decisions, signals)
     attach_supporting_evidence(candidates, signals, config)
     events = consolidate_candidates(candidates, decisions, config)
     pause_bridge_events(events, decisions, signals, gripper_state, config)
