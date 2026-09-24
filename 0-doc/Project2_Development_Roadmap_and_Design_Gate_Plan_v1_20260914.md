@@ -12,6 +12,7 @@
 | 2026-09-14 | **G1-D HUMAN CALIBRATION LOOP FREEZE** | 冻结 Boundary-level Human Review 为主标注粒度；Episode-level 仅作自动聚合。审查必须提供 video path、完整 Formal Signal Set plot、Candidate/Suppressed/Final Boundary 与 reason。人工标签进入 threshold/strategy calibration loop；Calibration Set 与 Independent Evaluation Set 严格隔离。 | 用户 Design Owner + ChatGPT |
 | 2026-09-14 | **G1 IMPLEMENTATION REBASELINE** | G1-A～D 架构级设计已冻结。G1 状态从“等待设计讨论”切换为 `DESIGN_FROZEN / IMPLEMENTATION_READY / OPEN_FOR_CALIBRATION`。Roadmap 将 G1 实施拆为 4 个带验收点的 phase；G2 Design 可并行讨论，但 G2 Formal implementation 仍等待 G1 Final Config / Evaluation 关闭。 | 用户 Design Owner + ChatGPT |
 | 2026-09-23 | **G1-P3 CALIBRATION PROTOCOL v1.2 FREEZE** | 基于 Stage A0、P12/C12 operationalization、20-event Design Diagnostic 与 Owner Adjudication，冻结当前 Calibration Search：保持 baseline Direction Candidate Generation，不再机械搜索 direction threshold × persistence；Stage A1 搜索 P12-only，Stage A2 仅把 C12 作为 conditional strategy candidate，随后进入既有 Stage B consolidation / Stage C regression。20-event Diagnostic Set 永久禁止参与 threshold selection / Calibration GT / Evaluation。 | 用户 Design Owner + ChatGPT |
+| 2026-09-24 | **G1-P3 STAGE A OWNER SELECTION / STAGE B GATE OPEN** | Design Owner 选择 `A1-007-C002` 作为进入后续校准阶段的 Stage A Candidate Acceptance 配置：`tau_P12=0.04758563666765155`、`tau_C12=0.690169167642685`。Residual FP 复核维持原 Human GT：`demo_242@60` 为 Acceptance residual，不作为 Stage B 优化目标；`demo_255@135` 与 `GRIPPER_TRANSITION@125` 属同一 physical event，确认存在 under-consolidation，故打开 Stage B，只允许固定 A1-007-C002 后比较 `boundary_consolidation_window ∈ {8,10,12}`。Final Config 仍未冻结，Evaluation 仍禁止触碰。 | 用户 Design Owner + ChatGPT |
 
 ---
 
@@ -40,7 +41,9 @@ G1_DESIGN = FROZEN
 G1_IMPLEMENTATION = READY
 G1_GATE = OPEN_FOR_CALIBRATION
 G1_P3_CALIBRATION_PROTOCOL = FROZEN_v1.2
-G1_P3_NEXT_GATE = STAGE_A1_P12_ONLY_CALIBRATION_IMPLEMENTATION
+G1_P3_STAGE_A = OWNER_SELECTED_A1_007_C002
+G1_P3_STAGE_B_GATE = OPEN
+G1_P3_NEXT_GATE = STAGE_B_LIMITED_CONSOLIDATION_IMPLEMENTATION
 G1_FINAL_CONFIG = NOT_FROZEN
 G2_DESIGN = MAY_PROCEED_IN_PARALLEL
 G2_FORMAL_IMPLEMENTATION = BLOCKED_BY_G1_CLOSE
@@ -398,7 +401,13 @@ Stage A1 — P12-only Candidate Acceptance
 Stage A2 — P12 + Conditional C12 Tail Guard
              C12 只有在相对 P12-only 有增量收益且 guardrail 全通过时才可晋级
         ↓
-Stage B — Limited Consolidation {8,10,12}（仅在仍有必要时）
+Design Owner Stage A Selection
+A1-007-C002
+tau_P12 = 0.04758563666765155
+tau_C12 = 0.690169167642685
+        ↓
+Stage B — Limited Consolidation {8,10,12}
+             GATE = OPEN；固定 A1-007-C002，仅搜索 consolidation window
         ↓
 Stage C — Regression / Guardrail
         ↓
