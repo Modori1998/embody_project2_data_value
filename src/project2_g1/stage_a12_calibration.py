@@ -162,7 +162,10 @@ def score_results(results: Sequence[Any], snapshot: Mapping[str, Any]) -> dict[s
             "Gripper_recall":rec("GRIPPER_PRIMARY"),"Merged_cluster_recall":rec("MERGED_GRIPPER_CLUSTER"),
             "Seed_valid_direction_recall":rec("VALID_DIRECTION_PRIMARY","SEED"),
             "Fresh_valid_direction_recall":rec("VALID_DIRECTION_PRIMARY","FRESH"),
+            "Localization_mean":float(np.mean(errors)) if errors else None,
+            "Localization_median":float(np.median(errors)) if errors else None,
             "Localization_p90":float(np.percentile(errors,90,method="inverted_cdf")) if errors else None,
+            "Localization_max":max(errors) if errors else None,
             "fragmentation_1_2_ratio":frag["1_2_frame_segment_ratio"],"segments_per_episode":frag["segments_per_episode"]}
 
 
