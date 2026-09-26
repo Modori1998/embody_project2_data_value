@@ -13,6 +13,7 @@
 | 2026-09-14 | **G1 IMPLEMENTATION REBASELINE** | G1-A～D 架构级设计已冻结。G1 状态从“等待设计讨论”切换为 `DESIGN_FROZEN / IMPLEMENTATION_READY / OPEN_FOR_CALIBRATION`。Roadmap 将 G1 实施拆为 4 个带验收点的 phase；G2 Design 可并行讨论，但 G2 Formal implementation 仍等待 G1 Final Config / Evaluation 关闭。 | 用户 Design Owner + ChatGPT |
 | 2026-09-23 | **G1-P3 CALIBRATION PROTOCOL v1.2 FREEZE** | 基于 Stage A0、P12/C12 operationalization、20-event Design Diagnostic 与 Owner Adjudication，冻结当前 Calibration Search：保持 baseline Direction Candidate Generation，不再机械搜索 direction threshold × persistence；Stage A1 搜索 P12-only，Stage A2 仅把 C12 作为 conditional strategy candidate，随后进入既有 Stage B consolidation / Stage C regression。20-event Diagnostic Set 永久禁止参与 threshold selection / Calibration GT / Evaluation。 | 用户 Design Owner + ChatGPT |
 | 2026-09-24 | **G1-P3 STAGE A OWNER SELECTION / STAGE B GATE OPEN** | Design Owner 选择 `A1-007-C002` 作为进入后续校准阶段的 Stage A Candidate Acceptance 配置：`tau_P12=0.04758563666765155`、`tau_C12=0.690169167642685`。Residual FP 复核维持原 Human GT：`demo_242@60` 为 Acceptance residual，不作为 Stage B 优化目标；`demo_255@135` 与 `GRIPPER_TRANSITION@125` 属同一 physical event，确认存在 under-consolidation，故打开 Stage B，只允许固定 A1-007-C002 后比较 `boundary_consolidation_window ∈ {8,10,12}`。Final Config 仍未冻结，Evaluation 仍禁止触碰。 | 用户 Design Owner + ChatGPT |
+| 2026-09-26 | **G1-P3 STAGE B OWNER DECISION / STAGE C GATE OPEN** | Stage B 单因素比较已完成：window=10/12 均能修复 `demo_255@125/@135` 的 under-consolidation，但分别引入 4/6 个 FN、Fresh valid-Direction recall 退化及 `NEW_UNANCHORED_FP=1`，违反 Frozen HARD guardrails；`STAGE_B_SAFE_CANDIDATES=[]`。Design Owner 因此拒绝 10/12，不把 window=8 记为 Stage B 优化胜者，而是 `NO_SAFE_INCREMENTAL_CHANGE` 后保留 parent window=8 进入 Stage C。`demo_255@135` 保留为已知 residual under-consolidation；Stage C 只做 regression，不再新增搜索轴。 | 用户 Design Owner + ChatGPT |
 
 ---
 
@@ -42,8 +43,10 @@ G1_IMPLEMENTATION = READY
 G1_GATE = OPEN_FOR_CALIBRATION
 G1_P3_CALIBRATION_PROTOCOL = FROZEN_v1.2
 G1_P3_STAGE_A = OWNER_SELECTED_A1_007_C002
-G1_P3_STAGE_B_GATE = OPEN
-G1_P3_NEXT_GATE = STAGE_B_LIMITED_CONSOLIDATION_IMPLEMENTATION
+G1_P3_STAGE_B = CLOSED_NO_SAFE_INCREMENTAL_CHANGE
+G1_P3_STAGE_B_EFFECTIVE_WINDOW = RETAIN_PARENT_8
+G1_P3_STAGE_C_GATE = OPEN
+G1_P3_NEXT_GATE = STAGE_C_REGRESSION_IMPLEMENTATION
 G1_FINAL_CONFIG = NOT_FROZEN
 G2_DESIGN = MAY_PROCEED_IN_PARALLEL
 G2_FORMAL_IMPLEMENTATION = BLOCKED_BY_G1_CLOSE
@@ -407,9 +410,12 @@ tau_P12 = 0.04758563666765155
 tau_C12 = 0.690169167642685
         ↓
 Stage B — Limited Consolidation {8,10,12}
-             GATE = OPEN；固定 A1-007-C002，仅搜索 consolidation window
+             EXECUTED；10/12 均违反 HARD guardrails
+             OWNER DECISION = NO_SAFE_INCREMENTAL_CHANGE
+             RETAIN parent window=8；不把 residual FP 当作扩大全局 window 的理由
         ↓
 Stage C — Regression / Guardrail
+             GATE = OPEN；只做回归，不新增搜索轴
         ↓
 Design Owner Config Freeze
         ↓
@@ -982,21 +988,26 @@ CODEX_ALLOWED_SCOPE
 # 14. 当前下一步
 
 ```text
-NEXT = P2-S1A / G1-P1 SIGNAL CONTRACT + AUDIT HARNESS
+NEXT = P2-S1C / G1-P3 STAGE C REGRESSION ONLY
 G1_DESIGN = FROZEN
 G1_GATE = OPEN_FOR_CALIBRATION
+G1_P3_STAGE_A = OWNER_SELECTED_A1_007_C002
+G1_P3_STAGE_B = CLOSED_NO_SAFE_INCREMENTAL_CHANGE
+G1_P3_STAGE_B_EFFECTIVE_WINDOW = RETAIN_PARENT_8
+G1_P3_STAGE_C_GATE = OPEN
+G1_FINAL_CONFIG = NOT_FROZEN
 G2_DESIGN = MAY_PROCEED_IN_PARALLEL
 ```
 
-当前不再继续讨论 G1 架构级 signal/boundary/length/review 设计；这些已冻结。优先执行：
+当前 G1 不再继续新增 Calibration 搜索轴。Stage A 已选定 `A1-007-C002`；Stage B 已证明把全局 `boundary_consolidation_window` 扩大到 10/12 会产生不可接受的 over-consolidation，因此保留 parent window=8。
+
+优先执行：
 
 ```text
-P2-S1A Signal Contract + Audit Harness
-→ USER VERIFY signal/time/plot
-→ P2-S1B Boundary Engine + Postprocess
-→ USER VERIFY audit package
-→ P2-S1C Boundary-level Human Calibration + Search
-→ Final Config Freeze
+P2-S1C Stage C Regression Only
+→ Seed/Fresh guardrail + FN/FP + fragmentation + localization + edge-context audit
+→ Design Owner Final Calibration Config Review
+→ CALIBRATION_CONFIG_FROZEN = YES（仅在 Owner 明确确认后）
 → P2-S1D Independent Evaluation
 → G1 Close
 ```
