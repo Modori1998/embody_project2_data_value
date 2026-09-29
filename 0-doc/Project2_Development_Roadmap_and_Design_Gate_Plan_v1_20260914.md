@@ -16,6 +16,7 @@
 | 2026-09-26 | **G1-P3 STAGE B OWNER DECISION / STAGE C GATE OPEN** | Stage B 单因素比较已完成：window=10/12 均能修复 `demo_255@125/@135` 的 under-consolidation，但分别引入 4/6 个 FN、Fresh valid-Direction recall 退化及 `NEW_UNANCHORED_FP=1`，违反 Frozen HARD guardrails；`STAGE_B_SAFE_CANDIDATES=[]`。Design Owner 因此拒绝 10/12，不把 window=8 记为 Stage B 优化胜者，而是 `NO_SAFE_INCREMENTAL_CHANGE` 后保留 parent window=8 进入 Stage C。`demo_255@135` 保留为已知 residual under-consolidation；Stage C 只做 regression，不再新增搜索轴。 | 用户 Design Owner + ChatGPT |
 | 2026-09-27 | **G1-P3 FINAL CALIBRATION CONFIG FREEZE / P2-S1D GATE OPEN** | Stage C Regression 通过：固定 `A1-007-C002`、`tau_P12=0.04758563666765155`、`tau_C12=0.690169167642685`、retained parent `boundary_consolidation_window=8`，复现 `TP/FP/FN=56/2/0`、Recall=1.0、全部 HARD guardrail PASS、`NEW_UNANCHORED_FP=0`、deterministic replay PASS、protected artifact identity PASS。Design Owner 明确确认冻结；两个已知 residual 保留，不再使用 Calibration Set 调参。G1 Final Config 进入 `FROZEN_v1`，下一 Gate 为 P2-S1D Independent Evaluation。 | 用户 Design Owner + ChatGPT |
 | 2026-09-27 | **P2-S1D EVALUATION MANIFEST GATE CLARIFICATION** | 依据 Frozen Calibration Protocol v1 §8.4 / §21，Evaluation Episode 数量与具体 ID 尚未被冻结；因此正式 Independent Evaluation 运行前必须先完成 Evaluation Manifest 设计与 Owner Freeze。此 Gate 不改变已冻结 Final Config，仅防止 Implementation 层自行选择 Evaluation episode 或提前触碰 Evaluation GT。 | ChatGPT（按 Frozen Protocol 落地） |
+| 2026-09-29 | **G1-P4 INDEPENDENT EVALUATION MANIFEST FROZEN v1** | Design Owner 选择 deterministic Medium proposal，正式冻结 24 条 held-out Evaluation episodes。Preparation audit：300 total、32 historical excluded、268 eligible、0 unreadable；Disjointness PASS、Leakage PASS；选择未使用 human label、Evaluation GT、Frozen Config score、FP/FN 或结果型 cherry-pick。`FORMAL_EVALUATION_RUN_ALLOWED=YES`，下一 Gate 为正式 Evaluation Audit Run + Human Review。 | 用户 Design Owner + ChatGPT |
 
 ---
 
@@ -51,8 +52,10 @@ G1_P3_STAGE_C = CLOSED_PASS
 G1_CALIBRATION_CONFIG = FROZEN_v1
 G1_FINAL_CONFIG = FROZEN_FOR_INDEPENDENT_EVALUATION
 G1_P4_GATE = OPEN
-G1_P4_EVALUATION_MANIFEST = NOT_FROZEN
-G1_P3_NEXT_GATE = P2_S1D_EVALUATION_MANIFEST_PREPARATION_AND_OWNER_FREEZE
+G1_P4_EVALUATION_MANIFEST = FROZEN_v1
+G1_P4_EVALUATION_EPISODE_COUNT = 24
+G1_P4_FORMAL_EVALUATION_RUN_ALLOWED = YES
+G1_P3_NEXT_GATE = P2_S1D_FORMAL_EVALUATION_AUDIT_RUN_AND_HUMAN_REVIEW
 G2_DESIGN = MAY_PROCEED_IN_PARALLEL
 G2_FORMAL_IMPLEMENTATION = BLOCKED_BY_G1_CLOSE
 P1_FAILURE_QUERY = OPTIONAL
@@ -995,7 +998,7 @@ CODEX_ALLOWED_SCOPE
 # 14. 当前下一步
 
 ```text
-NEXT = P2-S1D / G1-P4 EVALUATION MANIFEST PREPARATION + OWNER FREEZE
+NEXT = P2-S1D / G1-P4 FORMAL EVALUATION AUDIT RUN + HUMAN REVIEW
 G1_DESIGN = FROZEN
 G1_GATE = OPEN_FOR_INDEPENDENT_EVALUATION
 G1_P3_STAGE_A = CLOSED_OWNER_SELECTED_A1_007_C002
@@ -1013,13 +1016,12 @@ G2_DESIGN = MAY_PROCEED_IN_PARALLEL
 优先执行：
 
 ```text
-P2-S1D Evaluation Manifest Preparation
-→ 只从未用于 Exploratory / Calibration / Diagnostic 的 episode 池生成候选
-→ 不查看 Human GT / Evaluation scoring
-→ Design Owner 冻结 Evaluation Manifest（episode 数量 + IDs + provenance）
-→ 才允许首次正式 Independent Evaluation
-→ 使用 Frozen Config 一次性运行正式 pipeline
-→ 输出 Boundary-level Evaluation + Audit Package + Failure Cases
+P2-S1D Formal Evaluation Audit Run
+→ 只使用 FROZEN_v1 的 24 条 Evaluation episode
+→ 使用 Frozen Config 一次性生成正式 EVALUATION segmentation / audit package
+→ 启动 Human Evaluation Audit，生成 Evaluation GT
+→ 按 Frozen matching/tolerance 正式计分
+→ 输出 Boundary-level Evaluation + Failure Cases
 → 禁止基于 Evaluation 结果调参
 → Design Owner G1 Evaluation Review
 → G1 Close（仅在 Evaluation review 通过后）
