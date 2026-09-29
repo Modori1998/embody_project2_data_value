@@ -173,6 +173,9 @@ class RunHeader:
     human_review_status: str
     search_gate: str
     parameter_search_executed: bool
+    evaluation_manifest_version: str
+    frozen_config_identity: str
+    must_not_feed_back_to_calibration: bool
 
 
 def encode_episode_id(episode_id: str) -> str:
@@ -212,6 +215,9 @@ def run_header(loaded: dict[str, Any]) -> RunHeader:
         human_review_status=str(meta.get("human_review_status") or ""),
         search_gate=str(meta.get("search_gate") or ""),
         parameter_search_executed=bool(meta.get("parameter_search_executed", False)),
+        evaluation_manifest_version=str(meta.get("evaluation_manifest_version") or ""),
+        frozen_config_identity=str(meta.get("frozen_config_identity") or ""),
+        must_not_feed_back_to_calibration=bool(meta.get("must_not_feed_back_to_calibration", False)),
     )
 
 

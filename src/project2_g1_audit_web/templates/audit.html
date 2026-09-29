@@ -35,6 +35,11 @@
       <div><dt>Human Review</dt><dd>{{ display_code(header.human_review_status) }}</dd></div>
       <div><dt>Search Gate</dt><dd>{{ display_code(header.search_gate) }}</dd></div>
       {% endif %}
+      {% if header.run_stage == "EVALUATION" %}
+      <div><dt>SET_ROLE</dt><dd>EVALUATION</dd></div>
+      <div><dt>MANIFEST</dt><dd id="hdr-evaluation-manifest">{{ header.evaluation_manifest_version }}</dd></div>
+      <div><dt>FROZEN_CONFIG</dt><dd id="hdr-frozen-config">{{ header.frozen_config_identity }}</dd></div>
+      {% endif %}
     </dl>
   </header>
 
@@ -54,7 +59,10 @@
   {% endif %}
   {% if header.evaluation_no_tuning %}
   <aside class="banner eval" id="evaluation-banner">
-    <strong>{{ display_code("EVALUATION") }}</strong>
+    <strong>RUN_STAGE = EVALUATION · SET_ROLE = EVALUATION</strong>
+    · MANIFEST = {{ header.evaluation_manifest_version }}
+    · FROZEN_CONFIG = {{ header.frozen_config_identity }}
+    <p><strong>MUST_NOT_FEED_BACK_TO_CALIBRATION</strong></p>
     · {{ display_code("NO_TUNING") }}
     <p class="muted">禁止将本 Run 的人工结果继续用于 threshold / strategy tuning。</p>
   </aside>
