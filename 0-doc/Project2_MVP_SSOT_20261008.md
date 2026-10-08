@@ -867,7 +867,7 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 
 NEXT ACTION:
 
-**First locally validate the small M2 pre-retrieval hardening (computed runtime sanity + explicit Frozen G1 identity fail-fast). In parallel, Core Retrieval protocol design may proceed. Do not start SigLIP2/FAISS inference until the hardening runtime validation passes and the Core Retrieval protocol is frozen. Do not start VLM.**
+**Freeze the Core Retrieval Protocol before inference: Motion feature scaling / similarity, SigLIP2 checkpoint + preprocessing, segment visual aggregation, query sampling, candidate population, cross-episode exclusion, independent Human relevance rubric, final audit split, P@5 evaluation, and any Late Fusion rule. Do not start SigLIP2/FAISS inference until that protocol is frozen. Do not start VLM.**
 
 ---
 
