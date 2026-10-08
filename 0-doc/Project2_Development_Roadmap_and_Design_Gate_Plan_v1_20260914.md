@@ -17,6 +17,7 @@
 | 2026-09-27 | **G1-P3 FINAL CALIBRATION CONFIG FREEZE / P2-S1D GATE OPEN** | Stage C Regression 通过：固定 `A1-007-C002`、`tau_P12=0.04758563666765155`、`tau_C12=0.690169167642685`、retained parent `boundary_consolidation_window=8`，复现 `TP/FP/FN=56/2/0`、Recall=1.0、全部 HARD guardrail PASS、`NEW_UNANCHORED_FP=0`、deterministic replay PASS、protected artifact identity PASS。Design Owner 明确确认冻结；两个已知 residual 保留，不再使用 Calibration Set 调参。G1 Final Config 进入 `FROZEN_v1`，下一 Gate 为 P2-S1D Independent Evaluation。 | 用户 Design Owner + ChatGPT |
 | 2026-09-27 | **P2-S1D EVALUATION MANIFEST GATE CLARIFICATION** | 依据 Frozen Calibration Protocol v1 §8.4 / §21，Evaluation Episode 数量与具体 ID 尚未被冻结；因此正式 Independent Evaluation 运行前必须先完成 Evaluation Manifest 设计与 Owner Freeze。此 Gate 不改变已冻结 Final Config，仅防止 Implementation 层自行选择 Evaluation episode 或提前触碰 Evaluation GT。 | ChatGPT（按 Frozen Protocol 落地） |
 | 2026-09-29 | **G1-P4 INDEPENDENT EVALUATION MANIFEST FROZEN v1** | Design Owner 选择 deterministic Medium proposal，正式冻结 24 条 held-out Evaluation episodes。Preparation audit：300 total、32 historical excluded、268 eligible、0 unreadable；Disjointness PASS、Leakage PASS；选择未使用 human label、Evaluation GT、Frozen Config score、FP/FN 或结果型 cherry-pick。`FORMAL_EVALUATION_RUN_ALLOWED=YES`，下一 Gate 为正式 Evaluation Audit Run + Human Review。 | 用户 Design Owner + ChatGPT |
+| 2026-10-08 | **G1 EVALUATION DE-SCOPE / CLOSE WITH EVALUATION DEFERRED** | Design Owner 决定不继续 24-Episode Human Evaluation Audit。已生成的 frozen Evaluation Manifest 与一次性 inference run 保留，但 Human Evaluation GT 与 formal scoring 不执行。G1 以 `CLOSED_WITH_EVALUATION_DEFERRED` 收口；明确禁止 held-out performance / Independent Evaluation PASS claim。该 de-scope 解除 G2 Formal implementation 阻塞，下一阶段进入 P2-S2 / G2 Keyframe + Segment Summary。 | 用户 Design Owner + ChatGPT |
 
 ---
 
@@ -39,25 +40,28 @@
 当前状态：
 
 ```text
-PROJECT_2 = ACTIVE_BOOTSTRAP
+PROJECT_2 = ACTIVE_DEVELOPMENT
 G0 = CLOSED
 G1_DESIGN = FROZEN
-G1_IMPLEMENTATION = READY
-G1_GATE = OPEN_FOR_INDEPENDENT_EVALUATION
+G1_IMPLEMENTATION = COMPLETE
+G1_GATE = CLOSED_WITH_EVALUATION_DEFERRED
 G1_P3_CALIBRATION_PROTOCOL = FROZEN_v1.2
 G1_P3_STAGE_A = CLOSED_OWNER_SELECTED_A1_007_C002
 G1_P3_STAGE_B = CLOSED_NO_SAFE_INCREMENTAL_CHANGE
 G1_P3_STAGE_B_EFFECTIVE_WINDOW = RETAIN_PARENT_8
 G1_P3_STAGE_C = CLOSED_PASS
 G1_CALIBRATION_CONFIG = FROZEN_v1
-G1_FINAL_CONFIG = FROZEN_FOR_INDEPENDENT_EVALUATION
-G1_P4_GATE = OPEN
+G1_FINAL_CONFIG = FROZEN_v1
 G1_P4_EVALUATION_MANIFEST = FROZEN_v1
 G1_P4_EVALUATION_EPISODE_COUNT = 24
-G1_P4_FORMAL_EVALUATION_RUN_ALLOWED = YES
-G1_P3_NEXT_GATE = P2_S1D_FORMAL_EVALUATION_AUDIT_RUN_AND_HUMAN_REVIEW
-G2_DESIGN = MAY_PROCEED_IN_PARALLEL
-G2_FORMAL_IMPLEMENTATION = BLOCKED_BY_G1_CLOSE
+G1_P4_EVALUATION_INFERENCE_RUN = COMPLETE
+G1_P4_HUMAN_EVALUATION_AUDIT = DEFERRED_NOT_EXECUTED
+G1_P4_FORMAL_EVALUATION_SCORING = NOT_EXECUTED
+G1_INDEPENDENT_EVALUATION_STATUS = DEFERRED_BY_OWNER
+G1_HELD_OUT_PERFORMANCE_CLAIM = NOT_ALLOWED
+G1 = CLOSED_WITH_EVALUATION_DEFERRED
+G2_DESIGN = OPEN
+G2_FORMAL_IMPLEMENTATION = OPEN
 P1_FAILURE_QUERY = OPTIONAL
 P1_PROJECT = CONTINUES_IN_PARALLEL
 ```
@@ -113,7 +117,7 @@ P1 Failure Query
 
 ```text
 G1 Design Freeze → G2 Design discussion allowed
-G1 Gate Close → G2 Formal implementation / G3 Formal batch
+G1 Gate Close OR explicit Owner de-scope closeout → G2 Formal implementation / G3 Formal batch
 G2 → G4
 G4 → G5
 G5 → G6/G7
@@ -520,6 +524,22 @@ HARD_INTERACTION_BOUNDARY_RECALL = ACCEPTABLE
 MAJOR_BEHAVIOR_PHASES_ROUGHLY_SEPARABLE = YES
 G1 = CLOSED
 ```
+
+#### 2026-10-08 Owner De-scope Override
+
+原始 Done Criteria 中的 Independent Evaluation Human Audit / formal scoring 未完成。Design Owner 已通过独立 Owner Decision 将该项从当前 Project 2 scope 延期。
+
+因此当前关闭状态不是 `CLOSED_EVALUATION_PASS`，而是：
+
+```text
+G1 = CLOSED_WITH_EVALUATION_DEFERRED
+INDEPENDENT_EVALUATION_INFERENCE_RUN = COMPLETE
+HUMAN_EVALUATION_AUDIT = DEFERRED_NOT_EXECUTED
+FORMAL_EVALUATION_SCORING = NOT_EXECUTED
+HELD_OUT_PERFORMANCE_CLAIM = NOT_ALLOWED
+```
+
+此 override 仅解除 downstream blocking，不得解释为满足原 Independent Evaluation Done Criteria。
 
 ### 与 G2 的并行边界
 
@@ -998,39 +1018,33 @@ CODEX_ALLOWED_SCOPE
 # 14. 当前下一步
 
 ```text
-NEXT = P2-S1D / G1-P4 FORMAL EVALUATION AUDIT RUN + HUMAN REVIEW
+NEXT = P2-S2 / G2 KEYFRAME + SEGMENT SUMMARY
 G1_DESIGN = FROZEN
-G1_GATE = OPEN_FOR_INDEPENDENT_EVALUATION
-G1_P3_STAGE_A = CLOSED_OWNER_SELECTED_A1_007_C002
-G1_P3_STAGE_B = CLOSED_NO_SAFE_INCREMENTAL_CHANGE
-G1_P3_STAGE_B_EFFECTIVE_WINDOW = RETAIN_PARENT_8
-G1_P3_STAGE_C = CLOSED_PASS
 G1_CALIBRATION_CONFIG = FROZEN_v1
-G1_FINAL_CONFIG = FROZEN_FOR_INDEPENDENT_EVALUATION
-G1_P4_GATE = OPEN
-G2_DESIGN = MAY_PROCEED_IN_PARALLEL
+G1_FINAL_CONFIG = FROZEN_v1
+G1 = CLOSED_WITH_EVALUATION_DEFERRED
+G1_INDEPENDENT_EVALUATION_STATUS = DEFERRED_BY_OWNER
+G1_HELD_OUT_PERFORMANCE_CLAIM = NOT_ALLOWED
+G2_DESIGN = OPEN
+G2_FORMAL_IMPLEMENTATION = OPEN
 ```
 
-当前 G1 Calibration 已关闭搜索。冻结配置为 `A1-007-C002`，`tau_P12=0.04758563666765155`，`tau_C12=0.690169167642685`，`boundary_consolidation_window=8`。Calibration Set 及其两个 known residual 不得再用于任何规则或参数调整。
+G1 已完成设计、实现、Human Calibration、Stage A/B/C 与 Final Config Freeze。24-Episode Evaluation Manifest 和一次正式 inference run 已生成并保留，但 Design Owner 于 2026-10-08 明确将 Human Evaluation Audit 与 Formal Evaluation Scoring de-scope / defer。
+
+因此当前允许的 claim 仅包括 Calibration evidence；不得声明 Independent Evaluation PASS 或 held-out performance。
 
 优先执行：
 
 ```text
-P2-S1D Formal Evaluation Audit Run
-→ 只使用 FROZEN_v1 的 24 条 Evaluation episode
-→ 使用 Frozen Config 一次性生成正式 EVALUATION segmentation / audit package
-→ 启动 Human Evaluation Audit，生成 Evaluation GT
-→ 按 Frozen matching/tolerance 正式计分
-→ 输出 Boundary-level Evaluation + Failure Cases
-→ 禁止基于 Evaluation 结果调参
-→ Design Owner G1 Evaluation Review
-→ G1 Close（仅在 Evaluation review 通过后）
+P2-S2 G2 Keyframe / Segment Summary Design
+→ 冻结 keyframe policy
+→ 冻结 first / middle / last 语义
+→ 决定是否加入 max-motion keyframe
+→ 冻结 duplicate-keyframe handling
+→ 冻结 Action / State Summary 最小字段
+→ 冻结 segment provenance contract
+→ Design Owner Review
+→ G2 Formal implementation
 ```
 
-并行允许：
-
-```text
-Web: G2 Segment Summary / Keyframe Design
-```
-
-仍禁止：Dedup threshold、rarity formula、VLM 大批量实现、依赖临时 segmentation config 的下游正式 batch。
+当前不再要求先完成人工 Evaluation 才能推进 G2。若未来恢复 G1 Independent Evaluation，必须遵守单独 Owner Decision 中的 claim / resume policy。
