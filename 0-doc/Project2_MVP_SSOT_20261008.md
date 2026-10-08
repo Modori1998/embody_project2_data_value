@@ -853,8 +853,11 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - RGB_RUNTIME_VALIDATION_RESULT = Project2_MVP_RGB_Runtime_Validation_Result_20261008.md
 - G3_SEMANTIC_RESPONSIBILITY = FROZEN
 - G3_MVP_TAXONOMY = PENDING_MINIMAL_FREEZE
-- MVP-M2 = OPEN
-- MVP-M4_M5_CORE_RETRIEVAL = PENDING_M2
+- MVP-M2 = CLOSED_PASS
+- MVP_M2_RUNTIME_VALIDATION = PASS
+- READY_FOR_CORE_RETRIEVAL = YES
+- MVP_M2_RESULT = Project2_MVP_M2_Keyframe_and_Robot_Motion_Summary_Result_20261008.md
+- MVP-M4_M5_CORE_RETRIEVAL = OPEN_FOR_DESIGN_FREEZE
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
 - MVP-M6_DEDUP_LONGTAIL_COVERAGE = CONDITIONAL_AFTER_RETRIEVAL_GATE
 - DINOV2 = CONDITIONAL_EXTENSION
@@ -862,7 +865,7 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 
 NEXT ACTION:
 
-**Implement MVP-M2 Minimal Keyframe + Robot Motion Summary on current main. Do not start VLM. After M2 is validated, move directly to Motion-only vs SigLIP2-only cross-episode Retrieval.**
+**Freeze the Core Retrieval protocol before inference: Motion feature scaling / similarity, SigLIP2 checkpoint + preprocessing, segment visual aggregation, query sampling, candidate population, cross-episode exclusion, independent Human relevance rubric, final audit split, P@5 evaluation, and any Late Fusion rule. Do not start VLM.**
 
 ---
 
