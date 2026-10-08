@@ -848,10 +848,12 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - MVP_SSOT = ACTIVE_RETRIEVAL_FIRST
 - G1 = CLOSED_WITH_EVALUATION_DEFERRED
 - MVP_RGB_SOURCE_AND_ALIGNMENT_CONTRACT = FROZEN_v1
-- RGB_RUNTIME_VALIDATION = PENDING_LOCAL_SMOKE
+- MVP_P0A_RGB_INPUT_CONTRACT = CLOSED_PASS
+- RGB_RUNTIME_VALIDATION = PASS
+- RGB_RUNTIME_VALIDATION_RESULT = Project2_MVP_RGB_Runtime_Validation_Result_20261008.md
 - G3_SEMANTIC_RESPONSIBILITY = FROZEN
 - G3_MVP_TAXONOMY = PENDING_MINIMAL_FREEZE
-- MVP-M2 = NEXT_AFTER_RGB_SMOKE
+- MVP-M2 = OPEN
 - MVP-M4_M5_CORE_RETRIEVAL = PENDING_M2
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
 - MVP-M6_DEDUP_LONGTAIL_COVERAGE = CONDITIONAL_AFTER_RETRIEVAL_GATE
@@ -860,7 +862,7 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 
 NEXT ACTION:
 
-**Validate the clean RGB contract locally on real Can/MH data. If PASS, implement MVP-M2 Minimal Keyframe + Robot Motion Summary, then move directly to Motion-only vs SigLIP2-only cross-episode Retrieval.**
+**Implement MVP-M2 Minimal Keyframe + Robot Motion Summary on current main. Do not start VLM. After M2 is validated, move directly to Motion-only vs SigLIP2-only cross-episode Retrieval.**
 
 ---
 
