@@ -14,6 +14,12 @@ if str(SRC) not in sys.path:
 from project2_g1.boundary_engine import CANDIDATE_GRIPPER, UnlabeledSegment
 from project2_g1.source import FormalEpisodeArrays
 from project2_mvp.m2 import assert_no_privileged_inputs, select_keyframes, summarize_motion
+from project2_mvp.m2_materializer import (
+    EXPECTED_FROZEN_G1_IDENTITY,
+    compute_m2_sanity_checks,
+    runtime_frozen_g1_identity,
+    validate_frozen_g1_identity,
+)
 
 
 def segment(start: int, end: int) -> UnlabeledSegment:
@@ -86,6 +92,69 @@ class M2Tests(unittest.TestCase):
         for field in ("object", "Can_pos", "reward", "done", "success", "next_obs", "states"):
             with self.assertRaises(ValueError, msg=field):
                 assert_no_privileged_inputs([field])
+
+    def test_frozen_g1_identity_is_explicit_and_detects_drift(self) -> None:
+        actual = runtime_frozen_g1_identity()
+        self.assertEqual(actual, EXPECTED_FROZEN_G1_IDENTITY)
+        validate_frozen_g1_identity(actual)
+        drifted = dict(actual)
+        drifted["tau_C12"] = float(actual["tau_C12"]) + 0.01
+        with self.assertRaises(ValueError):
+            validate_frozen_g1_identity(drifted)
+
+    def test_runtime_sanity_is_computed_and_detects_corruption(self) -> None:
+        segments = [{
+            "segment_id": "demo-S0001",
+            "source_episode_id": "data/demo",
+            "start_frame": 4,
+            "end_frame": 6,
+            "duration_frames": 3,
+            "left_boundary_type": CANDIDATE_GRIPPER,
+        }]
+        keyframes = [
+            {"segment_id": "demo-S0001", "source_episode_id": "data/demo", "frame_index": 4,
+             "roles": "START|GRIPPER_EVENT", "png_relpath": "a.png",
+             "rgb_contract_version": "MVP_RGB_SOURCE_AND_ALIGNMENT_CONTRACT_v1"},
+            {"segment_id": "demo-S0001", "source_episode_id": "data/demo", "frame_index": 5,
+             "roles": "MIDDLE", "png_relpath": "b.png",
+             "rgb_contract_version": "MVP_RGB_SOURCE_AND_ALIGNMENT_CONTRACT_v1"},
+            {"segment_id": "demo-S0001", "source_episode_id": "data/demo", "frame_index": 6,
+             "roles": "END", "png_relpath": "c.png",
+             "rgb_contract_version": "MVP_RGB_SOURCE_AND_ALIGNMENT_CONTRACT_v1"},
+        ]
+        motion = [{
+            "segment_id": "demo-S0001",
+            "duration_sec": 0.15,
+            "eef_net_displacement_m": 0.01,
+            "eef_path_length_m": 0.02,
+            "eef_displacement_xyz": [0.01, 0.0, 0.0],
+            "eef_main_direction_xyz": [1.0, 0.0, 0.0],
+            "gripper_start_aperture": 0.08,
+            "gripper_end_aperture": 0.04,
+            "action_magnitude_mean": 0.1,
+            "action_magnitude_max": 0.2,
+            "action_magnitude_std": 0.01,
+            "coarse_direction_change_rad": None,
+        }]
+        provenance = {
+            "contract_version": "MVP_RGB_SOURCE_AND_ALIGNMENT_CONTRACT_v1",
+            "overlay_applied": False,
+            "audit_mp4_used": False,
+            "lossy_video_roundtrip": False,
+        }
+        rgb = [
+            {"source_episode_id": "data/demo", "segment_id": "demo-S0001",
+             "frame_index": frame, "png_relpath": path, "provenance": dict(provenance)}
+            for frame, path in ((4, "a.png"), (5, "b.png"), (6, "c.png"))
+        ]
+        checks = compute_m2_sanity_checks(segments, keyframes, motion, rgb)
+        self.assertTrue(all(checks.values()))
+
+        corrupted = [dict(row) for row in keyframes]
+        corrupted[1]["frame_index"] = 99
+        bad = compute_m2_sanity_checks(segments, corrupted, motion, rgb)
+        self.assertFalse(bad["KEYFRAME_FRAME_IN_SEGMENT"])
+        self.assertFalse(bad["MIDDLE_DETERMINISTIC"])
 
 
 if __name__ == "__main__":

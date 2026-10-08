@@ -857,7 +857,9 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - MVP_M2_RUNTIME_VALIDATION = PASS
 - READY_FOR_CORE_RETRIEVAL = YES
 - MVP_M2_RESULT = Project2_MVP_M2_Keyframe_and_Robot_Motion_Summary_Result_20261008.md
+- MVP_M2_PRE_RETRIEVAL_HARDENING = CODE_READY_PENDING_LOCAL_VALIDATION
 - MVP-M4_M5_CORE_RETRIEVAL = OPEN_FOR_DESIGN_FREEZE
+- CORE_RETRIEVAL_INFERENCE = BLOCKED_PENDING_M2_HARDENING_RUNTIME_VALIDATION
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
 - MVP-M6_DEDUP_LONGTAIL_COVERAGE = CONDITIONAL_AFTER_RETRIEVAL_GATE
 - DINOV2 = CONDITIONAL_EXTENSION
@@ -865,7 +867,7 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 
 NEXT ACTION:
 
-**Freeze the Core Retrieval protocol before inference: Motion feature scaling / similarity, SigLIP2 checkpoint + preprocessing, segment visual aggregation, query sampling, candidate population, cross-episode exclusion, independent Human relevance rubric, final audit split, P@5 evaluation, and any Late Fusion rule. Do not start VLM.**
+**First locally validate the small M2 pre-retrieval hardening (computed runtime sanity + explicit Frozen G1 identity fail-fast). In parallel, Core Retrieval protocol design may proceed. Do not start SigLIP2/FAISS inference until the hardening runtime validation passes and the Core Retrieval protocol is frozen. Do not start VLM.**
 
 ---
 
