@@ -792,13 +792,30 @@ P0A — Freeze + locally validate clean RGB input contract
     ↓
 M2 — Minimal Keyframe + Robot Motion Summary
     ↓
-M4/M5 Core — Motion-only vs SigLIP2-only Retrieval
+Core Retrieval Protocol Freeze
     ↓
-Freeze retrieval relevance rubric + cross-episode rule
+Retrieval Manifest Preparation
     ↓
-Small blind Human Retrieval Audit
+Owner Manifest Freeze
     ↓
-GO / CONDITIONAL / STOP
+Runtime Preflight + exact SigLIP2 revision pin
+    ↓
+Motion-only + SigLIP2-only Retrieval
+    ↓
+Calibration blind Human Audit
+    ↓
+Final blind Human Audit
+    ↓
+Formal P@5 scoring
+    ↓
+GO / CONDITIONAL / STOP / INCONCLUSIVE
+~~~
+
+Core Retrieval Protocol 已冻结于：
+
+~~~text
+0-doc/10-design-review/
+Project2_MVP_Core_Retrieval_Protocol_FROZEN_v1_20261008.md
 ~~~
 
 如果 GO / CONDITIONAL 且证据支持：
@@ -858,8 +875,12 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - READY_FOR_CORE_RETRIEVAL = YES
 - MVP_M2_RESULT = Project2_MVP_M2_Keyframe_and_Robot_Motion_Summary_Result_20261008.md
 - MVP_M2_PRE_RETRIEVAL_HARDENING = CLOSED_PASS
-- MVP-M4_M5_CORE_RETRIEVAL = OPEN_FOR_DESIGN_FREEZE
-- CORE_RETRIEVAL_INFERENCE = BLOCKED_PENDING_CORE_RETRIEVAL_PROTOCOL_FREEZE
+- MVP-M4_M5_CORE_RETRIEVAL = PROTOCOL_FROZEN_v1
+- CORE_RETRIEVAL_PROTOCOL = FROZEN_v1
+- CORE_RETRIEVAL_PROTOCOL_DOC = Project2_MVP_Core_Retrieval_Protocol_FROZEN_v1_20261008.md
+- CORE_RETRIEVAL_MANIFEST = NOT_FROZEN
+- CORE_RETRIEVAL_INFERENCE = BLOCKED_PENDING_RETRIEVAL_MANIFEST_FREEZE_AND_RUNTIME_PREFLIGHT
+- CORE_V1_LATE_FUSION = DISABLED
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
 - MVP-M6_DEDUP_LONGTAIL_COVERAGE = CONDITIONAL_AFTER_RETRIEVAL_GATE
 - DINOV2 = CONDITIONAL_EXTENSION
@@ -867,7 +888,7 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 
 NEXT ACTION:
 
-**Freeze the Core Retrieval Protocol before inference: Motion feature scaling / similarity, SigLIP2 checkpoint + preprocessing, segment visual aggregation, query sampling, candidate population, cross-episode exclusion, independent Human relevance rubric, final audit split, P@5 evaluation, and any Late Fusion rule. Do not start SigLIP2/FAISS inference until that protocol is frozen. Do not start VLM.**
+**Prepare the deterministic Core Retrieval Manifest: recompute eligible episodes from authoritative G1 artifacts, exclude historical G1-used episodes and the frozen 24-Episode G1 Evaluation Manifest, then deterministically select and present the 36 Candidate Bank + 9 Calibration Query + 18 Final Query episode IDs for Owner Freeze. Do not run SigLIP2, FAISS retrieval, Human scoring, or VLM before the Manifest is frozen and runtime preflight passes.**
 
 ---
 
