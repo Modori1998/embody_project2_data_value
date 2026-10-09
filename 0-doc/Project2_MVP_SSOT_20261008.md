@@ -929,17 +929,17 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - CORE_RETRIEVAL_MANIFEST = FROZEN_v1
 - CORE_RETRIEVAL_MANIFEST_DOC = Project2_MVP_Core_Retrieval_Manifest_FROZEN_v1_20261009.md
 - CORE_RETRIEVAL_MANIFEST_CSV = Project2_MVP_Core_Retrieval_Manifest_FROZEN_v1_20261009.csv
-- CORE_RETRIEVAL_RUNTIME_PREFLIGHT = NOT_RUN
-- CORE_RETRIEVAL_INFERENCE = BLOCKED_PENDING_RUNTIME_PREFLIGHT
+- CORE_RETRIEVAL_RUNTIME_PREFLIGHT = PASS
+- CORE_RETRIEVAL_INFERENCE = READY_FOR_FORMAL_CORE_RETRIEVAL_EXECUTION
 - CORE_V1_LATE_FUSION = DISABLED
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
 - MVP-M6_DEDUP_LONGTAIL_COVERAGE = CONDITIONAL_AFTER_RETRIEVAL_GATE
 - DINOV2 = CONDITIONAL_EXTENSION
 - PROJECT3_VALUE_VALIDATION = NOT_IN_P2_MVP
 
-NEXT = CORE_RETRIEVAL_RUNTIME_PREFLIGHT
+NEXT = FORMAL_63_EPISODE_MATERIALIZATION_AND_CORE_RETRIEVAL
 
-**Run the Core Retrieval runtime preflight on the frozen 63-Episode Manifest: verify Frozen Protocol / Manifest / dataset / M2 / RGB identities, check the local Motion + SigLIP2 runtime, and pin the exact SigLIP2 repository revision SHA. Do not run Formal M2 batch materialization, SigLIP2 embedding, FAISS retrieval, Human scoring, or VLM until the preflight passes.**
+**Execute Formal 63-Episode M2 materialization and Core Retrieval strictly under the Frozen Protocol and Frozen Manifest, using the pinned SigLIP2 revision established by the passing runtime preflight. This READY state does not claim Formal Retrieval, Human Audit, P@5, or a GO / CONDITIONAL / STOP decision has completed.**
 
 ---
 
