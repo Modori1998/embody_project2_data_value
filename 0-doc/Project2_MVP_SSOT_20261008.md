@@ -878,7 +878,7 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - MVP-M4_M5_CORE_RETRIEVAL = PROTOCOL_FROZEN_v1
 - CORE_RETRIEVAL_PROTOCOL = FROZEN_v1
 - CORE_RETRIEVAL_PROTOCOL_DOC = Project2_MVP_Core_Retrieval_Protocol_FROZEN_v1_20261008.md
-- CORE_RETRIEVAL_MANIFEST = NOT_FROZEN
+- CORE_RETRIEVAL_MANIFEST = READY_FOR_OWNER_REVIEW
 - CORE_RETRIEVAL_INFERENCE = BLOCKED_PENDING_RETRIEVAL_MANIFEST_FREEZE_AND_RUNTIME_PREFLIGHT
 - CORE_V1_LATE_FUSION = DISABLED
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
@@ -886,9 +886,9 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - DINOV2 = CONDITIONAL_EXTENSION
 - PROJECT3_VALUE_VALIDATION = NOT_IN_P2_MVP
 
-NEXT ACTION:
+NEXT = OWNER_REVIEW_RETRIEVAL_MANIFEST
 
-**Prepare the deterministic Core Retrieval Manifest: recompute eligible episodes from authoritative G1 artifacts, exclude historical G1-used episodes and the frozen 24-Episode G1 Evaluation Manifest, then deterministically select and present the 36 Candidate Bank + 9 Calibration Query + 18 Final Query episode IDs for Owner Freeze. Do not run SigLIP2, FAISS retrieval, Human scoring, or VLM before the Manifest is frozen and runtime preflight passes.**
+**Review the prepared deterministic 36 Candidate Bank + 9 Calibration Query + 18 Final Query Episode Manifest and its provenance. Do not run M2 materialization for the 63 episodes, SigLIP2, FAISS retrieval, Human scoring, or VLM before the Manifest is separately frozen and runtime preflight passes.**
 
 ---
 
