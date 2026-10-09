@@ -7,6 +7,54 @@
 > This file is a NEW MVP SSOT. It does NOT replace or overwrite the full Project 2 Engineering SSOT.
 > 2026-10-08 Retrieval-first amendment: Core MVP is now representation + cross-episode retrieval evidence; VLM / Dedup / Long-tail / Coverage are conditional extensions.
 
+> 2026-10-09 Owner Freeze Reconciliation: Design Owner accepts the remaining MVP decisions discussed in chat. This confirmation is reconciled against newer already-frozen GitHub artifacts; it does not roll back `MVP_CORE_RETRIEVAL_PROTOCOL_v1` or the CLOSED_PASS M2 implementation.
+
+### 2026-10-09 Owner Freeze Reconciliation
+
+```text
+OWNER_DECISION = CONFIRMED
+
+M2_MIDDLE =
+TEMPORAL_MIDDLE
+floor((start_frame + end_frame) / 2)
+STATUS = ALREADY_IMPLEMENTED_AND_FROZEN
+
+M2_GRIPPER_EVENT =
+CURRENT_CLOSED_PASS_RULE_RETAINS_AUTHORITY
+GRIPPER_EVENT = segment.start_frame
+iff left Final Boundary type = GRIPPER_TRANSITION
+STATUS = ALREADY_IMPLEMENTED_AND_FROZEN
+NOTE = supersedes earlier unimplemented "nearest-to-center among multiple events" suggestion
+
+MOTION_ACTION_MAGNITUDE =
+FORMAL_CORE_RETRIEVAL_FEATURE
+action_magnitude_mean/max/std
+STATUS = ALREADY_FROZEN_BY_MVP_CORE_RETRIEVAL_PROTOCOL_v1
+NOTE = supersedes earlier "diagnostic-only" suggestion
+
+M3_FORMAL_VLM_IF_BRANCH_OPENS =
+Qwen3-VL-8B-Instruct
+STATUS = OWNER_FROZEN_DEFAULT_MODEL_FAMILY
+BRANCH_STATUS = CONDITIONAL_NON_BLOCKING
+EXACT_CHECKPOINT_REVISION = RUNTIME_PIN_PENDING
+G3_MVP_TAXONOMY = PENDING_MINIMAL_FREEZE
+
+CORE_RETRIEVAL_PRIMARY =
+GLOBAL_CROSS_EPISODE_RETRIEVAL
+STATUS = ALREADY_FROZEN_BY_MVP_CORE_RETRIEVAL_PROTOCOL_v1
+
+WITHIN_PHASE_FINE_GRAINED_RETRIEVAL =
+SECONDARY_ANALYSIS
+NOT_FORMAL_CORE_PRIMARY
+NOTE = supersedes earlier unimplemented suggestion to make it the primary retrieval target
+```
+
+Authority rule for this reconciliation:
+
+1. Existing later `FROZEN_v1` protocol / manifest and CLOSED_PASS implementation artifacts outrank earlier chat proposals when they conflict.
+2. This owner confirmation freezes the compatible remaining choice for the conditional VLM branch without reopening the Core Retrieval protocol.
+3. Any future change to Motion feature composition, GRIPPER_EVENT semantics, or Global-vs-Within-phase Formal Retrieval requires a new Design Change Request and protocol version.
+
 ---
 
 # 0. 文档定位与权威关系
