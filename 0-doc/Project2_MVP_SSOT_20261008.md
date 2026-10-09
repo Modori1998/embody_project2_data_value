@@ -926,6 +926,8 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - MVP-M4_M5_CORE_RETRIEVAL = PROTOCOL_FROZEN_v1
 - CORE_RETRIEVAL_PROTOCOL = FROZEN_v1
 - CORE_RETRIEVAL_PROTOCOL_DOC = Project2_MVP_Core_Retrieval_Protocol_FROZEN_v1_20261008.md
+- CORE_RETRIEVAL_PROTOCOL_ADDENDUM = FROZEN_v1
+- CORE_RETRIEVAL_PROTOCOL_ADDENDUM_DOC = Project2_MVP_Core_Retrieval_Protocol_Addendum_FROZEN_v1_20261009.md
 - CORE_RETRIEVAL_MANIFEST = FROZEN_v1
 - CORE_RETRIEVAL_MANIFEST_DOC = Project2_MVP_Core_Retrieval_Manifest_FROZEN_v1_20261009.md
 - CORE_RETRIEVAL_MANIFEST_CSV = Project2_MVP_Core_Retrieval_Manifest_FROZEN_v1_20261009.csv
@@ -937,9 +939,9 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - DINOV2 = CONDITIONAL_EXTENSION
 - PROJECT3_VALUE_VALIDATION = NOT_IN_P2_MVP
 
-NEXT = FORMAL_63_EPISODE_MATERIALIZATION_AND_CORE_RETRIEVAL
+NEXT = FORMAL_63_EPISODE_MATERIALIZATION_AND_CALIBRATION_RETRIEVAL
 
-**Execute Formal 63-Episode M2 materialization and Core Retrieval strictly under the Frozen Protocol and Frozen Manifest, using the pinned SigLIP2 revision established by the passing runtime preflight. This READY state does not claim Formal Retrieval, Human Audit, P@5, or a GO / CONDITIONAL / STOP decision has completed.**
+**Execute Formal 63-Episode M2 materialization and Calibration Retrieval strictly under the Frozen Protocol, Frozen Protocol Addendum, and Frozen Manifest. The addendum now fully determines Query Segment class assignment, deterministic fallback, blind audit ordering, and hidden-repeat selection. Stop before Final Retrieval scoring; Human Audit and P@5 are still not completed.**
 
 ---
 
