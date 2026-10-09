@@ -933,15 +933,20 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - CORE_RETRIEVAL_MANIFEST_CSV = Project2_MVP_Core_Retrieval_Manifest_FROZEN_v1_20261009.csv
 - CORE_RETRIEVAL_RUNTIME_PREFLIGHT = PASS
 - CORE_RETRIEVAL_INFERENCE = READY_FOR_FORMAL_CORE_RETRIEVAL_EXECUTION
+- CORE_RETRIEVAL_FORMAL_REPRESENTATION = PASS
+- FORMAL_63_EPISODE_MATERIALIZATION = PASS
+- CALIBRATION_RETRIEVAL = READY_FOR_HUMAN_AUDIT
+- HUMAN_RELEVANCE_CALIBRATION = NOT_STARTED
+- FINAL_RETRIEVAL = BLOCKED_PENDING_CALIBRATION_HUMAN_AUDIT
 - CORE_V1_LATE_FUSION = DISABLED
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
 - MVP-M6_DEDUP_LONGTAIL_COVERAGE = CONDITIONAL_AFTER_RETRIEVAL_GATE
 - DINOV2 = CONDITIONAL_EXTENSION
 - PROJECT3_VALUE_VALIDATION = NOT_IN_P2_MVP
 
-NEXT = FORMAL_63_EPISODE_MATERIALIZATION_AND_CALIBRATION_RETRIEVAL
+NEXT = CALIBRATION_BLIND_HUMAN_AUDIT
 
-**Execute Formal 63-Episode M2 materialization and Calibration Retrieval strictly under the Frozen Protocol, Frozen Protocol Addendum, and Frozen Manifest. The addendum now fully determines Query Segment class assignment, deterministic fallback, blind audit ordering, and hidden-repeat selection. Stop before Final Retrieval scoring; Human Audit and P@5 are still not completed.**
+**Complete the Calibration Blind Human Audit using the generated reviewer package. Do not run Final Retrieval, compute P@5, or make a GO / CONDITIONAL / STOP decision until Calibration Human relevance and rubric stability are reviewed.**
 
 ---
 

@@ -8,6 +8,7 @@ and Human evaluation are intentionally out of scope.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
 from typing import Any, Mapping, Sequence
 
 import numpy as np
@@ -100,9 +101,15 @@ class SmokeRobustScaler:
 
 
 def fit_smoke_motion_scaler(raw_vectors: Sequence[np.ndarray]) -> SmokeRobustScaler:
+    return fit_motion_scaler(raw_vectors, role="SMOKE_ONLY_SCALER")
+
+
+def fit_motion_scaler(
+    raw_vectors: Sequence[np.ndarray], *, role: str = "FORMAL_CANDIDATE_BANK_SCALER"
+) -> SmokeRobustScaler:
     matrix = np.asarray(raw_vectors, dtype=np.float64)
     if matrix.ndim != 2 or matrix.shape[1] != MOTION_VECTOR_DIM or len(matrix) < 1:
-        raise CoreRetrievalRuntimeError("SMOKE_ONLY_SCALER requires non-empty Nx17 input")
+        raise CoreRetrievalRuntimeError(f"{role} requires non-empty Nx17 input")
     valid_coarse = matrix[np.isfinite(matrix[:, 9]), 9]
     if len(valid_coarse) == 0:
         raise CoreRetrievalRuntimeError("no valid coarse direction value for frozen median imputation")
@@ -123,7 +130,124 @@ def fit_smoke_motion_scaler(raw_vectors: Sequence[np.ndarray]) -> SmokeRobustSca
         denominator=denominator,
         constant_feature_indices=constant_global,
         coarse_valid_median=coarse_median,
+        role=role,
     )
+
+
+def _digest(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def candidate_segment_rows(
+    rows: Sequence[Mapping[str, Any]], candidate_episode_ids: Sequence[str]
+) -> list[Mapping[str, Any]]:
+    """Return only Frozen Candidate Bank rows; query cohorts cannot leak in."""
+
+    allowed = set(candidate_episode_ids)
+    return [row for row in rows if str(row["source_episode_id"]) in allowed]
+
+
+def select_query_segments(
+    rows: Sequence[Mapping[str, Any]],
+    episode_ids: Sequence[str],
+    *,
+    cohort: str,
+    target_true: int,
+) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    """Apply the Frozen Addendum query assignment and segment selection."""
+
+    by_episode: dict[str, list[Mapping[str, Any]]] = {episode: [] for episode in episode_ids}
+    for row in rows:
+        episode = str(row["source_episode_id"])
+        if episode in by_episode:
+            by_episode[episode].append(row)
+    typed: dict[str, dict[str, Any]] = {}
+    for episode in episode_ids:
+        true_set = [r for r in by_episode[episode] if str(r["gripper_transition_present"]).lower() in {"true", "1", "yes"}]
+        false_set = [r for r in by_episode[episode] if r not in true_set]
+        if not true_set and not false_set:
+            raise CoreRetrievalRuntimeError(f"STOP_QUERY_EPISODE_HAS_NO_ELIGIBLE_SEGMENT: {episode}")
+        availability = "FLEXIBLE" if true_set and false_set else ("TRUE_ONLY" if true_set else "FALSE_ONLY")
+        typed[episode] = {"TRUE": true_set, "FALSE": false_set, "availability": availability}
+    forced_true = sum(v["availability"] == "TRUE_ONLY" for v in typed.values())
+    forced_false = sum(v["availability"] == "FALSE_ONLY" for v in typed.values())
+    realized_true = min(max(target_true, forced_true), len(episode_ids) - forced_false)
+    flex_true_n = realized_true - forced_true
+    flexible = sorted(
+        (e for e, v in typed.items() if v["availability"] == "FLEXIBLE"),
+        key=lambda e: (_digest("MVP_CORE_RETRIEVAL_V1|QUERY_EPISODE_ASSIGN|" + e), e),
+    )
+    true_flexible = set(flexible[:flex_true_n])
+    selected = []
+    for episode in episode_ids:
+        info = typed[episode]
+        assigned = (
+            "TRUE" if info["availability"] == "TRUE_ONLY" or episode in true_flexible else "FALSE"
+        )
+        choices = sorted(
+            info[assigned],
+            key=lambda r: (_digest("MVP_CORE_RETRIEVAL_V1|QUERY|" + str(r["segment_id"])), str(r["segment_id"])),
+        )
+        chosen = choices[0]
+        selected.append({
+            "cohort": cohort,
+            "episode_id": episode,
+            "assigned_gripper_class": assigned,
+            "availability_type": info["availability"],
+            "segment_id": str(chosen["segment_id"]),
+            "gripper_transition_present": assigned == "TRUE",
+            "selection_digest": _digest("MVP_CORE_RETRIEVAL_V1|QUERY|" + str(chosen["segment_id"])),
+        })
+    balance = {"TRUE": sum(r["assigned_gripper_class"] == "TRUE" for r in selected)}
+    balance["FALSE"] = len(selected) - balance["TRUE"]
+    return selected, balance
+
+
+def build_blind_audit_items(
+    motion_rows: Sequence[Mapping[str, Any]],
+    visual_rows: Sequence[Mapping[str, Any]],
+    *,
+    cohort: str = "CALIBRATION",
+    repeat_n: int = 12,
+) -> tuple[list[dict[str, Any]], list[tuple[str, str]], int]:
+    """Union Top-K pairs, choose hidden repeats, and return blind ordered items."""
+
+    pairs = sorted({(str(r["query_segment_id"]), str(r["candidate_segment_id"])) for r in [*motion_rows, *visual_rows]})
+    ranked = sorted(
+        pairs,
+        key=lambda pair: (
+            _digest(f"MVP_CORE_RETRIEVAL_V1|HIDDEN_REPEAT|{cohort}|{pair[0]}|{pair[1]}"),
+            pair[0], pair[1],
+        ),
+    )
+    if len(ranked) < repeat_n:
+        raise CoreRetrievalRuntimeError("STOP_INSUFFICIENT_UNIQUE_AUDIT_PAIRS_FOR_REPEAT_QC")
+    repeats = ranked[:repeat_n]
+    repeat_set = set(repeats)
+    internal = []
+    for query_id, candidate_id in pairs:
+        copies = (0, 1) if (query_id, candidate_id) in repeat_set else (0,)
+        for copy_index in copies:
+            digest = _digest(
+                f"MVP_CORE_RETRIEVAL_V1|BLIND_AUDIT_ORDER|{cohort}|{query_id}|{candidate_id}|{copy_index}"
+            )
+            internal.append({
+                "query_segment_id": query_id,
+                "candidate_segment_id": candidate_id,
+                "copy_index": copy_index,
+                "order_digest": digest,
+            })
+    internal.sort(key=lambda r: (r["order_digest"], r["query_segment_id"], r["candidate_segment_id"], r["copy_index"]))
+    visible = [
+        {
+            "audit_order": index + 1,
+            "audit_item_id": f"CAL-{index + 1:04d}",
+            "query_segment_id": row["query_segment_id"],
+            "candidate_segment_id": row["candidate_segment_id"],
+        }
+        for index, row in enumerate(internal)
+    ]
+    return visible, repeats, len(pairs)
 
 
 def _normalize(vector: np.ndarray, *, label: str) -> np.ndarray:
