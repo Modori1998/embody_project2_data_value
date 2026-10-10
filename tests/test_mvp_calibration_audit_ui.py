@@ -51,6 +51,9 @@ class CalibrationAuditUITests(unittest.TestCase):
                 self.assertIn(label, page)
             for text in ("上一条", "下一条", "未完成", "导出填写好的 CSV", "localStorage"):
                 self.assertIn(text, page)
+            self.assertIn("function loadAnswers()", page)
+            self.assertIn("lines.join('\\r\\n')", page)
+            self.assertNotIn("lines.join('\r\n')", page)
             self.assertNotIn("hidden_repeat", page)
             self.assertNotIn("copy_index", page)
 

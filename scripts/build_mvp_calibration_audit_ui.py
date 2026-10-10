@@ -94,7 +94,9 @@ button{{border:1px solid #9aa7b5;border-radius:6px;background:#fff;padding:10px 
 const items={payload};
 const labels=['RELEVANT','PARTIAL','NOT_RELEVANT','BAD_SEGMENT','UNSURE'];
 const storageKey={json.dumps(storage_key)};
-let answers=JSON.parse(localStorage.getItem(storageKey)||'{{}}');
+function loadAnswers(){{try{{return JSON.parse(localStorage.getItem(storageKey)||'{{}}')}}catch(error){{console.warn('Browser storage unavailable; answers remain available for CSV export in this tab.',error);return {{}}}}}}
+function saveAnswers(){{try{{localStorage.setItem(storageKey,JSON.stringify(answers))}}catch(error){{console.warn('Browser storage unavailable; export the CSV before closing this tab.',error)}}}}
+let answers=loadAnswers();
 let current=0;
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[ch]));
 function strip(target,images){{document.getElementById(target).innerHTML=images.map(image=>`<figure><img src="${{esc(image.src)}}" alt="keyframe"><figcaption>${{esc(image.roles)}}</figcaption></figure>`).join('')}}
@@ -106,18 +108,18 @@ function render(){{
  document.getElementById('queryMeta').innerHTML=metadata('query',row);
  document.getElementById('candidateMeta').innerHTML=metadata('candidate',row);
  document.getElementById('choices').innerHTML=labels.map(label=>`<label class="choice"><input type="radio" name="label" value="${{label}}" ${{answers[id]===label?'checked':''}}>${{label}}</label>`).join('');
- document.querySelectorAll('input[name="label"]').forEach(input=>input.addEventListener('change',event=>{{answers[id]=event.target.value;localStorage.setItem(storageKey,JSON.stringify(answers));updateProgress()}}));
+ document.querySelectorAll('input[name="label"]').forEach(input=>input.addEventListener('change',event=>{{answers[id]=event.target.value;saveAnswers();updateProgress()}}));
  document.getElementById('previous').disabled=current===0;document.getElementById('next').disabled=current===items.length-1;
  document.getElementById('position').textContent=`当前条目：${{current+1}} / ${{items.length}}`;updateProgress();window.scrollTo(0,0);
 }}
 function updateProgress(){{const done=items.filter(item=>answers[item.row.audit_item_id]).length;document.getElementById('completed').textContent=`已完成：${{done}} / ${{items.length}}`;document.getElementById('remaining').textContent=`未完成：${{items.length-done}}`}}
 document.getElementById('previous').onclick=()=>{{if(current>0){{current--;render()}}}};
 document.getElementById('next').onclick=()=>{{if(current<items.length-1){{current++;render()}}}};
-function csvCell(value){{const text=String(value??'');return /[",\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text}}
+function csvCell(value){{const text=String(value??'');return /[",\\r\\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text}}
 document.getElementById('export').onclick=()=>{{
  const fields=Object.keys(items[0].row);const lines=[fields.map(csvCell).join(',')];
  for(const item of items){{const row={{...item.row,review_label:answers[item.row.audit_item_id]||''}};lines.push(fields.map(field=>csvCell(row[field])).join(','))}}
- const blob=new Blob(['\ufeff'+lines.join('\r\n')+'\r\n'],{{type:'text/csv;charset=utf-8'}});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='calibration_human_audit_pairs_filled.csv';link.click();URL.revokeObjectURL(link.href);
+ const blob=new Blob(['\ufeff'+lines.join('\\r\\n')+'\\r\\n'],{{type:'text/csv;charset=utf-8'}});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='calibration_human_audit_pairs_filled.csv';link.click();URL.revokeObjectURL(link.href);
 }};
 render();
 </script></body></html>"""

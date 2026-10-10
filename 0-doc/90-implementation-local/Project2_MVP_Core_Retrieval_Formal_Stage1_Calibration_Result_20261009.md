@@ -106,7 +106,7 @@ demo_283-S0008
 - Blind pair deduplication: PASS
 - Reviewer CSV hides method, similarity, method rank, copy index, and repeat status: PASS
 - Minimal lossless-keyframe HTML audit asset: generated
-- Interactive reviewer UI derived package: `outputs/mvp_core_retrieval_human_audit/calibration_blind_audit_ui_v1_20261010`
+- Interactive reviewer UI derived package: `outputs/mvp_core_retrieval_human_audit/calibration_blind_audit_ui_v2_20261010`
 - Interactive controls: five relevance choices, automatic browser-local persistence, previous/next navigation, current/completed/remaining progress, and filled CSV export
 - Human labels: NOT_STARTED
 
