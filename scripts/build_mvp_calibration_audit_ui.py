@@ -22,7 +22,13 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def build_page(formal_run: Path, output: Path) -> dict[str, int | str]:
+def build_page(
+    formal_run: Path,
+    output: Path,
+    *,
+    segment_gifs: dict[str, str] | None = None,
+    allow_existing_output: bool = False,
+) -> dict[str, int | str]:
     source_csv = formal_run / "calibration_human_audit_pairs.csv"
     keyframe_csv = formal_run / "m2/keyframe_manifest.csv"
     if not source_csv.is_file() or not keyframe_csv.is_file():
@@ -36,7 +42,8 @@ def build_page(formal_run: Path, output: Path) -> dict[str, int | str]:
     if forbidden & lowered:
         raise ValueError(f"Reviewer source contains forbidden fields: {sorted(forbidden & lowered)}")
 
-    output.mkdir(parents=True, exist_ok=False)
+    output.mkdir(parents=True, exist_ok=allow_existing_output)
+    segment_gifs = segment_gifs or {}
     by_segment: dict[str, list[dict[str, str]]] = {}
     for row in keyframes:
         by_segment.setdefault(row["segment_id"], []).append(row)
@@ -61,6 +68,8 @@ def build_page(formal_run: Path, output: Path) -> dict[str, int | str]:
         items.append(
             {
                 "row": row,
+                "query_gif": segment_gifs.get(query_id, ""),
+                "candidate_gif": segment_gifs.get(candidate_id, ""),
                 "query_images": images(query_id),
                 "candidate_images": images(candidate_id),
             }
@@ -78,7 +87,7 @@ header{{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid
 header strong{{font-size:18px}}.metric{{color:var(--muted)}}main{{max-width:1180px;margin:20px auto;padding:0 16px 120px}}
 .card{{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:0 2px 8px #0000000d}}
 h2{{margin-top:0}}h3{{margin-bottom:8px}}.strip{{display:flex;gap:10px;flex-wrap:wrap}}
-figure{{margin:0}}img{{width:170px;height:170px;object-fit:contain;background:#111;border-radius:4px}}figcaption{{text-align:center;color:var(--muted);margin-top:4px}}
+figure{{margin:0}}img{{width:170px;height:170px;object-fit:contain;background:#111;border-radius:4px}}figcaption{{text-align:center;color:var(--muted);margin-top:4px}}.temporal{{margin:8px 0 14px}}.temporal img{{width:360px;height:360px;image-rendering:auto}}
 .meta{{background:#f7f9fb;border-left:4px solid #a9b7c6;padding:10px;margin:10px 0 20px;line-height:1.6;overflow-wrap:anywhere}}
 .choices{{display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));gap:10px;margin-top:22px}}
 .choice{{border:2px solid var(--line);border-radius:8px;padding:14px 8px;text-align:center;cursor:pointer;font-weight:700;background:#fff}}
@@ -88,7 +97,7 @@ button{{border:1px solid #9aa7b5;border-radius:6px;background:#fff;padding:10px 
 @media(max-width:900px){{.choices{{grid-template-columns:1fr}}img{{width:140px;height:140px}}}}
 </style></head><body>
 <header><strong>Calibration Blind Human Audit</strong><span class="metric" id="position"></span><span class="metric" id="completed"></span><span class="metric" id="remaining"></span></header>
-<main><article class="card"><h2 id="itemId"></h2><h3>Query</h3><div class="strip" id="queryStrip"></div><div class="meta" id="queryMeta"></div><h3>Candidate</h3><div class="strip" id="candidateStrip"></div><div class="meta" id="candidateMeta"></div><div class="choices" id="choices"></div></article></main>
+<main><article class="card"><h2 id="itemId"></h2><h3>Query</h3><div class="temporal" id="queryTemporal"><img id="queryGif" alt="Query segment temporal GIF"></div><div class="strip" id="queryStrip"></div><div class="meta" id="queryMeta"></div><h3>Candidate</h3><div class="temporal" id="candidateTemporal"><img id="candidateGif" alt="Candidate segment temporal GIF"></div><div class="strip" id="candidateStrip"></div><div class="meta" id="candidateMeta"></div><div class="choices" id="choices"></div></article></main>
 <footer><button id="previous">上一条</button><button id="next">下一条</button><button class="primary" id="export">导出填写好的 CSV</button></footer>
 <script>
 const items={payload};
@@ -100,10 +109,12 @@ let answers=loadAnswers();
 let current=0;
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[ch]));
 function strip(target,images){{document.getElementById(target).innerHTML=images.map(image=>`<figure><img src="${{esc(image.src)}}" alt="keyframe"><figcaption>${{esc(image.roles)}}</figcaption></figure>`).join('')}}
+function temporal(container,image,source){{const box=document.getElementById(container),img=document.getElementById(image);if(source){{box.hidden=false;img.src=source}}else{{box.hidden=true;img.removeAttribute('src')}}}}
 function metadata(prefix,row){{return `duration=${{esc(row[prefix+'_duration_sec'])}}s | gripper=${{esc(row[prefix+'_gripper_start_state'])}} → ${{esc(row[prefix+'_gripper_end_state'])}} | transition=${{esc(row[prefix+'_gripper_transition_present'])}}<br>displacement=${{esc(row[prefix+'_eef_displacement_xyz'])}} | direction-change=${{esc(row[prefix+'_coarse_direction_change_rad'])}}`}}
 function render(){{
  const item=items[current],row=item.row,id=row.audit_item_id;
  document.getElementById('itemId').textContent=id;
+ temporal('queryTemporal','queryGif',item.query_gif);temporal('candidateTemporal','candidateGif',item.candidate_gif);
  strip('queryStrip',item.query_images);strip('candidateStrip',item.candidate_images);
  document.getElementById('queryMeta').innerHTML=metadata('query',row);
  document.getElementById('candidateMeta').innerHTML=metadata('candidate',row);
