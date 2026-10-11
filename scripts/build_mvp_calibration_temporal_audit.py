@@ -184,14 +184,57 @@ def build_temporal_package(formal_run: Path, output: Path, *, target_fps: float 
     return summary
 
 
+def existing_segment_gif_paths(output: Path) -> dict[str, str]:
+    manifest_path = output / "segment_gif_manifest.json"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"Temporal GIF manifest is missing: {manifest_path}")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    gif_paths: dict[str, str] = {}
+    for row in manifest:
+        segment_id = str(row["segment_id"])
+        relative = str(row["gif_relpath"])
+        target = output / relative
+        if not target.is_file() or target.stat().st_size <= 0:
+            raise FileNotFoundError(f"Temporal GIF is missing: {target}")
+        gif_paths[segment_id] = relative
+    if not gif_paths:
+        raise ValueError("Temporal GIF manifest is empty")
+    return gif_paths
+
+
+def refresh_temporal_audit_ui(formal_run: Path, output: Path) -> dict:
+    if not output.is_dir():
+        raise FileNotFoundError(f"Temporal audit output is missing: {output}")
+    gif_paths = existing_segment_gif_paths(output)
+    result = build_page(
+        formal_run,
+        output,
+        segment_gifs=gif_paths,
+        allow_existing_output=True,
+    )
+    return {
+        "refresh_ui_only": True,
+        "segment_gifs_reused": len(gif_paths),
+        **result,
+    }
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--formal-run", type=Path, default=DEFAULT_FORMAL_RUN)
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--target-fps", type=float, default=10.0)
+    parser.add_argument(
+        "--refresh-ui-only",
+        action="store_true",
+        help="Reuse existing Segment GIFs and rebuild only index.html/ui_meta.json.",
+    )
     args = parser.parse_args(argv)
     output = ROOT / "outputs/mvp_core_retrieval_human_audit" / args.run_id
-    result = build_temporal_package(args.formal_run.resolve(), output, target_fps=args.target_fps)
+    if args.refresh_ui_only:
+        result = refresh_temporal_audit_ui(args.formal_run.resolve(), output)
+    else:
+        result = build_temporal_package(args.formal_run.resolve(), output, target_fps=args.target_fps)
     print(json.dumps({"output": str(output.resolve()), **result}, indent=2))
     return 0
 
