@@ -51,6 +51,10 @@ class CalibrationAuditUITests(unittest.TestCase):
                 self.assertIn(label, page)
             for text in ("上一条", "下一条", "未完成", "导出填写好的 CSV", "localStorage"):
                 self.assertIn(text, page)
+            self.assertIn('class="compare"', page)
+            self.assertEqual(page.count('class="compare-panel"'), 2)
+            self.assertIn("grid-template-columns:minmax(0,1fr) minmax(0,1fr)", page)
+            self.assertIn("@media(max-width:980px)", page)
             self.assertIn("function loadAnswers()", page)
             self.assertIn("lines.join('\\r\\n')", page)
             self.assertNotIn("lines.join('\r\n')", page)

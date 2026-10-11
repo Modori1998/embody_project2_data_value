@@ -84,20 +84,23 @@ def build_page(
 :root{{--bg:#f4f6f8;--card:#fff;--line:#d8dee6;--ink:#17202a;--muted:#627080;--accent:#1769aa;--chosen:#d9ecff}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Microsoft YaHei",sans-serif}}
 header{{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);padding:12px 20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}}
-header strong{{font-size:18px}}.metric{{color:var(--muted)}}main{{max-width:1180px;margin:20px auto;padding:0 16px 120px}}
+header strong{{font-size:18px}}.metric{{color:var(--muted)}}main{{max-width:1560px;margin:16px auto;padding:0 16px 120px}}
 .card{{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:0 2px 8px #0000000d}}
-h2{{margin-top:0}}h3{{margin-bottom:8px}}.strip{{display:flex;gap:10px;flex-wrap:wrap}}
-figure{{margin:0}}img{{width:170px;height:170px;object-fit:contain;background:#111;border-radius:4px}}figcaption{{text-align:center;color:var(--muted);margin-top:4px}}.temporal{{margin:8px 0 14px}}.temporal img{{width:360px;height:360px;image-rendering:auto}}
-.meta{{background:#f7f9fb;border-left:4px solid #a9b7c6;padding:10px;margin:10px 0 20px;line-height:1.6;overflow-wrap:anywhere}}
-.choices{{display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));gap:10px;margin-top:22px}}
+h2{{margin-top:0}}h3{{margin:0 0 10px}}.compare{{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}}
+.compare-panel{{min-width:0;border:1px solid var(--line);border-radius:8px;padding:14px;background:#fbfcfd}}
+.strip{{display:flex;gap:8px;flex-wrap:wrap}}
+figure{{margin:0}}img{{width:118px;height:118px;object-fit:contain;background:#111;border-radius:4px}}figcaption{{text-align:center;color:var(--muted);margin-top:4px;font-size:12px}}
+.temporal{{margin:0 0 12px}}.temporal img{{display:block;width:100%;height:360px;object-fit:contain;image-rendering:auto}}
+.meta{{background:#f7f9fb;border-left:4px solid #a9b7c6;padding:10px;margin:10px 0 0;line-height:1.55;overflow-wrap:anywhere;font-size:14px}}
+.choices{{display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));gap:10px;margin-top:18px}}
 .choice{{border:2px solid var(--line);border-radius:8px;padding:14px 8px;text-align:center;cursor:pointer;font-weight:700;background:#fff}}
 .choice:has(input:checked){{border-color:var(--accent);background:var(--chosen)}}.choice input{{margin-right:7px}}
 footer{{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}}
 button{{border:1px solid #9aa7b5;border-radius:6px;background:#fff;padding:10px 18px;cursor:pointer;font-weight:700}}button.primary{{background:var(--accent);color:#fff;border-color:var(--accent)}}button:disabled{{opacity:.45;cursor:not-allowed}}
-@media(max-width:900px){{.choices{{grid-template-columns:1fr}}img{{width:140px;height:140px}}}}
+@media(max-width:980px){{.compare{{grid-template-columns:1fr}}.choices{{grid-template-columns:1fr}}.temporal img{{height:320px}}img{{width:140px;height:140px}}}}
 </style></head><body>
 <header><strong>Calibration Blind Human Audit</strong><span class="metric" id="position"></span><span class="metric" id="completed"></span><span class="metric" id="remaining"></span></header>
-<main><article class="card"><h2 id="itemId"></h2><h3>Query</h3><div class="temporal" id="queryTemporal"><img id="queryGif" alt="Query segment temporal GIF"></div><div class="strip" id="queryStrip"></div><div class="meta" id="queryMeta"></div><h3>Candidate</h3><div class="temporal" id="candidateTemporal"><img id="candidateGif" alt="Candidate segment temporal GIF"></div><div class="strip" id="candidateStrip"></div><div class="meta" id="candidateMeta"></div><div class="choices" id="choices"></div></article></main>
+<main><article class="card"><h2 id="itemId"></h2><div class="compare"><section class="compare-panel"><h3>Query</h3><div class="temporal" id="queryTemporal"><img id="queryGif" alt="Query segment temporal GIF"></div><div class="strip" id="queryStrip"></div><div class="meta" id="queryMeta"></div></section><section class="compare-panel"><h3>Candidate</h3><div class="temporal" id="candidateTemporal"><img id="candidateGif" alt="Candidate segment temporal GIF"></div><div class="strip" id="candidateStrip"></div><div class="meta" id="candidateMeta"></div></section></div><div class="choices" id="choices"></div></article></main>
 <footer><button id="previous">上一条</button><button id="next">下一条</button><button class="primary" id="export">导出填写好的 CSV</button></footer>
 <script>
 const items={payload};
