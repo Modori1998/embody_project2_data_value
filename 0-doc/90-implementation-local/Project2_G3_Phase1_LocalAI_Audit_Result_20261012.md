@@ -77,9 +77,17 @@ FORCE_CHECKOUT      = 未执行     RESET/CLEAN = 未执行     STASH = 未执�
 CURRENT_BRANCH = p2-g3-local-ai-phase01-20261012
 WORKTREE       = C:/Users/95611/embody/_p2_g3_phase01_wt
 BASE           = b5fd9b9  （= 权威 origin/main）
-HEAD           = 7fa0e88  "Record P2-G3 Phase-1 local AI audit result (A-G deliverable)"
-PUSHED         = NO（待 Owner 决定是否推送该审计分支）
+HEAD           = b2b9983  "Refresh G.1/artifact-hash/plain-language summary..."
+                 970cce0  "Correct Section A: ... authoritatively verified"
+                 7fa0e88  "Record P2-G3 Phase-1 local AI audit result (A-G deliverable)"
+                 9bb28de  "Add P2-G3 Phase-1 read-only Development-pool audit scaffold"
+PUSHED         = YES  → origin/p2-g3-local-ai-phase01-20261012 = b2b998374f0022b20854924661004eda5c12aebb
+                 （`git ls-remote` 权威核验；**未**创建 PR、**未** merge）
+NOTE           = push 经 4 次重试成功（schannel 后端）；代理间歇 502，见 A.1
 ```
+
+> 该分支是**审计/只读**分支：不含对 G1/M2/Frozen Retrieval/原始数据/Rubric 的任何改动。
+> **未**对 `main` 做任何写入，**未**自动合并，**未**创建重复 PR。
 
 ### A.5 PR #1 状态 — **已核验（权威）**
 
@@ -491,7 +499,7 @@ RUN_DIR = <worktree>/outputs/g3_phase1_probe/g3_phase1_probe_20261012/
   development_pool.csv           sha256(前16) = 58b5cac7c4c67546
   evidence_packs/data__demo_*.json  (12 个)
 VISUAL = <worktree>/outputs/g3_phase1_probe/_visual/data__demo_*_contact_sheet.png  (12 张)
-CODE_COMMIT = 970cce0  (branch p2-g3-local-ai-phase01-20261012；前序 9bb28de 脚手架 / 7fa0e88 A–G 报告)
+CODE_COMMIT = 见 A.4（branch p2-g3-local-ai-phase01-20261012，HEAD 已 push 至 origin）
 BASE        = b5fd9b9  (= 权威 origin/main)
 ```
 
