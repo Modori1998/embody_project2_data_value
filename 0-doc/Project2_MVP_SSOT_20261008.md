@@ -946,7 +946,10 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - CALIBRATION_AUDIT_ORDER_UNCHANGED = YES
 - CALIBRATION_METHOD_SCORE_RANK_HIDDEN = YES
 - CALIBRATION_RETRIEVAL_RERUN = NO
-- HUMAN_RELEVANCE_CALIBRATION = READY_FOR_RUBRIC_FREEZE
+- HUMAN_RELEVANCE_CALIBRATION = CLOSED_PASS
+- HUMAN_RELEVANCE_RUBRIC = FROZEN_v1
+- HUMAN_RELEVANCE_RUBRIC_DOC = Project2_MVP_Human_Relevance_Rubric_Clarification_FROZEN_v1_20261012.md
+- CALIBRATION_RUBRIC_STABILITY = PASS
 - CALIBRATION_FIRST_PASS_LABELS = ARCHIVED_95_ITEMS
 - CALIBRATION_FIRST_PASS_UNSURE = 31/95
 - CALIBRATION_UNSURE_REAUDIT = COMPLETED_31_ITEMS
@@ -957,16 +960,17 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - CALIBRATION_FIRST_PASS_BINARY_REPEAT_QC = 10/12 PASS
 - CALIBRATION_RECONCILED_BINARY_REPEAT_CONSISTENCY = 11/12 SUPPORTIVE_ONLY
 - CALIBRATION_REAUDIT_COMPARISON = 05_calibration_unsure_reaudit_comparison_20261012.md
-- FINAL_RETRIEVAL = BLOCKED_PENDING_CALIBRATION_RUBRIC_FREEZE
+- FINAL_RETRIEVAL = READY_FOR_EXECUTION
+- FINAL_HUMAN_AUDIT_RUBRIC = LOCKED_TO_FROZEN_v1
 - CORE_V1_LATE_FUSION = DISABLED
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
 - MVP-M6_DEDUP_LONGTAIL_COVERAGE = CONDITIONAL_AFTER_RETRIEVAL_GATE
 - DINOV2 = CONDITIONAL_EXTENSION
 - PROJECT3_VALUE_VALIDATION = NOT_IN_P2_MVP
 
-NEXT = OWNER_REVIEW_AND_FREEZE_CALIBRATION_RUBRIC
+NEXT = FINAL_RETRIEVAL
 
-**The 31-item UNSURE re-audit is complete and the reconciled Calibration label set contains 0 UNSURE items. The original frozen binary repeat-QC gate remains PASS at 10/12; reconciled 11/12 consistency is supportive only. Freeze the clarified Human relevance rubric before Final Retrieval. Do not compute Formal P@5 or run Final Retrieval before that freeze.**
+**The clarified Human relevance rubric is now FROZEN_v1. Run the already-frozen 18-query Final Retrieval using the existing Candidate Bank and representation contracts, then build the blind Final Human Audit package under the frozen rubric. Do not compute Formal P@5 or make a GO / CONDITIONAL / STOP decision until Final Human labels are frozen and Final repeat QC is checked.**
 
 ---
 
