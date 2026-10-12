@@ -946,21 +946,27 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - CALIBRATION_AUDIT_ORDER_UNCHANGED = YES
 - CALIBRATION_METHOD_SCORE_RANK_HIDDEN = YES
 - CALIBRATION_RETRIEVAL_RERUN = NO
-- HUMAN_RELEVANCE_CALIBRATION = RUBRIC_CLARIFICATION_IN_PROGRESS
+- HUMAN_RELEVANCE_CALIBRATION = READY_FOR_RUBRIC_FREEZE
 - CALIBRATION_FIRST_PASS_LABELS = ARCHIVED_95_ITEMS
 - CALIBRATION_FIRST_PASS_UNSURE = 31/95
-- CALIBRATION_UNSURE_REAUDIT = READY_31_ITEMS
+- CALIBRATION_UNSURE_REAUDIT = COMPLETED_31_ITEMS
 - CALIBRATION_UNSURE_REAUDIT_SOURCE = 01_calibration_human_audit_pairs_filled_20261011.csv
-- FINAL_RETRIEVAL = BLOCKED_PENDING_CALIBRATION_HUMAN_AUDIT
+- CALIBRATION_UNSURE_REAUDIT_RESULT = 03_calibration_unsure_reaudit_filled_20261012.csv
+- CALIBRATION_RECONCILED_LABELS = 04_calibration_human_audit_reconciled_20261012.csv
+- CALIBRATION_RECONCILED_UNSURE = 0/95
+- CALIBRATION_FIRST_PASS_BINARY_REPEAT_QC = 10/12 PASS
+- CALIBRATION_RECONCILED_BINARY_REPEAT_CONSISTENCY = 11/12 SUPPORTIVE_ONLY
+- CALIBRATION_REAUDIT_COMPARISON = 05_calibration_unsure_reaudit_comparison_20261012.md
+- FINAL_RETRIEVAL = BLOCKED_PENDING_CALIBRATION_RUBRIC_FREEZE
 - CORE_V1_LATE_FUSION = DISABLED
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
 - MVP-M6_DEDUP_LONGTAIL_COVERAGE = CONDITIONAL_AFTER_RETRIEVAL_GATE
 - DINOV2 = CONDITIONAL_EXTENSION
 - PROJECT3_VALUE_VALIDATION = NOT_IN_P2_MVP
 
-NEXT = CALIBRATION_UNSURE_REAUDIT
+NEXT = OWNER_REVIEW_AND_FREEZE_CALIBRATION_RUBRIC
 
-**Re-audit the 31 first-pass `UNSURE` items using the existing temporal GIF evidence. This is Calibration rubric clarification only: do not rerun Retrieval, change Top-K, or treat the re-audit as a Formal Core result. Final Retrieval remains blocked until the Calibration rubric is frozen.**
+**The 31-item UNSURE re-audit is complete and the reconciled Calibration label set contains 0 UNSURE items. The original frozen binary repeat-QC gate remains PASS at 10/12; reconciled 11/12 consistency is supportive only. Freeze the clarified Human relevance rubric before Final Retrieval. Do not compute Formal P@5 or run Final Retrieval before that freeze.**
 
 ---
 
