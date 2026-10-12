@@ -8,81 +8,126 @@ VLM_INVOKED       = NO
 FORMAL_RETRIEVAL  = NOT_EXECUTED
 FAISS_SIGLIP2     = NOT_EXECUTED
 FROZEN_ARTIFACTS  = UNMODIFIED
-RESULT            = PARTIAL_BLOCKED (见 A 节)
+RESULT            = PARTIAL (文档补齐阻塞；Git/网络已恢复并权威核验)
 ```
 
 > **结论先行**：本轮**未**产生任何 VLM 调用、未执行正式检索、未改动任何冻结产物。
-> 第 1 节（PR 文档补齐）因**输入缺失 + 网络不可用**而**阻塞**，如实报告，未凭记忆重写文档。
+> 第 1 节（PR 文档补齐）因**输入缺失**（ZIP 不在本地）而**阻塞**；网络问题已排查并修复，PR #1 与 `origin/main` 已**权威核验**（见 A 节）。如实报告，未凭记忆重写文档。
 > 第 2 节 Argus 侧**上游源码不可得**，故只完成 P2 侧能力盘点并给出映射骨架（Argus 侧标注 UNVERIFIED）。
 > 第 3 节数据可观测性 Probe **完整执行成功**，是本轮唯一有实证产出的部分。
 
 ---
 
-## A. Git / PR 同步状态
+## A. Git / PR 同步状态 — **已恢复，权威确认**
 
 ### A.1 远端可达性诊断（先诊断，未臆测）
 
-| 检查 | 结果 |
-|---|---|
-| `git ls-remote origin refs/heads/main` | **失败**（3 次退避重试均失败） |
-| 失败形态 1 | `CONNECT tunnel failed, response 502`（经代理 `127.0.0.1:4311`） |
-| 失败形态 2 | `schannel: server closed abruptly (missing close_notify)` |
-| 失败形态 3 | 直连（`env -u *_proxy`）→ `Recv failure: Connection was reset` / 超时 |
-| DNS/TCP | `github.com:443` → `20.205.243.166` **可解析可建连**；`codeload.github.com:443` 同理 |
-| 代理端口 | `4311` LISTENING 但返回 502；历史端口 `14227` **已不再监听** |
+初次执行时网络**确实不可用**；随后（用户提示 VPN 后）重新诊断，**代理恢复**。
 
-结论：**故障在网络/代理层，不在本机 DNS 或仓库**。属于记忆中已登记的"代理时好时坏"现象。
-因此 **`CURRENT_MAIN_SHA` 无法通过权威通道确认**。
-
-### A.2 本地可用的最强证据（非权威，仅作降级依据）
-
-| 项 | 值 | 依据 |
+| 阶段 | 检查 | 结果 |
 |---|---|---|
-| `CURRENT_MAIN_SHA`（**未能权威确认**） | 本地 tracking ref `origin/main` = `b5fd9b97d1b32ffa98d6facd95bf663be12ac63e` | `git show-ref` + `reflog origin/main@{0}: pull --ff-only ... fast-forward` |
-| 本地 `main` 分支 HEAD | `cc42b9b39d72f52f540485411f6d80ff3dd785ae` | `git rev-parse HEAD` |
-| 两者关系 | `cc42b9b` **是** `b5fd9b9` 的祖先，本地 `main` **落后 24 个提交** | `git merge-base --is-ancestor` |
-| `packed-refs` 中的 `origin/main` | `b40218e`（**陈旧**，为 G1-P3 时期提交） | `git cat-file -t` 确认是 `Add G1-P3 trajectory diagnostic human review export` |
-| `b5fd9b9` 提交信息 | `Prepare formal final retrieval and blind audit` | `git log --oneline -1` |
-| 既有 worktree | `.cindy-worktrees/{loyal-colden, stoic-jepsen, warm-bohr}`；其中 `stoic-jepsen` = `b5fd9b9` | `git worktree list` |
+| 初次 | `git ls-remote` × 3 次退避 | **失败**：`CONNECT tunnel failed, response 502` / `schannel: server closed abruptly` / 直连 `Connection was reset` |
+| 初次 | 代理端口 | 当时为 `127.0.0.1:4311`；历史端口 `14227` **已不再监听** |
+| 恢复后 | 代理端口 | 变为 **`127.0.0.1:13931`**（另有 `127.0.0.1:10808` 监听） |
+| 恢复后 | 公共仓库对照 | `git ls-remote https://github.com/octocat/Hello-World` → **成功** |
+| 恢复后 | 目标仓库 | 无凭据时 `401`（私有）；**注入凭据后成功** |
 
-> **重要**：`refs/remotes/*` 在本机可能被静默丢弃（见项目记忆）。`b5fd9b9` 只是"本地可得的、最合理的 main 候选"，
-> **不是**经过 `ls-remote` 验证的事实。Owner 恢复网络后应重新执行 `git fetch origin --prune` 并复核。
+**根因（两项，均已解决）**：
+1. **代理端口漂移 + 间歇 502**：`ls-remote` 轻量可通，`fetch`（下载对象）易被重置 → 需**多后端 + 退避重试**。
+2. **凭据助手失效**：`credential.helper=helper-selector` 在非交互环境路由失败（`could not read Username`）。
+   Windows 凭据管理器**确实存有** `LegacyGeneric:target=git:https://github.com`（user `Modori1998`），
+   直接调用 `git-credential-manager.exe get` **可取回**。
 
-### A.3 主工作树保护
+**可用组合（本轮验证）**：
+```text
+credential.helper=  （清空默认）
+credential.helper=!f(){ echo username=Modori1998; echo password=$GH_PAT; }; f
+http.sslBackend=openssl  （schannel 亦可，交替重试更稳）
++ 退避重试循环（每次 sleep 5–8s）
+```
+> 凭据**仅在进程内注入**，未写入磁盘、未进入命令行、未提交。
+
+### A.2 `CURRENT_MAIN_SHA` — **已权威确认**
 
 ```text
-MAIN_WORKTREE      = C:/Users/95611/embody/4-Project2_data_value  (branch main @ cc42b9b)
-MAIN_WORKTREE_DIFF = 空（git diff --numstat 无输出）
-MAIN_UNTRACKED     = .cindy-worktrees/ （执行前即已存在，非本轮产生）
-FORCE_CHECKOUT     = 未执行
-RESET/CLEAN        = 未执行
-STASH              = 未执行（遵守项目铁律：本机禁用 stash）
+CURRENT_MAIN_SHA = b5fd9b97d1b32ffa98d6facd95bf663be12ac63e
 ```
-主工作树**逐字节未被本轮触碰**。
+- 依据：`git ls-remote origin refs/heads/main` **成功返回**（权威通道，非缓存）。
+- 交叉印证：PR 分支 `P2_G3_Retrieval_HOLD_Scope_Change_v1_20261012.md` 内
+  `SRC_MAIN_HEAD_BEFORE = b5fd9b97d1b32ffa98d6facd95bf663be12ac63e` —— **完全一致**。
+- 初次执行时的降级推断（本地 tracking `origin/main` = `b5fd9b9`）**被证实正确**。
+
+### A.3 主工作树同步
+
+```text
+MAIN_WORKTREE       = C:/Users/95611/embody/4-Project2_data_value
+BEFORE              = cc42b9b39d72f52f540485411f6d80ff3dd785ae
+AFTER               = b5fd9b97d1b32ffa98d6facd95bf663be12ac63e
+OPERATION           = git pull --ff-only origin main  →  Fast-forward
+CHANGED             = 40 files, +7531 / -9
+POST_STATE          = clean (git diff --numstat 空)
+FORCE_CHECKOUT      = 未执行     RESET/CLEAN = 未执行     STASH = 未执行
+```
+> 同步内容即检索优先 MVP 的 24 个提交（M2、Core Retrieval 协议/清单、校准人审、Rubric Clarification）。
+> 本机 `refs/remotes/*` 写入可能被静默丢弃（已知问题）—— 故 PR 分支需**显式指定 refspec** 拉取。
 
 ### A.4 本任务分支与 worktree
 
 ```text
 CURRENT_BRANCH = p2-g3-local-ai-phase01-20261012
 WORKTREE       = C:/Users/95611/embody/_p2_g3_phase01_wt
-BASE           = b5fd9b9（本地可得的 main 候选；未能与远端权威比对）
-HEAD           = 9bb28de  "Add P2-G3 Phase-1 read-only Development-pool audit scaffold"
-PUSHED         = NO（网络不可用，未 push）
+BASE           = b5fd9b9  （= 权威 origin/main）
+HEAD           = 7fa0e88  "Record P2-G3 Phase-1 local AI audit result (A-G deliverable)"
+PUSHED         = NO（待 Owner 决定是否推送该审计分支）
 ```
 
-### A.5 PR #1 文档同步状态 — **阻塞**
+### A.5 PR #1 状态 — **已核验（权威）**
+
+```text
+PR_NUMBER            = 1
+PR_HEAD_BRANCH       = design/p2-g3-argus-scope-20261012
+PR_HEAD_SHA          = dcad5c12818b73499ba11e43c0fd3a73b2e65cd7   (= refs/pull/1/head)
+PR_MERGE_REF         = 3c423e5c4b401ac3f1b3b2a6c26318b064a029a9   (= refs/pull/1/merge)
+MERGE_BASE_WITH_MAIN = b5fd9b9   （干净分支，无偏离）
+COMMITS              = d8b0395 "Record Owner HOLD of Retrieval and reprioritize Argus-style G3"
+                       dcad5c1 "Add non-destructive P2 Retrieval HOLD and G3 priority overlay"
+MERGED               = NO（Draft，未合并）
+```
+
+**PR 实际改动（`git diff --numstat b5fd9b9 dcad5c12`，权威核验）**：
+
+| 状态 | 文件 | 行数 |
+|---|---|---|
+| A | `0-doc/10-design-review/P2_G3_Retrieval_HOLD_Scope_Change_v1_20261012.md` | +30 |
+| M | `0-doc/Project2_MVP_SSOT_20261008.md`（顶部 HOLD overlay） | +4 |
+
+> **与任务书描述完全一致**："该 PR 当前仅有 SSOT 的 HOLD overlay 和
+> `P2_G3_Retrieval_HOLD_Scope_Change_v1_20261012.md`，三份详细文档尚未同步。"
+
+**SSOT overlay 内容（已读全文）**：声明 `P2_RETRIEVAL_V1_STATUS=HOLD_BY_OWNER`、
+`P2_ACTIVE_PRIORITY=ARGUS_INSPIRED_G3_SEMANTIC_ANNOTATION`、`G3_DEPENDS_ON_RETRIEVAL_GATE=NO`，
+并明确冻结检索清单/rubric/未执行的 18-query Final Retrieval **不得**被重解释为已完成或失败。
+
+**Scope Change memo 内容（已读全文）**：`STATUS=OWNER_APPROVED_DIRECTION / REVIEW_BRANCH_PENDING_MERGE`；
+5 条 Owner 决定（HOLD、G3 新主线、Argus 核心功能重实现 + Apache-2.0 归属、工业最小评测
+**同一冻结 Qwen3-VL 模型** + A/B 对照、不训练 ACT/VLA、不自动 DROP/UPWEIGHT）。
+其 "Next execution" 第 1 条明确要求**先把 Design / Plan / Output Design 三份文档纳入 PR 再合并**。
+
+### A.6 三份文档补齐状态 — **仍阻塞（输入缺失）**
 
 | 项 | 状态 |
 |---|---|
-| PR #1 `design/p2-g3-argus-scope-20261012` 本地是否存在 | **不存在**（`git show-ref` 无该 ref；未 fetch 成功） |
-| 该分支内容（HOLD overlay / Scope Change memo）本地是否存在 | **不存在**（全仓 `grep -i "Argus\|P2_G3\|Retrieval_HOLD"` → 0 命中） |
-| `P2_G3_Argus_Review_Package_v1.zip` | **缺失**（Downloads / Desktop / embody 全盘搜索 → 0 命中） |
+| `P2_G3_Argus_Review_Package_v1.zip` | **缺失**（Downloads / Desktop / embody 全盘搜索 0 命中） |
+| PR 分支内是否已有三份文档 | **无**（diff 权威核验：仅 2 个文件） |
 | 三份目标文档 | **未创建、未提交** |
+| 结论 | **明确报告：缺少文档。** 依指令**不凭模型记忆重写**、**不新建重复 PR**、**不 merge** |
 
-**明确报告：缺少文档。** 依指令**不凭模型记忆重写**，**不新建重复 PR**，**不自动 merge**。
-第 2 节只读审计**未因此阻塞**（已按指令执行）。
+> **术语/状态一致性核查（可执行部分）**：PR 内 SSOT overlay 与 Scope Change memo **互相一致**
+> （HOLD 状态、G3 优先级、冻结保留、不训练 ACT/VLA、taxonomy 仍需单独冻结）。
+> 三份文档到手后需再核对其与这两者的术语与状态一致性，并做**最小定向修复**。
 
 ---
+
 
 ## B. Argus 核心能力 → P2 功能映射与缺口
 
