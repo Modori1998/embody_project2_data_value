@@ -32,6 +32,7 @@ def build_page(
     page_title: str = "Calibration Blind Human Audit",
     storage_key_suffix: str = "",
     export_filename: str = "calibration_human_audit_pairs_filled.csv",
+    review_guidance: str = "",
 ) -> dict[str, int | str]:
     source_csv = formal_run / "calibration_human_audit_pairs.csv"
     keyframe_csv = formal_run / "m2/keyframe_manifest.csv"
@@ -84,6 +85,8 @@ def build_page(
     if storage_key_suffix:
         storage_key += ":" + storage_key_suffix
     escaped_page_title = html.escape(page_title)
+    escaped_guidance = html.escape(review_guidance)
+    guidance_html = f'<div class="guidance">{escaped_guidance}</div>' if escaped_guidance else ""
     page = f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Project 2 {escaped_page_title}</title>
@@ -93,6 +96,7 @@ def build_page(
 header{{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);padding:12px 20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}}
 header strong{{font-size:18px}}.metric{{color:var(--muted)}}main{{max-width:1560px;margin:16px auto;padding:0 16px 120px}}
 .card{{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:0 2px 8px #0000000d}}
+.guidance{{background:#f7f9fb;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 14px;line-height:1.55;color:#344150}}
 h2{{margin-top:0}}h3{{margin:0 0 10px}}.compare{{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}}
 .compare-panel{{min-width:0;border:1px solid var(--line);border-radius:8px;padding:14px;background:#fbfcfd}}
 .strip{{display:flex;gap:8px;flex-wrap:wrap}}
@@ -107,7 +111,7 @@ button{{border:1px solid #9aa7b5;border-radius:6px;background:#fff;padding:10px 
 @media(max-width:980px){{.compare{{grid-template-columns:1fr}}.choices{{grid-template-columns:1fr}}.temporal img{{height:320px}}img{{width:140px;height:140px}}}}
 </style></head><body>
 <header><strong>{escaped_page_title}</strong><span class="metric" id="position"></span><span class="metric" id="completed"></span><span class="metric" id="remaining"></span></header>
-<main><article class="card"><h2 id="itemId"></h2><div class="compare"><section class="compare-panel"><h3>Query</h3><div class="temporal" id="queryTemporal"><img id="queryGif" alt="Query segment temporal GIF"></div><div class="strip" id="queryStrip"></div><div class="meta" id="queryMeta"></div></section><section class="compare-panel"><h3>Candidate</h3><div class="temporal" id="candidateTemporal"><img id="candidateGif" alt="Candidate segment temporal GIF"></div><div class="strip" id="candidateStrip"></div><div class="meta" id="candidateMeta"></div></section></div><div class="choices" id="choices"></div></article></main>
+<main><article class="card">{guidance_html}<h2 id="itemId"></h2><div class="compare"><section class="compare-panel"><h3>Query</h3><div class="temporal" id="queryTemporal"><img id="queryGif" alt="Query segment temporal GIF"></div><div class="strip" id="queryStrip"></div><div class="meta" id="queryMeta"></div></section><section class="compare-panel"><h3>Candidate</h3><div class="temporal" id="candidateTemporal"><img id="candidateGif" alt="Candidate segment temporal GIF"></div><div class="strip" id="candidateStrip"></div><div class="meta" id="candidateMeta"></div></section></div><div class="choices" id="choices"></div></article></main>
 <footer><button id="previous">上一条</button><button id="next">下一条</button><button class="primary" id="export">导出填写好的 CSV</button></footer>
 <script>
 const items={payload};

@@ -69,11 +69,13 @@ class CalibrationAuditUITests(unittest.TestCase):
                 page_title="Calibration UNSURE Re-audit",
                 storage_key_suffix="unsure-reaudit-v1-20261012",
                 export_filename="calibration_unsure_reaudit_filled.csv",
+                review_guidance="Judge full temporal behavior, not absolute position alone.",
             )
             subset_page = (subset_output / "index.html").read_text(encoding="utf-8")
             self.assertIn("Calibration UNSURE Re-audit", subset_page)
             self.assertIn("unsure-reaudit-v1-20261012", subset_page)
             self.assertIn("calibration_unsure_reaudit_filled.csv", subset_page)
+            self.assertIn("Judge full temporal behavior, not absolute position alone.", subset_page)
             self.assertIn("function loadAnswers()", page)
             self.assertIn("lines.join('\\r\\n')", page)
             self.assertNotIn("lines.join('\r\n')", page)

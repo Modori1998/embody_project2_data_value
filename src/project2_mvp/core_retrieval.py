@@ -209,6 +209,7 @@ def build_blind_audit_items(
     *,
     cohort: str = "CALIBRATION",
     repeat_n: int = 12,
+    item_prefix: str = "CAL",
 ) -> tuple[list[dict[str, Any]], list[tuple[str, str]], int]:
     """Union Top-K pairs, choose hidden repeats, and return blind ordered items."""
 
@@ -241,7 +242,7 @@ def build_blind_audit_items(
     visible = [
         {
             "audit_order": index + 1,
-            "audit_item_id": f"CAL-{index + 1:04d}",
+            "audit_item_id": f"{item_prefix}-{index + 1:04d}",
             "query_segment_id": row["query_segment_id"],
             "candidate_segment_id": row["candidate_segment_id"],
         }

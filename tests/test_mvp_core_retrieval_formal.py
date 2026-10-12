@@ -63,6 +63,16 @@ class FormalCoreRetrievalTests(unittest.TestCase):
         self.assertEqual(len(repeats), 12)
         self.assertEqual(len(first), unique + 12)
         self.assertTrue(all(set(row) == {"audit_order", "audit_item_id", "query_segment_id", "candidate_segment_id"} for row in first))
+        final_items, final_repeats, final_unique = build_blind_audit_items(
+            motion,
+            visual,
+            cohort="FINAL",
+            item_prefix="FIN",
+        )
+        self.assertEqual(len(final_repeats), 12)
+        self.assertEqual(len(final_items), final_unique + 12)
+        self.assertTrue(all(row["audit_item_id"].startswith("FIN-") for row in final_items))
+        self.assertNotEqual(first, final_items)
 
     def test_stage1_scope_declares_no_final_retrieval(self) -> None:
         runner = (Path(__file__).resolve().parents[1] / "scripts/run_mvp_core_retrieval_formal_stage1.py").read_text(encoding="utf-8")
