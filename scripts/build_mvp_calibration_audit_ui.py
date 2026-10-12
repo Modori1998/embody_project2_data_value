@@ -28,12 +28,16 @@ def build_page(
     *,
     segment_gifs: dict[str, str] | None = None,
     allow_existing_output: bool = False,
+    audit_rows: list[dict[str, str]] | None = None,
+    page_title: str = "Calibration Blind Human Audit",
+    storage_key_suffix: str = "",
+    export_filename: str = "calibration_human_audit_pairs_filled.csv",
 ) -> dict[str, int | str]:
     source_csv = formal_run / "calibration_human_audit_pairs.csv"
     keyframe_csv = formal_run / "m2/keyframe_manifest.csv"
-    if not source_csv.is_file() or not keyframe_csv.is_file():
+    if not keyframe_csv.is_file() or (audit_rows is None and not source_csv.is_file()):
         raise FileNotFoundError("Formal Stage1 audit CSV or keyframe manifest is missing")
-    rows = read_csv(source_csv)
+    rows = [dict(row) for row in audit_rows] if audit_rows is not None else read_csv(source_csv)
     keyframes = read_csv(keyframe_csv)
     if not rows:
         raise ValueError("Calibration blind audit package is empty")
@@ -77,9 +81,12 @@ def build_page(
 
     payload = json.dumps(items, ensure_ascii=False).replace("</", "<\\/")
     storage_key = "project2-calibration-audit:" + formal_run.name
+    if storage_key_suffix:
+        storage_key += ":" + storage_key_suffix
+    escaped_page_title = html.escape(page_title)
     page = f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Project 2 Calibration Blind Human Audit</title>
+<title>Project 2 {escaped_page_title}</title>
 <style>
 :root{{--bg:#f4f6f8;--card:#fff;--line:#d8dee6;--ink:#17202a;--muted:#627080;--accent:#1769aa;--chosen:#d9ecff}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Microsoft YaHei",sans-serif}}
@@ -99,7 +106,7 @@ footer{{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px so
 button{{border:1px solid #9aa7b5;border-radius:6px;background:#fff;padding:10px 18px;cursor:pointer;font-weight:700}}button.primary{{background:var(--accent);color:#fff;border-color:var(--accent)}}button:disabled{{opacity:.45;cursor:not-allowed}}
 @media(max-width:980px){{.compare{{grid-template-columns:1fr}}.choices{{grid-template-columns:1fr}}.temporal img{{height:320px}}img{{width:140px;height:140px}}}}
 </style></head><body>
-<header><strong>Calibration Blind Human Audit</strong><span class="metric" id="position"></span><span class="metric" id="completed"></span><span class="metric" id="remaining"></span></header>
+<header><strong>{escaped_page_title}</strong><span class="metric" id="position"></span><span class="metric" id="completed"></span><span class="metric" id="remaining"></span></header>
 <main><article class="card"><h2 id="itemId"></h2><div class="compare"><section class="compare-panel"><h3>Query</h3><div class="temporal" id="queryTemporal"><img id="queryGif" alt="Query segment temporal GIF"></div><div class="strip" id="queryStrip"></div><div class="meta" id="queryMeta"></div></section><section class="compare-panel"><h3>Candidate</h3><div class="temporal" id="candidateTemporal"><img id="candidateGif" alt="Candidate segment temporal GIF"></div><div class="strip" id="candidateStrip"></div><div class="meta" id="candidateMeta"></div></section></div><div class="choices" id="choices"></div></article></main>
 <footer><button id="previous">上一条</button><button id="next">下一条</button><button class="primary" id="export">导出填写好的 CSV</button></footer>
 <script>
@@ -133,7 +140,7 @@ function csvCell(value){{const text=String(value??'');return /[",\\r\\n]/.test(t
 document.getElementById('export').onclick=()=>{{
  const fields=Object.keys(items[0].row);const lines=[fields.map(csvCell).join(',')];
  for(const item of items){{const row={{...item.row,review_label:answers[item.row.audit_item_id]||''}};lines.push(fields.map(field=>csvCell(row[field])).join(','))}}
- const blob=new Blob(['\ufeff'+lines.join('\\r\\n')+'\\r\\n'],{{type:'text/csv;charset=utf-8'}});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='calibration_human_audit_pairs_filled.csv';link.click();URL.revokeObjectURL(link.href);
+ const blob=new Blob(['\ufeff'+lines.join('\\r\\n')+'\\r\\n'],{{type:'text/csv;charset=utf-8'}});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download={json.dumps(export_filename)};link.click();URL.revokeObjectURL(link.href);
 }};
 render();
 </script></body></html>"""
@@ -152,7 +159,7 @@ render();
                     "UNSURE",
                 ],
                 "browser_persistence": "localStorage",
-                "export_filename": "calibration_human_audit_pairs_filled.csv",
+                "export_filename": export_filename,
                 "blind_fields_exposed": False,
             },
             indent=2,

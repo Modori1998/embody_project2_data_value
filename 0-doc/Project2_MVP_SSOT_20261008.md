@@ -946,7 +946,11 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - CALIBRATION_AUDIT_ORDER_UNCHANGED = YES
 - CALIBRATION_METHOD_SCORE_RANK_HIDDEN = YES
 - CALIBRATION_RETRIEVAL_RERUN = NO
-- HUMAN_RELEVANCE_CALIBRATION = NOT_STARTED
+- HUMAN_RELEVANCE_CALIBRATION = RUBRIC_CLARIFICATION_IN_PROGRESS
+- CALIBRATION_FIRST_PASS_LABELS = ARCHIVED_95_ITEMS
+- CALIBRATION_FIRST_PASS_UNSURE = 31/95
+- CALIBRATION_UNSURE_REAUDIT = READY_31_ITEMS
+- CALIBRATION_UNSURE_REAUDIT_SOURCE = 01_calibration_human_audit_pairs_filled_20261011.csv
 - FINAL_RETRIEVAL = BLOCKED_PENDING_CALIBRATION_HUMAN_AUDIT
 - CORE_V1_LATE_FUSION = DISABLED
 - MVP-M3_VLM = CONDITIONAL_NON_BLOCKING
@@ -954,9 +958,9 @@ DINOv2 不阻塞 Core，只有需要定位视觉 representation failure 时再�
 - DINOV2 = CONDITIONAL_EXTENSION
 - PROJECT3_VALUE_VALIDATION = NOT_IN_P2_MVP
 
-NEXT = CALIBRATION_BLIND_HUMAN_AUDIT
+NEXT = CALIBRATION_UNSURE_REAUDIT
 
-**Complete the Calibration Blind Human Audit using the generated reviewer package. Do not run Final Retrieval, compute P@5, or make a GO / CONDITIONAL / STOP decision until Calibration Human relevance and rubric stability are reviewed.**
+**Re-audit the 31 first-pass `UNSURE` items using the existing temporal GIF evidence. This is Calibration rubric clarification only: do not rerun Retrieval, change Top-K, or treat the re-audit as a Formal Core result. Final Retrieval remains blocked until the Calibration rubric is frozen.**
 
 ---
 

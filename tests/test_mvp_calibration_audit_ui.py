@@ -55,6 +55,25 @@ class CalibrationAuditUITests(unittest.TestCase):
             self.assertEqual(page.count('class="compare-panel"'), 2)
             self.assertIn("grid-template-columns:minmax(0,1fr) minmax(0,1fr)", page)
             self.assertIn("@media(max-width:980px)", page)
+            subset_output = root / "subset_ui"
+            subset_row = {field: "" for field in fields} | {
+                "audit_order": "1",
+                "audit_item_id": "CAL-0001",
+                "query_segment_id": "q1",
+                "candidate_segment_id": "c1",
+            }
+            build_page(
+                formal,
+                subset_output,
+                audit_rows=[subset_row],
+                page_title="Calibration UNSURE Re-audit",
+                storage_key_suffix="unsure-reaudit-v1-20261012",
+                export_filename="calibration_unsure_reaudit_filled.csv",
+            )
+            subset_page = (subset_output / "index.html").read_text(encoding="utf-8")
+            self.assertIn("Calibration UNSURE Re-audit", subset_page)
+            self.assertIn("unsure-reaudit-v1-20261012", subset_page)
+            self.assertIn("calibration_unsure_reaudit_filled.csv", subset_page)
             self.assertIn("function loadAnswers()", page)
             self.assertIn("lines.join('\\r\\n')", page)
             self.assertNotIn("lines.join('\r\n')", page)
