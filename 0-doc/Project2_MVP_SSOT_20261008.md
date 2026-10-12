@@ -1,4 +1,8 @@
 # Project 2 MVP SSOT｜Robot Demonstration Mining & VLA Data Curation MVP
+
+> **2026-10-12 Owner Scope Change — REVIEW BRANCH, NOT YET MERGED**
+> Previous Retrieval-first execution priority is superseded on merger of this change, not retroactively: `P2_RETRIEVAL_V1_STATUS=HOLD_BY_OWNER`; `P2_ACTIVE_PRIORITY=ARGUS_INSPIRED_G3_SEMANTIC_ANNOTATION`; `G3_DEPENDS_ON_RETRIEVAL_GATE=NO`. Frozen Retrieval manifests, calibration, human rubric and the unexecuted 18-query Final Retrieval are preserved and must not be reinterpreted as a completed or failed benchmark. G1/M2 contracts unchanged; G3 minimum taxonomy, exact model revision and human evaluation still require a separate freeze. **No ACT/VLA training or automatic DROP/UPWEIGHT in G3 v1.** See [Owner scope change](10-design-review/P2_G3_Retrieval_HOLD_Scope_Change_v1_20261012.md). The historic `NEXT=FINAL_RETRIEVAL` status below is a pre-change snapshot and is not the new execution instruction.
+
 ## 2026-10-08｜ACTIVE MVP EXECUTION AUTHORITY
 
 > Status: ACTIVE
