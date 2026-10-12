@@ -452,8 +452,10 @@ G3_MVP_TAXONOMY           = PENDING_MINIMAL_FREEZE   (不变)
 
 ### G.1 需 Owner 决策（5 项，按优先级）
 
-1. **PR 文档补齐的输入通道**：`P2_G3_Argus_Review_Package_v1.zip` 缺失且网络不可用。
-   Owner 需决定：(a) 提供本地 ZIP；(b) 授权恢复网络后由执行侧 fetch；(c) 暂缓 PR #1 文档补齐。
+1. **PR 文档补齐的输入通道**：`P2_G3_Argus_Review_Package_v1.zip` **仍缺失**（网络已恢复，但该 ZIP
+   不在任何远端分支、不在本地任何目录）。Owner 需决定：(a) 提供本地 ZIP 路径；
+   (b) 告知该 ZIP 的下载来源（URL / 附件 / 分支），由执行侧取回；(c) 暂缓 PR #1 文档补齐。
+   > 注意：网络恢复**不改变**本项阻塞——缺失的是**文档内容本身**，不是通道。
 2. **Argus 上游 commit 固定与许可**：需 Owner 指定 Argus 仓库 URL + 目标 commit SHA，
    并确认 Apache-2.0 归属/NOTICE 的落地方式（本轮**无法**记录，属 OPEN BLOCKER）。
 3. **taxonomy 粒度与短段策略**：41% 段 ≤10 帧、20% 段为 `EPISODE_START` 前奏段。
@@ -489,7 +491,8 @@ RUN_DIR = <worktree>/outputs/g3_phase1_probe/g3_phase1_probe_20261012/
   development_pool.csv           sha256(前16) = 58b5cac7c4c67546
   evidence_packs/data__demo_*.json  (12 个)
 VISUAL = <worktree>/outputs/g3_phase1_probe/_visual/data__demo_*_contact_sheet.png  (12 张)
-CODE_COMMIT = 9bb28de  (branch p2-g3-local-ai-phase01-20261012)
+CODE_COMMIT = 970cce0  (branch p2-g3-local-ai-phase01-20261012；前序 9bb28de 脚手架 / 7fa0e88 A–G 报告)
+BASE        = b5fd9b9  (= 权威 origin/main)
 ```
 
 ---
@@ -507,8 +510,12 @@ P2 的检索之所以暂停，是因为 18-query 的正式 Final Retrieval 还�
 并且把每个关键帧渲染出来做了接触表人工目视。好消息是对齐和来源全都干净——12 条 episode 重复渲染像素哈希完全一致，
 0 个禁止字段漏入，Action 确实只是归一化控制器输入而不是物理速度。
 
-**遇到的阻碍**有三个，都很硬：GitHub 完全连不上（代理 502、直连被重置），所以远端 main 的真实 SHA
-无法权威确认、PR 分支也拉不下来；`P2_G3_Argus_Review_Package_v1.zip` 根本不在本地，
+**网络这块先说清楚**：第一次连 GitHub 时确实是断的（代理 502、直连被重置），我当时报了阻塞；
+你提醒是 VPN 之后我重试，代理端口已经漂到 `127.0.0.1:13931`，于是**通了**——所以远端 main 的真实 SHA
+`b5fd9b97d1b32ffa98d6facd95bf663be12ac63e` 已经**权威确认**，主工作树也从 `cc42b9b` 快进到了 `b5fd9b9`（40 个文件，+7531/−9，干净），
+PR #1 也核验清楚了（head `dcad5c12`，**未合并**，只有 HOLD overlay + Scope Change memo 两个文件，和任务书描述完全对上）。
+
+**仍然卡住的**是 `P2_G3_Argus_Review_Package_v1.zip`：它根本不在本地、也不在任何远端分支，
 所以三份设计文档我**没有**写、也**拒绝**凭记忆补；Argus 上游源码同样不可得，
 所以固定 commit SHA 和 Apache-2.0 归属要求这一轮**记录不了**。
 
