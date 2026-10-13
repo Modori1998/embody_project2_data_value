@@ -1,5 +1,7 @@
 # P2-G3 — Argus-inspired Semantic Curation | Output Design v1
 
+> **2026-10-13 Owner Freeze overlay**: **The output architecture is now frozen** as [Controlled Enum JSON + short note + frame evidence + deterministic QC](P2_G3_Structured_JSON_and_Evidence_Contract_Owner_Freeze_20261013.md). The sample `P2_G3_LABEL_V1_DRAFT` in this document and enum proposals remain **draft / not yet frozen**; retain their purpose as examples. Program injects trusted segment/Episode provenance outside model-owned payload. Invalid references and context-as-target events must fail closed. `JSON parse_ok` is not visual correctness.  
+
 > Date: 2026-10-12  
 > Status: `SCHEMA_PROPOSAL_PENDING_MINIMAL_TAXONOMY_FREEZE`  
 > Intended repo path: `0-doc/10-design-review/P2_G3_Argus_Output_Design_v1_20261012.md`  
