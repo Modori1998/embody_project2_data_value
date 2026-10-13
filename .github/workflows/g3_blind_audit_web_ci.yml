@@ -7,6 +7,7 @@ on:
       - "scripts/g3_semantic_blind_audit_template.html"
       - "scripts/g3c_multi_event.js"
       - "tests/test_g3_semantic_blind_audit_web.py"
+      - "tests/g3c_multi_event_dom_smoke.cjs"
       - "0-doc/10-design-review/evidence/P2_G3_Semantic_Blind_Audit_12_Source_20261013.csv"
       - ".github/workflows/g3_blind_audit_web_ci.yml"
   push:
@@ -29,3 +30,6 @@ jobs:
         run: python -m pip install --disable-pip-version-check pytest
       - name: Verify offline G3 audit builder
         run: python -m pytest -q tests/test_g3_semantic_blind_audit_web.py
+
+      - name: Simulate multi-event browser form and CSV roundtrip (Node)
+        run: node tests/g3c_multi_event_dom_smoke.cjs
