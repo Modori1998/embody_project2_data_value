@@ -58,6 +58,7 @@ function choose(name,value,checked=true) {
 async function run(){
  assert.equal(get("progress").textContent,"已完成 0 / 12");
  choose("phase_ref","transport");
+ choose("evidence_quality_ref","sufficient");
  choose("event_assessment_ref","event_visible");
  choose("event_types_ref","object_motion");
  choose("event_type_ref","object_motion");
