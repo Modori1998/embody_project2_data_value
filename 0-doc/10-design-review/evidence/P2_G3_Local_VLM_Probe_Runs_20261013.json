@@ -1,0 +1,861 @@
+{
+  "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+  "note": "Primary configuration is test_1img_A / test_3img_B / test_6img_C with --max-tokens 128 --temperature 0 --seed 1234 on the documented server. diag_* and alt_* runs are diagnostics, NOT the primary configuration, and must not be merged with it.",
+  "runs": [
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "smoke_single_real",
+      "started_utc": "2026-10-13T04:06:35.009321+00:00",
+      "finished_utc": "2026-10-13T04:06:37.529410+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "local-vlm",
+      "http_status": 200,
+      "image_count": 1,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        }
+      ],
+      "total_image_bytes": 24008,
+      "prompt": "请根据图像描述机械臂、夹爪和目标物体的可见状态。如果无法判断，明确说明无法判断。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": false,
+        "stream": false
+      },
+      "wall_seconds": 2.52,
+      "prompt_tokens": 51,
+      "completion_tokens": 128,
+      "predicted_ms": 1852.568,
+      "predicted_n": 128,
+      "prompt_ms": 581.551,
+      "prompt_n": 51,
+      "finish_reason": "length",
+      "response_text": "根据图像描述，可见状态如下：\n\n- 机械臂：一个白色的机械臂，其结构清晰可见，包括连接臂、关节和末端执行器。机械臂正悬停在工作台上方，其末端夹爪正对准目标物体。\n- 夹爪：夹爪为银灰色金属材质，呈张开状态，正对准目标物体，但尚未夹紧。\n- 目标物体：一个红色的圆柱形物体，位于工作台中央，被夹爪正对准，但尚未被夹取。\n\n综上，机械臂的夹爪正对准红色圆柱",
+      "json_parsed_ok": false,
+      "json_value": null,
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": false
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4806,
+        "vram_free_mib": 3151,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4824,
+        "vram_free_mib": 3133,
+        "gpu_util_pct": 93
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "2408, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": ""
+    },
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "test_1img_A",
+      "started_utc": "2026-10-13T04:06:59.733892+00:00",
+      "finished_utc": "2026-10-13T04:07:01.733065+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "qwen3-vl-4b-q4_k_m",
+      "http_status": 200,
+      "image_count": 1,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        }
+      ],
+      "total_image_bytes": 24008,
+      "prompt": "请根据图像描述机械臂、夹爪和目标物体的可见状态。如果无法判断，明确说明无法判断。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": false,
+        "stream": false
+      },
+      "wall_seconds": 1.999,
+      "prompt_tokens": 51,
+      "completion_tokens": 128,
+      "predicted_ms": 1668.285,
+      "predicted_n": 128,
+      "prompt_ms": 241.752,
+      "prompt_n": 1,
+      "finish_reason": "length",
+      "response_text": "根据图像描述，可见状态如下：\n\n- 机械臂：一个白色的机械臂，其结构清晰可见，包括连接臂、关节和末端执行器。机械臂正悬停在工作台上方，其末端夹爪正对准目标物体。\n- 夹爪：夹爪为银灰色金属材质，呈张开状态，正对准目标物体，但尚未夹紧。\n- 目标物体：一个红色的圆柱形物体，位于工作台中央，被夹爪正对准，但尚未被夹取。\n\n综上，机械臂的夹爪正对准红色圆柱",
+      "json_parsed_ok": false,
+      "json_value": null,
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": false
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4824,
+        "vram_free_mib": 3133,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4824,
+        "vram_free_mib": 3133,
+        "gpu_util_pct": 93
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "2408, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": "single target keyframe START",
+      "_driver_wall_seconds": 2.21,
+      "_vram_peak_mib_sampled": 4824,
+      "_vram_samples_n": 11
+    },
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "test_1img_A_json",
+      "started_utc": "2026-10-13T04:07:02.949859+00:00",
+      "finished_utc": "2026-10-13T04:07:04.039361+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "qwen3-vl-4b-q4_k_m",
+      "http_status": 200,
+      "image_count": 1,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        }
+      ],
+      "total_image_bytes": 24008,
+      "prompt": "请只输出一个 JSON 对象，字段为：arm_visible(布尔), gripper_state(字符串,取值为 open/closed/uncertain), target_object_visible(布尔), uncertain(布尔), notes(字符串)。如果无法从图像判断，把 uncertain 设为 true 并说明原因。不要输出 JSON 以外的内容。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": true,
+        "stream": false
+      },
+      "wall_seconds": 1.089,
+      "prompt_tokens": 96,
+      "completion_tokens": 73,
+      "predicted_ms": 949.692,
+      "predicted_n": 73,
+      "prompt_ms": 79.193,
+      "prompt_n": 92,
+      "finish_reason": "stop",
+      "response_text": "{\n  \"arm_visible\": true,\n  \"gripper_state\": \"closed\",\n  \"target_object_visible\": true,\n  \"uncertain\": false,\n  \"notes\": \"The robotic arm is in a closed gripper state, holding a red object. The target object (red object) is visible and being grasped by the gripper.\"\n}",
+      "json_parsed_ok": true,
+      "json_value": {
+        "arm_visible": true,
+        "gripper_state": "closed",
+        "target_object_visible": true,
+        "uncertain": false,
+        "notes": "The robotic arm is in a closed gripper state, holding a red object. The target object (red object) is visible and being grasped by the gripper."
+      },
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": false
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4824,
+        "vram_free_mib": 3133,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4824,
+        "vram_free_mib": 3133,
+        "gpu_util_pct": 93
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "2408, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": "single image, structured JSON requested",
+      "_driver_wall_seconds": 1.31,
+      "_vram_peak_mib_sampled": 4824,
+      "_vram_samples_n": 8
+    },
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "test_3img_B",
+      "started_utc": "2026-10-13T04:07:05.271334+00:00",
+      "finished_utc": "2026-10-13T04:07:07.152672+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "qwen3-vl-4b-q4_k_m",
+      "http_status": 200,
+      "image_count": 3,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        },
+        {
+          "order": 1,
+          "name": "data_demo_47_f00070.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00070.png",
+          "bytes": 23623,
+          "sha256": "2ff531241339f33ebf8bd88dbf8a5a13bf02ccb8b12bfef8cb9e3444d3a02b84"
+        },
+        {
+          "order": 2,
+          "name": "data_demo_47_f00090.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00090.png",
+          "bytes": 23753,
+          "sha256": "fbccf177e7d5d386baf099d8e8c4cb73dddd758560474fa39bb948d97df93a73"
+        }
+      ],
+      "total_image_bytes": 71384,
+      "prompt": "这三张图片按时间顺序排列。请描述机械臂的主要可见运动，不要推断看不见的接触或任务成功。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": false,
+        "stream": false
+      },
+      "wall_seconds": 1.881,
+      "prompt_tokens": 89,
+      "completion_tokens": 128,
+      "predicted_ms": 1664.661,
+      "predicted_n": 128,
+      "prompt_ms": 143.229,
+      "prompt_n": 86,
+      "finish_reason": "length",
+      "response_text": "按时间顺序，机械臂的主要可见运动如下：\n\n- 在第一张图中，机械臂的末端执行器（夹爪）正夹持着一个红色的圆柱形物体，位于浅棕色托盘的上方，处于即将放置或刚刚放置的瞬间。\n- 在第二张图中，机械臂已将红色圆柱形物体放置在右侧的黑色托盘中，夹爪已松开，正从物体上方移开，同时浅棕色托盘已从左侧移开，露出其下方的结构。\n- 在第三张图中，机械臂的末端执行器已移开",
+      "json_parsed_ok": false,
+      "json_value": null,
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": false
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4824,
+        "vram_free_mib": 3133,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4830,
+        "vram_free_mib": 3127,
+        "gpu_util_pct": 95
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "2408, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": "target keyframes START/MID/END",
+      "_driver_wall_seconds": 2.22,
+      "_vram_peak_mib_sampled": 4830,
+      "_vram_samples_n": 10
+    },
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "test_6img_C",
+      "started_utc": "2026-10-13T04:07:08.490548+00:00",
+      "finished_utc": "2026-10-13T04:07:10.535794+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "qwen3-vl-4b-q4_k_m",
+      "http_status": 200,
+      "image_count": 6,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00049.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00049.png",
+          "bytes": 24027,
+          "sha256": "177a83234624d68a098e9b53d9cf20c51757e999b0d4d15e4c3988a96dee76a4"
+        },
+        {
+          "order": 1,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        },
+        {
+          "order": 2,
+          "name": "data_demo_47_f00070.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00070.png",
+          "bytes": 23623,
+          "sha256": "2ff531241339f33ebf8bd88dbf8a5a13bf02ccb8b12bfef8cb9e3444d3a02b84"
+        },
+        {
+          "order": 3,
+          "name": "data_demo_47_f00090.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00090.png",
+          "bytes": 23753,
+          "sha256": "fbccf177e7d5d386baf099d8e8c4cb73dddd758560474fa39bb948d97df93a73"
+        },
+        {
+          "order": 4,
+          "name": "data_demo_47_f00091.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00091.png",
+          "bytes": 23722,
+          "sha256": "77bfa4a61b99861dd265dc5c029c21d75b5e0f2d30ee3d35f0f49479ebcc9598"
+        },
+        {
+          "order": 5,
+          "name": "data_demo_47_f00094.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00094.png",
+          "bytes": 23752,
+          "sha256": "7c2debc5c8bd39f42d134fbaaa67807b1262c6b5c6c5f61af82adc4e559f4f1d"
+        }
+      ],
+      "total_image_bytes": 142885,
+      "prompt": "这六张图片按时间顺序排列，来自同一个机器人 Episode（demo_47）。\n- 图1：目标 Segment 的前一段最后一帧（邻段上下文）\n- 图2、图3、图4：目标 Segment（demo_47-S0003）的原始关键帧\n- 图5、图6：目标 Segment 的后一段帧（邻段上下文）\n只判断目标 Segment 的可见行为。邻段图片仅用于补充上下文，不允许把邻段事件当作目标段内事件。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": false,
+        "stream": false
+      },
+      "wall_seconds": 2.045,
+      "prompt_tokens": 228,
+      "completion_tokens": 128,
+      "predicted_ms": 1699.385,
+      "predicted_n": 128,
+      "prompt_ms": 261.305,
+      "prompt_n": 224,
+      "finish_reason": "length",
+      "response_text": "按时间顺序排列的目标 Segment（demo_47-S0003）可见行为如下：\n\n- 图2：机器人机械臂正将一个红色物体（可能是球体或小块）放入右侧的黑色容器中。\n- 图3：机器人机械臂已将红色物体放入容器后，开始将一个黑色小物体（可能是积木或小块）放入同一个容器中。\n- 图4：机器人机械臂已将黑色小物体放入容器后，开始将一个白色小物体（可能是积木或小块）放入同一个容器中。\n- 图5：机器人机械臂已将白色小",
+      "json_parsed_ok": false,
+      "json_value": null,
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": false
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4830,
+        "vram_free_mib": 3127,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4832,
+        "vram_free_mib": 3125,
+        "gpu_util_pct": 94
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "2408, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": "target keyframes + neighbour context, roles labelled",
+      "_driver_wall_seconds": 2.27,
+      "_vram_peak_mib_sampled": 4832,
+      "_vram_samples_n": 11
+    },
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "test_6img_C_repeat",
+      "started_utc": "2026-10-13T04:07:11.765584+00:00",
+      "finished_utc": "2026-10-13T04:07:13.567321+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "qwen3-vl-4b-q4_k_m",
+      "http_status": 200,
+      "image_count": 6,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00049.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00049.png",
+          "bytes": 24027,
+          "sha256": "177a83234624d68a098e9b53d9cf20c51757e999b0d4d15e4c3988a96dee76a4"
+        },
+        {
+          "order": 1,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        },
+        {
+          "order": 2,
+          "name": "data_demo_47_f00070.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00070.png",
+          "bytes": 23623,
+          "sha256": "2ff531241339f33ebf8bd88dbf8a5a13bf02ccb8b12bfef8cb9e3444d3a02b84"
+        },
+        {
+          "order": 3,
+          "name": "data_demo_47_f00090.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00090.png",
+          "bytes": 23753,
+          "sha256": "fbccf177e7d5d386baf099d8e8c4cb73dddd758560474fa39bb948d97df93a73"
+        },
+        {
+          "order": 4,
+          "name": "data_demo_47_f00091.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00091.png",
+          "bytes": 23722,
+          "sha256": "77bfa4a61b99861dd265dc5c029c21d75b5e0f2d30ee3d35f0f49479ebcc9598"
+        },
+        {
+          "order": 5,
+          "name": "data_demo_47_f00094.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00094.png",
+          "bytes": 23752,
+          "sha256": "7c2debc5c8bd39f42d134fbaaa67807b1262c6b5c6c5f61af82adc4e559f4f1d"
+        }
+      ],
+      "total_image_bytes": 142885,
+      "prompt": "这六张图片按时间顺序排列，来自同一个机器人 Episode（demo_47）。\n- 图1：目标 Segment 的前一段最后一帧（邻段上下文）\n- 图2、图3、图4：目标 Segment（demo_47-S0003）的原始关键帧\n- 图5、图6：目标 Segment 的后一段帧（邻段上下文）\n只判断目标 Segment 的可见行为。邻段图片仅用于补充上下文，不允许把邻段事件当作目标段内事件。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": false,
+        "stream": false
+      },
+      "wall_seconds": 1.802,
+      "prompt_tokens": 228,
+      "completion_tokens": 128,
+      "predicted_ms": 1704.699,
+      "predicted_n": 128,
+      "prompt_ms": 17.465,
+      "prompt_n": 1,
+      "finish_reason": "length",
+      "response_text": "按时间顺序排列的目标 Segment（demo_47-S0003）可见行为如下：\n\n- 图2：机器人机械臂正将一个红色物体从左侧的浅色托盘中拿起，准备移动。\n- 图3：机器人机械臂已将红色物体移至右侧的深色托盘中，动作完成。\n- 图4：机器人机械臂已将红色物体放置在右侧深色托盘的指定位置，动作完成。\n- 图5：机器人机械臂已将红色物体放置在右侧深色托盘的指定位置，动作完成。\n- 图6：机器人机械臂已",
+      "json_parsed_ok": false,
+      "json_value": null,
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": false
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4832,
+        "vram_free_mib": 3125,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4832,
+        "vram_free_mib": 3125,
+        "gpu_util_pct": 94
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "2408, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": "stability repeat of the 6-image case",
+      "_driver_wall_seconds": 2.02,
+      "_vram_peak_mib_sampled": 4832,
+      "_vram_samples_n": 10
+    },
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "diag_1img_repeat",
+      "started_utc": "2026-10-13T04:07:26.704284+00:00",
+      "finished_utc": "2026-10-13T04:07:28.699266+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "local-vlm",
+      "http_status": 200,
+      "image_count": 1,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        }
+      ],
+      "total_image_bytes": 24008,
+      "prompt": "请根据图像描述机械臂、夹爪和目标物体的可见状态。如果无法判断，明确说明无法判断。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": false,
+        "stream": false
+      },
+      "wall_seconds": 1.995,
+      "prompt_tokens": 51,
+      "completion_tokens": 128,
+      "predicted_ms": 1658.474,
+      "predicted_n": 128,
+      "prompt_ms": 195.661,
+      "prompt_n": 1,
+      "finish_reason": "length",
+      "response_text": "根据图像描述，可见状态如下：\n\n- 机械臂：一个白色的机械臂，其结构清晰可见，包括连接臂、关节和末端执行器。机械臂正悬停在工作台上方，其末端夹爪正对准目标物体。\n- 夹爪：夹爪为银灰色金属材质，呈张开状态，正对准目标物体，但尚未夹紧。\n- 目标物体：一个红色的圆柱形物体，位于工作台中央，被夹爪正对准，但尚未被夹取。\n\n综上，机械臂的夹爪正对准红色圆柱",
+      "json_parsed_ok": false,
+      "json_value": null,
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": false
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4832,
+        "vram_free_mib": 3125,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4832,
+        "vram_free_mib": 3125,
+        "gpu_util_pct": 94
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "2408, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": ""
+    },
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "diag_6img_long",
+      "started_utc": "2026-10-13T04:07:29.057147+00:00",
+      "finished_utc": "2026-10-13T04:07:31.975039+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "local-vlm",
+      "http_status": 200,
+      "image_count": 6,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00049.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00049.png",
+          "bytes": 24027,
+          "sha256": "177a83234624d68a098e9b53d9cf20c51757e999b0d4d15e4c3988a96dee76a4"
+        },
+        {
+          "order": 1,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        },
+        {
+          "order": 2,
+          "name": "data_demo_47_f00070.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00070.png",
+          "bytes": 23623,
+          "sha256": "2ff531241339f33ebf8bd88dbf8a5a13bf02ccb8b12bfef8cb9e3444d3a02b84"
+        },
+        {
+          "order": 3,
+          "name": "data_demo_47_f00090.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00090.png",
+          "bytes": 23753,
+          "sha256": "fbccf177e7d5d386baf099d8e8c4cb73dddd758560474fa39bb948d97df93a73"
+        },
+        {
+          "order": 4,
+          "name": "data_demo_47_f00091.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00091.png",
+          "bytes": 23722,
+          "sha256": "77bfa4a61b99861dd265dc5c029c21d75b5e0f2d30ee3d35f0f49479ebcc9598"
+        },
+        {
+          "order": 5,
+          "name": "data_demo_47_f00094.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00094.png",
+          "bytes": 23752,
+          "sha256": "7c2debc5c8bd39f42d134fbaaa67807b1262c6b5c6c5f61af82adc4e559f4f1d"
+        }
+      ],
+      "total_image_bytes": 142885,
+      "prompt": "这六张图片按时间顺序排列，来自同一个机器人 Episode（demo_47）。\n- 图1：目标 Segment 的前一段最后一帧（邻段上下文）\n- 图2、图3、图4：目标 Segment（demo_47-S0003）的原始关键帧\n- 图5、图6：目标 Segment 的后一段帧（邻段上下文）\n只判断目标 Segment 的可见行为。邻段图片仅用于补充上下文，不允许把邻段事件当作目标段内事件。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 512,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": false,
+        "stream": false
+      },
+      "wall_seconds": 2.918,
+      "prompt_tokens": 228,
+      "completion_tokens": 212,
+      "predicted_ms": 2811.871,
+      "predicted_n": 212,
+      "prompt_ms": 13.409,
+      "prompt_n": 1,
+      "finish_reason": "stop",
+      "response_text": "按时间顺序排列的目标 Segment（demo_47-S0003）可见行为如下：\n\n- 图2：机器人机械臂正将一个红色物体从左侧的浅色托盘中拿起，准备移动。\n- 图3：机器人机械臂已将红色物体移至右侧的深色托盘中，动作完成。\n- 图4：机器人机械臂已将红色物体放置在右侧深色托盘的指定位置，动作完成。\n- 图5：机器人机械臂已将红色物体放置在右侧深色托盘的指定位置，动作完成。\n- 图6：机器人机械臂已将红色物体放置在右侧深色托盘的指定位置，动作完成。\n\n注意：图1和图5、图6是邻段上下文，不计入目标段内行为。图2、图3、图4、图5、图6是目标段内连续关键帧，按顺序描述了机器人将红色物体从左托盘移动到右托盘并放置的过程。",
+      "json_parsed_ok": false,
+      "json_value": null,
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": true
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4832,
+        "vram_free_mib": 3125,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 4832,
+        "vram_free_mib": 3125,
+        "gpu_util_pct": 93
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "2408, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": ""
+    },
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "alt_min1024_1img",
+      "started_utc": "2026-10-13T04:08:04.152308+00:00",
+      "finished_utc": "2026-10-13T04:08:07.568061+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "local-vlm",
+      "http_status": 200,
+      "image_count": 1,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        }
+      ],
+      "total_image_bytes": 24008,
+      "prompt": "请根据图像描述机械臂、夹爪和目标物体的可见状态。如果无法判断，明确说明无法判断。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": false,
+        "stream": false
+      },
+      "wall_seconds": 3.416,
+      "prompt_tokens": 1059,
+      "completion_tokens": 128,
+      "predicted_ms": 1801.905,
+      "predicted_n": 128,
+      "prompt_ms": 1507.97,
+      "prompt_n": 1059,
+      "finish_reason": "length",
+      "response_text": "根据图像描述，当前机械臂、夹爪和目标物体的可见状态如下：\n\n- **机械臂**：一个银白色的多关节机械臂，其末端执行器（夹爪）正悬停在左侧木制托盘上方，未与任何物体接触。\n- **夹爪**：夹爪处于张开状态，未夹持任何物体，其红色的视觉标记位于夹爪中心位置，表明夹爪当前为空。\n- **目标物体**：图像中未显示任何明确的目标物体（如待放置或待抓取的物品），左侧托盘上无物体，右侧托盘",
+      "json_parsed_ok": false,
+      "json_value": null,
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": false
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 5386,
+        "vram_free_mib": 2571,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 5502,
+        "vram_free_mib": 2455,
+        "gpu_util_pct": 93
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "7532, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": ""
+    },
+    {
+      "probe_version": "P2_G3_LOCAL_VLM_PROBE_V1",
+      "label": "alt_min1024_6img",
+      "started_utc": "2026-10-13T04:08:07.993161+00:00",
+      "finished_utc": "2026-10-13T04:08:14.404274+00:00",
+      "base_url": "http://127.0.0.1:8080",
+      "requested_model": "local-vlm",
+      "http_status": 200,
+      "image_count": 6,
+      "images": [
+        {
+          "order": 0,
+          "name": "data_demo_47_f00049.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00049.png",
+          "bytes": 24027,
+          "sha256": "177a83234624d68a098e9b53d9cf20c51757e999b0d4d15e4c3988a96dee76a4"
+        },
+        {
+          "order": 1,
+          "name": "data_demo_47_f00050.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00050.png",
+          "bytes": 24008,
+          "sha256": "ff8ef6d65df2974cc5d0fffde26ccb59219216db94e33d87b9817fcac9ded8a5"
+        },
+        {
+          "order": 2,
+          "name": "data_demo_47_f00070.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00070.png",
+          "bytes": 23623,
+          "sha256": "2ff531241339f33ebf8bd88dbf8a5a13bf02ccb8b12bfef8cb9e3444d3a02b84"
+        },
+        {
+          "order": 3,
+          "name": "data_demo_47_f00090.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00090.png",
+          "bytes": 23753,
+          "sha256": "fbccf177e7d5d386baf099d8e8c4cb73dddd758560474fa39bb948d97df93a73"
+        },
+        {
+          "order": 4,
+          "name": "data_demo_47_f00091.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00091.png",
+          "bytes": 23722,
+          "sha256": "77bfa4a61b99861dd265dc5c029c21d75b5e0f2d30ee3d35f0f49479ebcc9598"
+        },
+        {
+          "order": 5,
+          "name": "data_demo_47_f00094.png",
+          "path": "<LOCAL_DEPLOY_ROOT>/rgb\\data_demo_47_f00094.png",
+          "bytes": 23752,
+          "sha256": "7c2debc5c8bd39f42d134fbaaa67807b1262c6b5c6c5f61af82adc4e559f4f1d"
+        }
+      ],
+      "total_image_bytes": 142885,
+      "prompt": "这六张图片按时间顺序排列，来自同一个机器人 Episode（demo_47）。图1：目标 Segment 的前一段最后一帧（邻段上下文）。图2、图3、图4：目标 Segment（demo_47-S0003）的原始关键帧。图5、图6：目标 Segment 的后一段帧（邻段上下文）。只判断目标 Segment 的可见行为。邻段图片仅用于补充上下文，不允许把邻段事件当作目标段内事件。",
+      "system_prompt": null,
+      "sampling": {
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "seed": 1234,
+        "json_object": false,
+        "stream": false
+      },
+      "wall_seconds": 6.411,
+      "prompt_tokens": 6272,
+      "completion_tokens": 101,
+      "predicted_ms": 1702.426,
+      "predicted_n": 101,
+      "prompt_ms": 4380.485,
+      "prompt_n": 6269,
+      "finish_reason": "stop",
+      "response_text": "图2：机器人抓取红色物体，从左侧木板上移动至右侧分隔盒上方。\n图3：机器人将红色物体移动至右侧分隔盒的右上格，准备放置。\n图4：机器人将红色物体放置在右侧分隔盒的右上格中。\n图5：机器人完成放置后，将红色物体移出分隔盒，准备离开。\n图6：机器人将红色物体从分隔盒中移出，完成操作。",
+      "json_parsed_ok": false,
+      "json_value": null,
+      "evidence_flags": {
+        "states_uncertainty": false,
+        "mentions_neighbour_segment": false
+      },
+      "completed_inference": true,
+      "oom_detected": false,
+      "gpu_before": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 5502,
+        "vram_free_mib": 2455,
+        "gpu_util_pct": 0
+      },
+      "gpu_after": {
+        "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vram_total_mib": 8188,
+        "vram_used_mib": 5514,
+        "vram_free_mib": 2443,
+        "gpu_util_pct": 95
+      },
+      "gpu_compute_processes_after": [
+        "2568, [Insufficient Permissions], [N/A]",
+        "11744, C:\\Windows\\explorer.exe, [N/A]",
+        "22584, C:\\Program Files\\Listary\\Listary.exe, [N/A]",
+        "38416, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1007.2314.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]",
+        "7532, <LOCAL_DEPLOY_ROOT>\\llama_cpp\\bin\\llama-server.exe, [N/A]"
+      ],
+      "notes": ""
+    }
+  ]
+}
