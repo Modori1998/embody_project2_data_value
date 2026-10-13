@@ -135,3 +135,22 @@ def test_real_frozen_microset_csv_12_only():
     assert {r["cohort"] for r in rows}=={"microset"}
     assert len({r["episode_id"] for r in rows})==12
     assert "demo_47-S0003" not in {r["segment_id"] for r in rows}
+
+
+def test_frontend_javascript_has_valid_syntax(tmp_path):
+    """Node is available on GitHub Actions ubuntu runner; no browser deps."""
+    import shutil
+    import subprocess
+    if not shutil.which("node"):
+        pytest.skip("Node unavailable; manual browser smoke test still required")
+    html = TEMPLATE.read_text(encoding="utf-8")
+    script = html.rsplit("<script>", 1)[-1].split("</script>", 1)[0]
+    assert 'function exportCsv()' in script
+    assert 'function importCsv(raw)' in script
+    source = tmp_path / "g3_audit.js"
+    source.write_text(script, encoding="utf-8")
+    result = subprocess.run(
+        ["node", "--check", str(source)],
+        capture_output=True, text=True, check=False
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
