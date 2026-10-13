@@ -1,0 +1,5 @@
+# G3D Output Design — 2026-10-13
+
+Local run folder: `run_manifest.json` (source commit, model revision, task, prompt/schema SHA, sampling, cohort, stop gates), `inputs.jsonl` (segment identity, intervals, image SHA, A/B full prompt and request SHA, B motion JSON), `raw_responses.jsonl`, `parsed.jsonl`, `qc.jsonl`, `paired_scores.json`, `per_segment.csv`, and `resource_cost.csv`. Save full raw request and response locally. Export to GitHub only sanitized design, code, tests and aggregate results; never personal reference CSV or raw local paths.
+
+`paired_scores.json` contains phase accuracy, event presence P/R/F1, event-type micro P/R/F1, TP/FP/FN by event, exact event-set match, and gate decision `GAIN`, `NO_GAIN`, `INCONCLUSIVE` or `EXPERIMENT_NOT_RUN`. `per_segment.csv` includes A/B/human event sets, A-only/B-only/both-right/both-wrong, evidence QC, latency and tokens. Empty results must explicitly say `EXPERIMENT_NOT_RUN`; never populate inferred scores from historical model predictions.
