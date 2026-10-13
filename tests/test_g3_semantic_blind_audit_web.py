@@ -9,6 +9,10 @@ import pytest
 from scripts.build_g3_semantic_blind_audit import (
     AuditBundleError,
     SOURCE_FIELDS,
+    OUTPUT_FIELDS,
+    MULTI_EVENT_FIELDS,
+    REVIEW_JS,
+    DEFAULT_OUT,
     TEMPLATE,
     build_bundle,
     load_source,
@@ -49,9 +53,12 @@ def test_real_template_contains_no_model_predictions():
     assert html.count("__AUDIT_DATA_JSON__")==1
     for field in ("phase_ref","event_assessment_ref","event_type_ref","evidence_quality_ref"):
         assert 'id="'+field+'"' in html
-    assert "localStorage" in html
-    assert "importCsv" in html
-    assert "exportCsv" in html
+    assert '<script src="g3c_multi_event.js"></script>' in html
+    assert 'id="event_types_ref"' in html
+    assert 'id="event_evidence_ref"' in html
+    assert "localStorage" in REVIEW_JS.read_text(encoding="utf-8")
+    assert "function importCSV(" in REVIEW_JS.read_text(encoding="utf-8")
+    assert "function download(" in REVIEW_JS.read_text(encoding="utf-8")
     assert "labels_v0_2.jsonl" not in html
 
 
@@ -71,6 +78,12 @@ def test_happy_path_12_segments_36_verified_images(tmp_path):
     assert '"model_payload"' not in html
     assert '"label_qc_status"' not in html
     assert (out/"README.txt").is_file()
+    assert (out/"g3c_multi_event.js").read_bytes() == REVIEW_JS.read_bytes()
+    assert manifest["audit_version"] == "G3C_MULTI_EVENT_V2"
+    assert manifest["source_fields"] == list(SOURCE_FIELDS)
+    assert manifest["output_fields"] == list(OUTPUT_FIELDS)
+    assert len(OUTPUT_FIELDS) == len(SOURCE_FIELDS) + 4
+    assert "event_types_ref" in OUTPUT_FIELDS
     assert len(list((out/"images").glob("*.png")))==36
 
 
@@ -143,14 +156,30 @@ def test_frontend_javascript_has_valid_syntax(tmp_path):
     import subprocess
     if not shutil.which("node"):
         pytest.skip("Node unavailable; manual browser smoke test still required")
-    html = TEMPLATE.read_text(encoding="utf-8")
-    script = html.rsplit("<script>", 1)[-1].split("</script>", 1)[0]
-    assert 'function exportCsv()' in script
-    assert 'function importCsv(raw)' in script
-    source = tmp_path / "g3_audit.js"
-    source.write_text(script, encoding="utf-8")
+    source = REVIEW_JS
     result = subprocess.run(
         ["node", "--check", str(source)],
         capture_output=True, text=True, check=False
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_v2_bundle_isolated_and_no_source_schema_change():
+    assert DEFAULT_OUT.name == "g3c_v02_microset_12_multi_event"
+    assert len(SOURCE_FIELDS) == 16
+    assert len(MULTI_EVENT_FIELDS) == 4
+    assert list(OUTPUT_FIELDS[-4:]) == list(MULTI_EVENT_FIELDS)
+    assert all(f not in SOURCE_FIELDS for f in MULTI_EVENT_FIELDS)
+
+
+def test_g3c_event_evidence_validation_guards():
+    js = REVIEW_JS.read_text(encoding="utf-8")
+    assert "function valid(a,row)" in js
+    assert "function complete(a,row)" in js
+    assert "selected.every(" in js
+    assert "citationFields[t]" in js
+    assert "source_manifest_sha256" in js
+    assert "oldKey" in js
+    assert "legacy?migrate(a):a" in js
+    assert "if(bad.length)" in js
+    assert "model_payload" not in js
