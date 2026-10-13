@@ -1,4 +1,12 @@
 # Project 2 MVP SSOT｜Robot Demonstration Mining & VLA Data Curation MVP
+
+> **2026-10-13 Phase 1C Owner Observability Freeze — authoritative upon docs PR merge**  
+> **PHASE1C_REVIEW_STATUS=CLOSED_WITH_OWNER_SCORES_10_OF_10**; A=Target-only, B=A+Neighbor context; A `CAN=7/CANNOT=3`; B `CAN=9/UNCERTAIN=1`; paired improvements **3/10** (2 full `CANNOT→CAN`, 1 partial `CANNOT→UNCERTAIN`), unchanged **7/10**, worsened **0/10**. This is **one human's subjective observability**, not human semantic GT or measured VLM accuracy. **CONTEXT_POLICY_DECISION=KEEP_CONTEXT_OPTIONAL**; `FORMAL_VLM_INPUT_POLICY=PENDING_FREEZE`. Full locked scoring definitions, 10 original score rows, source hash, short-segment evidence and precise limitations: [Phase 1B/1C owner freeze](10-design-review/P2_G3_Phase1B_1C_Observability_Owner_Freeze_20261013.md), [raw owner scores](10-design-review/evidence/P2_G3_Phase1C_Simple10_Owner_Scored_Raw_20261013.csv). G1/M2, Retrieval HOLD and original images remain unchanged. **The context-observability A/B is not the later formal Vision-only vs Vision+Robot-state A/B.**  
+> **Open decisions**: G3 formal taxonomy, VLM exact revision/prompt, final A/B input policy, human reference / held-out eval, acceptance thresholds, optional higher-native-resolution contract. Phase 1/1B/1C runtime branches remain unmerged and are not frozen to main by this docs-only PR.
+
+> **2026-10-12 Owner Scope Change — documentation approved by Owner**
+> Previous Retrieval-first execution priority is superseded when this approved documentation change merges to main, not retroactively: `P2_RETRIEVAL_V1_STATUS=HOLD_BY_OWNER`; `P2_ACTIVE_PRIORITY=ARGUS_INSPIRED_G3_SEMANTIC_ANNOTATION`; `G3_DEPENDS_ON_RETRIEVAL_GATE=NO`. Frozen Retrieval manifests, calibration, human rubric and the unexecuted 18-query Final Retrieval are preserved and must not be reinterpreted as a completed or failed benchmark. G1/M2 contracts unchanged; G3 minimum taxonomy, exact model revision and human evaluation still require a separate freeze. **No ACT/VLA training or automatic DROP/UPWEIGHT in G3 v1.** See [Owner scope change](10-design-review/P2_G3_Retrieval_HOLD_Scope_Change_v1_20261012.md). The historic `NEXT=FINAL_RETRIEVAL` status below is a pre-change snapshot and is not the new execution instruction.
+
 ## 2026-10-08｜ACTIVE MVP EXECUTION AUTHORITY
 
 > Status: ACTIVE
