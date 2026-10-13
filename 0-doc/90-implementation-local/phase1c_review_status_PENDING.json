@@ -1,9 +1,0 @@
-{
-  "decision": "PENDING_HUMAN_REVIEW",
-  "selected": 24,
-  "complete": 0,
-  "skipped": 0,
-  "missing": 24,
-  "reviewer_id": "owner",
-  "launch_command": "python scripts/run_g3_phase1c_review.py --assets <PHASE1B_AB_OUTPUT>"
-}

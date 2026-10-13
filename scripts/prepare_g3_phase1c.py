@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'src'))
-from project2_g3.human_review import read_csv, select, sha, validate_assets, blank
+from project2_g3.simple_review import read_csv, select, sha, validate_assets, blank
 
 def write(path, rows):
     path.parent.mkdir(parents=True,exist_ok=True)
@@ -23,8 +23,13 @@ def main():
         r['source_review_sha256']=sha(a.assets/'ab_review_sheet_UNSCORED.csv')
         r['source_provenance_sha256']=sha(a.assets/'evidence_frame_manifest.csv')
         r['blinding_key_sha256']=sha(a.assets/'ab_blinding_key_SEALED.csv')
-    write(a.output/'phase1c_review_selection_manifest.csv',rows)
-    write(a.output/'phase1c_review_sheet_UNSCORED.csv',[blank(r,'UNASSIGNED') for r in rows])
+    kept=('episode_id','segment_id','start_frame','end_frame','length','prev_status','next_status',
+          'selection_strata','selection_seed','analyst_sheet','blinded_panel1','blinded_panel2',
+          'analyst_sheet_sha256','blinded_panel1_sha256','blinded_panel2_sha256',
+          'source_review_sha256','source_provenance_sha256','blinding_key_sha256')
+    rows=[{k:r[k] for k in kept} for r in rows]
+    write(a.output/'review_selection.csv',rows)
+    write(a.output/'review_sheet_UNSCORED.csv',[blank(r) for r in rows])
     print(f'locked {len(rows)} segments from {len(source)}; {len({r["episode_id"] for r in rows})} episodes')
 
 if __name__=='__main__':main()

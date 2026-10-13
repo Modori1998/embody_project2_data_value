@@ -1,0 +1,8 @@
+{
+  "context_decision": "PENDING_HUMAN_REVIEW",
+  "selected": 10,
+  "complete": 0,
+  "skipped": 0,
+  "unfinished": 10,
+  "launch_command": "python scripts/run_g3_phase1c_simple.py --assets <PHASE1B_AB_OUTPUT> --port 18871"
+}
