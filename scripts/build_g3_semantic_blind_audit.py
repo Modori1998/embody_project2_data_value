@@ -115,14 +115,56 @@ def locate_png(cache: Path, segment_id: str, frame_index: int) -> Path:
     return cache / f"{segment_id}_f{frame_index:05d}.png"
 
 
+def render_missing_rgb(rows: list[dict[str, str]], cache: Path) -> None:
+    """Optional renderer-only recovery. NEVER invoke the VLM or modify G1."""
+    import os
+    os.environ.setdefault("MUJOCO_GL", "wgl")
+    src_dir = ROOT / "src"
+    if str(src_dir) not in sys.path:
+        sys.path.insert(0, str(src_dir))
+
+    from project2_g1.config import load_g1_p1_config
+    from project2_g1.source import build_can_mh_adapter
+    from project2_mvp.m2_materializer import assert_frozen_g1_identity
+    from project2_mvp.rgb_input import render_clean_rgb_frames, write_clean_rgb_png
+
+    assert_frozen_g1_identity()
+    adapter = build_can_mh_adapter(load_g1_p1_config())
+    cache.mkdir(parents=True, exist_ok=True)
+    for row in rows:
+        ids = [int(v) for v in row["target_keyframes"].split(";")]
+        needed = [
+            frame for frame in ids
+            if not locate_png(cache, row["segment_id"], frame).is_file()
+        ]
+        if not needed:
+            continue
+        rendered = render_clean_rgb_frames(adapter, row["episode_id"], needed)
+        by_index = {f.frame_index: f for f in rendered}
+        if set(by_index) != set(needed):
+            raise AuditBundleError("Renderer returned unexpected frames: " + row["segment_id"])
+        for frame_index in needed:
+            frame = by_index[frame_index]
+            # Clean RGB contract explicitly forbids label/overlay or MP4 roundtrip.
+            provenance = frame.provenance
+            if (provenance["overlay_applied"] or provenance["audit_mp4_used"]
+                    or provenance["lossy_video_roundtrip"]):
+                raise AuditBundleError("Non-clean RGB renderer result")
+            path = locate_png(cache, row["segment_id"], frame_index)
+            write_clean_rgb_png(frame, path)
+
+
 def build_bundle(
     source: Path,
     rgb_cache: Path,
     output: Path,
     template: Path = TEMPLATE,
+    render_missing: bool = False,
 ) -> dict:
     """Verify every frozen PNG file hash before finalizing an offline package."""
     rows, source_sha = load_source(source)
+    if render_missing:
+        render_missing_rgb(rows, rgb_cache)
     if not rgb_cache.is_dir():
         raise AuditBundleError(
             f"RGB cache missing: {rgb_cache}\n"
@@ -239,9 +281,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--rgb-cache", type=Path, default=DEFAULT_RGB_CACHE,
                         help="v0.2.1 RGB cache RUN DIRECTORY with demo_N-SXXXX_fNNNNN.png")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--render-missing", action="store_true",
+                        help="Use the EXISTING frozen Clean RGB renderer only if cache PNGs are missing; no VLM")
     args = parser.parse_args(argv)
     try:
-        result = build_bundle(args.source, args.rgb_cache, args.output)
+        result = build_bundle(args.source, args.rgb_cache, args.output,
+                              render_missing=args.render_missing)
     except (AuditBundleError, OSError, ValueError) as exc:
         print(f"G3_BLIND_AUDIT_BLOCKED: {exc}", file=sys.stderr)
         return 2
