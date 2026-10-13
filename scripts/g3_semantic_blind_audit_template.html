@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>P2-G3 Semantic Blind Audit · 人工语义盲审</title>
+<title>P2-G3C Multi-Event Blind Audit · 多事件人工语义盲审</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;color:#1d2935;background:#f4f6fa}
 *{box-sizing:border-box}body{margin:0}.shell{max-width:1180px;margin:auto;padding:20px}
@@ -20,6 +20,7 @@ figure img{display:block;width:100%;height:280px;object-fit:contain;image-render
 figcaption{font-size:13px;margin-top:7px;color:#475567;font-weight:600}
 fieldset{border:0;padding:0;margin:0}.choiceGroup{margin:0 0 15px}.choiceGroup legend{font-weight:700;margin-bottom:8px}
 .choices{display:flex;flex-wrap:wrap;gap:8px}.choice{display:inline-flex;gap:5px;align-items:center;padding:8px 10px;border:1px solid #cfdae7;border-radius:8px;font-size:13px;background:#fff;cursor:pointer}
+.evidenceItem{margin:8px 0;padding:11px;border:1px solid #dfe5ed;border-radius:9px;background:#f9fafc}.evidenceItem .choices{margin-top:8px}
 .choice:has(input:checked){border-color:#2565a7;background:#eaf3ff;color:#133e70}.choice input{accent-color:#205d9c}
 textarea,input[type=text]{width:100%;border:1px solid #bccbdc;border-radius:8px;font:inherit;padding:9px;max-width:100%}
 textarea{min-height:68px;resize:vertical}
@@ -35,7 +36,7 @@ footer{font-size:12px;color:#617184;padding:18px 0}
 <body>
 <div class="shell">
 <header>
-<div><h1>P2-G3 · Semantic Blind Audit</h1><div class="muted">12 个 Development Segment · 仅目标段 Clean RGB · 模型预测完全隐藏</div></div>
+<div><h1>P2-G3 · Semantic Blind Audit</h1><div class="muted">12 个 Development Segment · 仅目标段 Clean RGB · 多事件证据补审 · 模型预测隐藏</div></div>
 <div class="compact"><label for="reviewer">审核人</label><input id="reviewer" type="text" style="width:170px" maxlength="100" placeholder="例如 OWNER"/></div>
 </header>
 <div class="notice"><b>盲审协议：</b>只根据当前显示的目标段关键帧回答。动作需要可见的时间变化；夹爪闭合不是抓取成功。<b>未观察到事件</b>不等于<b>确定没有事件</b>。如果看不清，请选择“不确定/证据不足”。页面不显示任何 VLM 输出。</div>
@@ -54,171 +55,26 @@ footer{font-size:12px;color:#617184;padding:18px 0}
 <p class="help">这三张是本地按冻结帧号准备的原始 Clean RGB；没有邻段帧、标签图、后验结果或机器人特权状态。图片准备程序已校验各 PNG 文件 SHA256。</p>
 </section>
 <section class="panel">
-<h2>人工审核 · 四项判断</h2>
+<h2>人工审核 · 动作阶段与多事件</h2>
 <form id="reviewForm" autocomplete="off">
 <fieldset class="choiceGroup"><legend>① 主要可见动作 phase_ref</legend><div class="choices" id="phase_ref"></div><p class="help">靠近：相对距离减小；抓取尝试：看到靠近物体并闭合等过程；提起/搬运/放置/撤离需要时间变化证据。看不到过程可选“无法判断”，不能从夹爪静态构型推断。</p></fieldset>
 <fieldset class="choiceGroup"><legend>② 候选事件是否可见 event_assessment_ref</legend><div class="choices" id="event_assessment_ref"></div><p class="help">“未观察到”只指这三张图片；若无法判断事件发生与否，选“证据不足”。</p></fieldset>
-<fieldset class="choiceGroup"><legend>③ 事件类型 event_type_ref</legend><div class="choices" id="event_type_ref"></div><p class="help">如果②为“可见”，选择主要事件。若有多个事件，请在备注里说明其余事件；单选只记录主事件，不代表完整召回。</p></fieldset>
+<fieldset class="choiceGroup"><legend>③a 全部可见事件 event_types_ref（多选）</legend><div class="choices" id="event_types_ref"></div><p class="help">可同时选择抓取尝试和物体移动，前提是每个事件均有独立视觉证据。仅靠近物体不等于抓取尝试。</p></fieldset>
+<fieldset class="choiceGroup"><legend>③b 主要事件 event_type_ref（沿用旧版单选）</legend><div class="choices" id="event_type_ref"></div><p class="help">需从已选的可见事件中选择主要事件；保留此列仅为兼容旧人工标注及主要事件评估。</p></fieldset>
+<fieldset class="choiceGroup"><legend>③c 每个事件的证据帧（至少两张）</legend><div id="event_evidence_ref"></div><p class="help">依次选择能支持事件变化的目标帧，帧证据用于限定时间区间，并非精确接触时刻。请勿根据后续已搬运倒推不可见抓取。</p></fieldset>
 <fieldset class="choiceGroup"><legend>④ 动作阶段证据质量 evidence_quality_ref</legend><div class="choices" id="evidence_quality_ref"></div><p class="help"><b>充分：</b>可见时序证据支持主要动作标签。<b>部分：</b>一些状态可见，但无法可靠确定主要动作。<b>不足：</b>遮挡、缺失或时序信息无法支持动作判断。不能仅因段长 4 帧就选不足，也不能仅因夹爪清晰就选充分。</p></fieldset>
-<label for="explanation"><b>可选说明</b>（多事件、遮挡、关键歧义）</label>
+<label for="explanation"><b>可选说明</b>（未观察到的过程、遮挡、关键歧义）</label>
 <textarea id="explanation" maxlength="800" placeholder="仅记录自己从三张图中观察到的事实"></textarea>
 </form>
 <p id="caseStatus" class="muted"></p>
 </section>
 <div class="actions">
 <div class="compact"><button id="prev" type="button">← 上一条</button><button id="next" type="button">下一条 →</button></div>
-<div class="compact"><button id="import" type="button">导入已有 CSV</button><button id="export" type="button" class="primary">导出完整 CSV</button><input id="importFile" type="file" accept=".csv,text/csv" hidden></div>
+<div class="compact"><button id="import" type="button">导入已有 CSV</button><button id="export" type="button" class="primary">导出多事件 CSV</button><input id="importFile" type="file" accept=".csv,text/csv" hidden></div>
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
 <footer>本地静态审核页 · 无服务器提交、无第三方网络请求 · 人工参考数据不自动上传 GitHub。导出后请妥善保管 CSV。</footer>
 </div>
 <script id="audit-payload" type="application/json">__AUDIT_DATA_JSON__</script>
-<script>
-"use strict";
-(function () {
-const bundle = JSON.parse(document.getElementById("audit-payload").textContent);
-const rows = bundle.rows, fields = bundle.fields;
-const rubric = {
- phase_ref:[["approach","靠近"],["grasp","抓取尝试"],["lift","提起"],["transport","搬运"],["place","放置"],["retract","撤离"],["idle","静止"],["other","其他动作"],["uncertain","无法判断"]],
- event_assessment_ref:[["event_visible","观察到事件"],["no_event_visible","未观察到事件"],["insufficient_evidence","证据不足"]],
- event_type_ref:[["grasp_attempt","抓取尝试"],["release_attempt","释放尝试"],["object_motion","物体移动"],["none","无事件"],["uncertain","无法判断"]],
- evidence_quality_ref:[["sufficient","充分"],["partial","部分充分"],["insufficient","不足"]]
-};
-const editable = ["phase_ref","event_assessment_ref","event_type_ref","evidence_quality_ref","reviewer_id","reviewed_at_utc","explanation"];
-const key = "p2_g3_blind_audit_v1_" + bundle.source_manifest_sha256;
-let answers = {};
-let current = 0;
-let hasStorage = true;
-const $ = id => document.getElementById(id);
-const validChoice = (name,v) => !v || rubric[name].some(option=>option[0]===v);
-function validAnswer(a) {
- if (!a || typeof a!=="object") return false;
- for (const name of Object.keys(rubric)) if (!validChoice(name,String(a[name]||""))) return false;
- if (a.event_assessment_ref==="event_visible" && ["none","uncertain"].includes(a.event_type_ref)) return false;
- if (a.event_assessment_ref==="no_event_visible" && a.event_type_ref && a.event_type_ref!=="none") return false;
- if (a.event_assessment_ref==="insufficient_evidence" && a.event_type_ref && a.event_type_ref!=="uncertain") return false;
- return true;
-}
-function complete(a){
- if (!a || !validAnswer(a)) return false;
- return Boolean(a.phase_ref && a.event_assessment_ref && a.event_type_ref && a.evidence_quality_ref);
-}
-function restore(){
- try { const raw = localStorage.getItem(key);
-  if (raw){ const data=JSON.parse(raw); if (data && typeof data==="object" && data.answers && typeof data.answers==="object"){
-   for (const row of rows) {const a=data.answers[row.segment_id];if (a && validAnswer(a)) answers[row.segment_id]=a;}
-   $("reviewer").value=String(data.reviewer||"").slice(0,100);
-  }}
- } catch(err){hasStorage=false;$("save-status").textContent="此浏览器不能自动保存，请频繁导出 CSV。";}
-}
-function persist(){
- try{ localStorage.setItem(key,JSON.stringify({reviewer:$("reviewer").value,answers}));hasStorage=true;}
- catch(err){hasStorage=false;$("save-status").textContent="浏览器自动保存不可用，请立即导出 CSV。";}
-}
-function buildChoices() {
- for (const [name,options] of Object.entries(rubric)){
-  const box=$(name);
-  for (const [value,text] of options) {
-   const label=document.createElement("label");label.className="choice";
-   const input=document.createElement("input");input.type="radio";input.name=name;input.value=value;
-   input.addEventListener("change",()=>changeValue(name,value));
-   label.append(input,document.createTextNode(text));
-   box.append(label);
-  }
- }
-}
-function changeValue(name,value){
- const row=rows[current],a=Object.assign({},answers[row.segment_id]||{});
- a[name]=value;
- if(name==="event_assessment_ref"){
-  if(value==="no_event_visible")a.event_type_ref="none";
-  else if(value==="insufficient_evidence")a.event_type_ref="uncertain";
-  else if(["none","uncertain"].includes(a.event_type_ref))a.event_type_ref="";
- }
- a.reviewer_id=$("reviewer").value.trim();
- a.reviewed_at_utc=complete(a)?new Date().toISOString():"";
- answers[row.segment_id]=a;persist();render();
-}
-function render(){
- const row=rows[current], a=answers[row.segment_id]||{};
- $("position").textContent=(current+1)+" / "+rows.length;
- $("identity").textContent=row.segment_id+" · Episode "+row.episode_id+" · 冻结区间 ["+row.start_frame+", "+row.end_frame+"]";
- const done=rows.filter(r=>complete(answers[r.segment_id])).length;
- $("progress").textContent="已完成 "+done+" / "+rows.length;
- $("progressFill").style.width=(100*done/rows.length)+"%";
- row.images.forEach((im,i)=>{
-  const el=$("frame-"+i);el.src=im.src;el.alt="目标段 "+im.role+" 帧 "+im.frame_index;
-  $("caption-"+i).textContent=im.role+" · frame "+im.frame_index;
-  el.onerror=()=>{$("caption-"+i).textContent="图片未加载：frame "+im.frame_index; $("caption-"+i).className="error";};
-  el.onload=()=>{$("caption-"+i).className="";};
- });
- for (const name of Object.keys(rubric)) {
-  for (const control of document.querySelectorAll('input[name="'+name+'"]')) control.checked=(control.value===a[name]);
- }
- $("explanation").value=a.explanation||"";
- $("caseStatus").textContent=complete(a)?"此条已完成 · 已保存在本地":"此条尚未完整填写（可以跳过稍后补充）";
- $("prev").disabled=current===0;$("next").disabled=current===rows.length-1;
- $("save-status").textContent=hasStorage?"填写即时保存在当前浏览器；请定期导出 CSV 备份。":"浏览器本地保存不可用，请使用 CSV 导出备份。";
-}
-function csvCell(v){const s=String(v==null?"":v);return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
-function exportCsv(){
- const result=[fields.join(",")];
- for (const row of rows){const a=answers[row.segment_id]||{};result.push(fields.map(f=>csvCell(editable.includes(f)?(a[f]||""):(row[f]||""))).join(","));}
- const blob=new Blob(["\ufeff"+result.join("\r\n")+"\r\n"],{type:"text/csv;charset=utf-8"});
- const url=URL.createObjectURL(blob),ln=document.createElement("a");ln.href=url;ln.download="G3_12_Segment_Human_Semantic_Reference.csv";document.body.appendChild(ln);ln.click();ln.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
- $("toast").textContent="已导出 "+rows.length+" 行；其中 "+rows.filter(r=>complete(answers[r.segment_id])).length+" 行完成。请保留 CSV 备份。";
-}
-function parseCSV(text){
- text=text.replace(/^\ufeff/,"");
- const data=[];let r=[],cell="",quoted=false;
- for(let i=0;i<text.length;i++){
-  const ch=text[i];
-  if(quoted){if(ch==='"' && text[i+1]==='"'){cell+='"';i++;}else if(ch==='"'){quoted=false;}else cell+=ch;}
-  else if(ch==='"'){if(cell!=="")throw Error("CSV 引号位置非法");quoted=true;}
-  else if(ch===","){r.push(cell);cell="";}
-  else if(ch==="\r"||ch==="\n"){if(ch==="\r" && text[i+1]==="\n")i++;r.push(cell);cell="";if(r.some(v=>v!==""))data.push(r);r=[];}
-  else cell+=ch;
- }
- if(quoted)throw Error("CSV 引号没有闭合");
- if(cell||r.length){r.push(cell);data.push(r);}
- return data;
-}
-function importCsv(raw){
- const data=parseCSV(raw);
- if(data.length!==rows.length+1)throw Error("行数必须是 "+rows.length+" 条审核数据");
- if(JSON.stringify(data[0])!==JSON.stringify(fields))throw Error("CSV 列名/顺序与冻结模板不一致");
- const incoming={};
- for(let i=0;i<rows.length;i++){
-  const values=data[i+1];if(values.length!==fields.length)throw Error("第 "+(i+2)+" 行列数不一致");
-  const record={};fields.forEach((f,n)=>record[f]=values[n]);
-  const row=rows[i];if(record.segment_id!==row.segment_id)throw Error("第 "+(i+2)+" 行 Segment ID 不匹配");
-  for(const f of fields.filter(f=>!editable.includes(f)))if(record[f]!==String(row[f]||""))throw Error(row.segment_id+" 的冻结来源字段 "+f+" 已变化");
-  const a={};for(const f of editable)a[f]=record[f]||"";
-  if(!validAnswer(a))throw Error(row.segment_id+" 的人工枚举/事件组合不合法");
-  incoming[row.segment_id]=a;
- }
- answers=incoming;persist();render();
- $("toast").textContent="CSV 导入成功：12 行身份与来源均核验通过。";
-}
-$("reviewer").addEventListener("change",()=>{
- for(const a of Object.values(answers))if(a && complete(a))a.reviewer_id=$("reviewer").value.trim();
- persist();render();
-});
-$("explanation").addEventListener("input",()=>{
- const id=rows[current].segment_id;const a=Object.assign({},answers[id]||{});
- a.explanation=$("explanation").value;a.reviewer_id=$("reviewer").value.trim();
- a.reviewed_at_utc=complete(a)?new Date().toISOString():"";answers[id]=a;persist();
-});
-$("prev").addEventListener("click",()=>{if(current>0){current--;render();}});
-$("next").addEventListener("click",()=>{if(current<rows.length-1){current++;render();}});
-$("export").addEventListener("click",exportCsv);
-$("import").addEventListener("click",()=>$("importFile").click());
-$("importFile").addEventListener("change",async e=>{
- const file=e.target.files[0];if(!file)return;
- try{importCsv(await file.text());}catch(err){window.alert("导入失败（已有数据未改变）："+err.message);}
- e.target.value="";
-});
-buildChoices();restore();render();
-})();
-</script>
+<script src="g3c_multi_event.js"></script>
 </body></html>
