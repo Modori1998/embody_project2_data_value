@@ -1,0 +1,440 @@
+{
+  "manifest_version": "P2_G3_TAXONOMY_V02_DEV_MICROSET_v1",
+  "samples": [
+    {
+      "sample_order": 1,
+      "episode_id": "data/demo_2",
+      "segment_id": "demo_2-S0003",
+      "start_frame": 63,
+      "end_frame": 106,
+      "segment_length": 44,
+      "episode_duration_stratum": "SHORT",
+      "episode_frame_count": 113,
+      "episode_segment_count": 4,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        63,
+        84,
+        106
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.017796,
+        "eef_path_length_m": 0.582748,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 2,
+      "episode_id": "data/demo_4",
+      "segment_id": "demo_4-S0003",
+      "start_frame": 69,
+      "end_frame": 136,
+      "segment_length": 68,
+      "episode_duration_stratum": "SHORT",
+      "episode_frame_count": 142,
+      "episode_segment_count": 4,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        69,
+        102,
+        136
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.010985,
+        "eef_path_length_m": 0.877556,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 3,
+      "episode_id": "data/demo_28",
+      "segment_id": "demo_28-S0003",
+      "start_frame": 14,
+      "end_frame": 62,
+      "segment_length": 49,
+      "episode_duration_stratum": "SHORT",
+      "episode_frame_count": 109,
+      "episode_segment_count": 5,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        14,
+        38,
+        62
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.013793,
+        "eef_path_length_m": 0.191703,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 4,
+      "episode_id": "data/demo_180",
+      "segment_id": "demo_180-S0001",
+      "start_frame": 0,
+      "end_frame": 3,
+      "segment_length": 4,
+      "episode_duration_stratum": "SHORT",
+      "episode_frame_count": 132,
+      "episode_segment_count": 4,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        0,
+        1,
+        3
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.011057,
+        "eef_path_length_m": 0.004802,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 5,
+      "episode_id": "data/demo_159",
+      "segment_id": "demo_159-S0003",
+      "start_frame": 81,
+      "end_frame": 150,
+      "segment_length": 70,
+      "episode_duration_stratum": "MEDIUM",
+      "episode_frame_count": 151,
+      "episode_segment_count": 3,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        81,
+        115,
+        150
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.088047,
+        "eef_path_length_m": 0.692802,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 6,
+      "episode_id": "data/demo_169",
+      "segment_id": "demo_169-S0002",
+      "start_frame": 4,
+      "end_frame": 28,
+      "segment_length": 25,
+      "episode_duration_stratum": "MEDIUM",
+      "episode_frame_count": 158,
+      "episode_segment_count": 5,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        4,
+        16,
+        28
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.018136,
+        "eef_path_length_m": 0.193506,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 7,
+      "episode_id": "data/demo_172",
+      "segment_id": "demo_172-S0004",
+      "start_frame": 166,
+      "end_frame": 169,
+      "segment_length": 4,
+      "episode_duration_stratum": "MEDIUM",
+      "episode_frame_count": 170,
+      "episode_segment_count": 4,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        166,
+        167,
+        169
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.012649,
+        "eef_path_length_m": 0.014656,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 8,
+      "episode_id": "data/demo_232",
+      "segment_id": "demo_232-S0002",
+      "start_frame": 4,
+      "end_frame": 49,
+      "segment_length": 46,
+      "episode_duration_stratum": "MEDIUM",
+      "episode_frame_count": 187,
+      "episode_segment_count": 7,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        4,
+        26,
+        49
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.018784,
+        "eef_path_length_m": 0.26475,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 9,
+      "episode_id": "data/demo_71",
+      "segment_id": "demo_71-S0003",
+      "start_frame": 34,
+      "end_frame": 106,
+      "segment_length": 73,
+      "episode_duration_stratum": "LONG",
+      "episode_frame_count": 605,
+      "episode_segment_count": 19,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        34,
+        70,
+        106
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.017066,
+        "eef_path_length_m": 0.19291,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 10,
+      "episode_id": "data/demo_72",
+      "segment_id": "demo_72-S0002",
+      "start_frame": 4,
+      "end_frame": 88,
+      "segment_length": 85,
+      "episode_duration_stratum": "LONG",
+      "episode_frame_count": 337,
+      "episode_segment_count": 6,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        4,
+        46,
+        88
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.019128,
+        "eef_path_length_m": 0.363138,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 11,
+      "episode_id": "data/demo_183",
+      "segment_id": "demo_183-S0003",
+      "start_frame": 67,
+      "end_frame": 104,
+      "segment_length": 38,
+      "episode_duration_stratum": "LONG",
+      "episode_frame_count": 207,
+      "episode_segment_count": 6,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        67,
+        85,
+        104
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.115622,
+        "eef_path_length_m": 0.131302,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    },
+    {
+      "sample_order": 12,
+      "episode_id": "data/demo_216",
+      "segment_id": "demo_216-S0002",
+      "start_frame": 4,
+      "end_frame": 70,
+      "segment_length": 67,
+      "episode_duration_stratum": "LONG",
+      "episode_frame_count": 206,
+      "episode_segment_count": 7,
+      "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+      "segment_pick_rule": "among segments with length >= 4, lowest SHA256('P2_G3_TAXONOMY_V02_20261013|' + segment_id)",
+      "target_keyframes": [
+        4,
+        37,
+        70
+      ],
+      "keyframe_count": 3,
+      "selection_proxies": {
+        "gripper_travel": 0.031841,
+        "eef_path_length_m": 0.405837,
+        "provenance": "PROPRIO_STRUCTURAL_PROXY_NOT_MODEL_INPUT_NOT_HUMAN_GT"
+      }
+    }
+  ],
+  "selection": {
+    "episode_ids": [
+      "data/demo_2",
+      "data/demo_4",
+      "data/demo_28",
+      "data/demo_180",
+      "data/demo_159",
+      "data/demo_169",
+      "data/demo_172",
+      "data/demo_232",
+      "data/demo_71",
+      "data/demo_72",
+      "data/demo_183",
+      "data/demo_216"
+    ],
+    "episode_rows": [
+      {
+        "episode_id": "data/demo_2",
+        "frame_count": 113,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "SHORT",
+        "v02_digest": "02f90f9545f0c36e0ca9a86769eb939227b3346903c5703b685abe74377d39d8"
+      },
+      {
+        "episode_id": "data/demo_4",
+        "frame_count": 142,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "SHORT",
+        "v02_digest": "03321df4537dff2d7982f88e1eed10bc4b34d8116736a69298dd8bd2bfe2d4b8"
+      },
+      {
+        "episode_id": "data/demo_28",
+        "frame_count": 109,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "SHORT",
+        "v02_digest": "0853fbb2c3187c43f40b9b0a756dc08ac6c3828f5ff17b65e7fec5cfb8445e28"
+      },
+      {
+        "episode_id": "data/demo_180",
+        "frame_count": 132,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "SHORT",
+        "v02_digest": "097155513636f08dca7e2e2ecc5baea79fdd699e8653ec8c6f4d5fece1f56da0"
+      },
+      {
+        "episode_id": "data/demo_159",
+        "frame_count": 151,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "MEDIUM",
+        "v02_digest": "0143a6e3518485b84fae1dda67695fa1438689ec6b507b5542f2c2848921771d"
+      },
+      {
+        "episode_id": "data/demo_169",
+        "frame_count": 158,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "MEDIUM",
+        "v02_digest": "03993780da9ed26bfc0b3ae89babe79440e3bc823475639faf04062ed2c018e6"
+      },
+      {
+        "episode_id": "data/demo_172",
+        "frame_count": 170,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "MEDIUM",
+        "v02_digest": "0660885f8d92c62c1f913862a42107a37676da54fc275c54444d62923f75406b"
+      },
+      {
+        "episode_id": "data/demo_232",
+        "frame_count": 187,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "MEDIUM",
+        "v02_digest": "07335944fdfd512f01b8b4aea541cd329425e92a10bbb8dac263bee3947167bd"
+      },
+      {
+        "episode_id": "data/demo_71",
+        "frame_count": 605,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "LONG",
+        "v02_digest": "00594341ab502f98a1949b9400d37226e7e3c13e5e74eab809186a125c26f7cc"
+      },
+      {
+        "episode_id": "data/demo_72",
+        "frame_count": 337,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "LONG",
+        "v02_digest": "06152a1c6e0cb27eefa96a12503afbf837e88d9958cc087013cb63d612a3951d"
+      },
+      {
+        "episode_id": "data/demo_183",
+        "frame_count": 207,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "LONG",
+        "v02_digest": "07ac0a798332c82f130358424dbf16a8e8e6afa88d6d3ee3c7833d523c2532bb"
+      },
+      {
+        "episode_id": "data/demo_216",
+        "frame_count": 206,
+        "development_pool_member": "YES",
+        "exclusion_reasons": "",
+        "duration_stratum": "LONG",
+        "v02_digest": "1b5d45f63009a1d0f94139edf0757f2e9377b7bc8ed9448a11e54451bfa41df0"
+      }
+    ],
+    "selection_salt": "P2_G3_TAXONOMY_V02_20261013",
+    "excluded_probe_episodes": [
+      "data/demo_120",
+      "data/demo_155",
+      "data/demo_165",
+      "data/demo_196",
+      "data/demo_227",
+      "data/demo_24",
+      "data/demo_277",
+      "data/demo_292",
+      "data/demo_33",
+      "data/demo_47",
+      "data/demo_74",
+      "data/demo_75"
+    ],
+    "candidate_pool_size": 169,
+    "selection_rule": "Development pool minus the 12-episode Phase-1 probe set; duration terciles (frame_count ASC, episode_id ASC); within each stratum rank by SHA256('P2_G3_TAXONOMY_V02_20261013|' + episode_id); take first 4 per stratum"
+  },
+  "excluded_probe_episodes": [
+    "data/demo_120",
+    "data/demo_155",
+    "data/demo_165",
+    "data/demo_196",
+    "data/demo_227",
+    "data/demo_24",
+    "data/demo_277",
+    "data/demo_292",
+    "data/demo_33",
+    "data/demo_47",
+    "data/demo_74",
+    "data/demo_75"
+  ],
+  "sample_count": 12,
+  "note": "Episode-disjoint from the whole Phase-1 probe set, which contains every previously used and diagnostic episode. Structural proxies are for coverage description only; they are not event labels and not human GT."
+}

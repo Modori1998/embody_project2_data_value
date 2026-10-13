@@ -1,0 +1,822 @@
+{
+  "run_id": "g3_taxonomy_v02_20261013_r2",
+  "scope": "V0_2_TINY_PAIRED_DEVELOPMENT_ONLY_NOT_FORMAL",
+  "cohorts": {
+    "known_cases": 3,
+    "microset": 12
+  },
+  "rates_by_version": {
+    "v0_1": {
+      "all": {
+        "version": "P2_G3_SEMANTIC_JSON_V0_1_CANDIDATE",
+        "denominator": 15,
+        "model_requests_attempted": 15,
+        "json_parse_rate": 1.0,
+        "schema_valid_rate": 0.9333,
+        "frame_reference_valid_rate": 1.0,
+        "review_required_rate": 0.0667,
+        "truncated_output_count": 0,
+        "illegal_frame_reference_count": 0,
+        "cross_boundary_reference_count": 0,
+        "mean_wall_seconds": 2.817,
+        "peak_vram_used_mib": 4838,
+        "qc_status_counts": {
+          "VALID": 13,
+          "INVALID_MODEL_OUTPUT": 1,
+          "REVIEW_REQUIRED": 1
+        },
+        "finding_counts_by_check": {
+          "MISSING_REQUIRED_FIELD": 1,
+          "EVIDENCE_SUFFICIENCY_CANDIDATE": 1,
+          "LABEL_NOTE_CONFLICT_CANDIDATE": 1
+        },
+        "finding_counts_by_scope": {
+          "DETERMINISTIC": 1,
+          "CANDIDATE": 2
+        },
+        "motion_phase_uncertain_rate": 0.0,
+        "evidence_quality_partial_or_insufficient_rate": 0.0,
+        "whole_annotation_abstained_rate": 0.0,
+        "events_nonempty_rate": 0.0667,
+        "decisive_motion_phase_rate": 1.0,
+        "motion_phase_distribution": {
+          "approach": 9,
+          "grasp": 6
+        },
+        "gripper_state_distribution": {
+          "open": 9,
+          "closed": 6
+        },
+        "evidence_quality_distribution": {
+          "sufficient": 15
+        },
+        "object_relation_distribution": {
+          "object_static": 3,
+          "gripper_around": 12
+        },
+        "event_type_distribution": {
+          "grasp_attempt": 1
+        },
+        "event_outcome_distribution": {
+          "success": 1
+        },
+        "grasp_phase_count": 6,
+        "closed_gripper_count": 6,
+        "grasp_phase_with_closed_gripper_count": 6,
+        "closed_gripper_to_grasp_rate": 1.0,
+        "phase_gripper_contingency": {
+          "approach|open": 9,
+          "grasp|closed": 6
+        },
+        "semantic_accuracy": "NOT_ESTIMABLE",
+        "semantic_accuracy_note": "No independent human semantic reference was collected; accuracy / precision / recall / F1 are NOT_ESTIMABLE. Do not fabricate them.",
+        "event_assessment_distribution": "NOT_APPLICABLE",
+        "event_assessment_insufficient_evidence_rate": "NOT_APPLICABLE",
+        "event_visible_rate": "NOT_APPLICABLE",
+        "event_assessment_note": "v0.1 had no event_assessment field; this metric is NOT_APPLICABLE and must not be compared across versions as if identical."
+      },
+      "known_cases": {
+        "version": "P2_G3_SEMANTIC_JSON_V0_1_CANDIDATE",
+        "denominator": 3,
+        "model_requests_attempted": 3,
+        "json_parse_rate": 1.0,
+        "schema_valid_rate": 1.0,
+        "frame_reference_valid_rate": 1.0,
+        "review_required_rate": 0.0,
+        "truncated_output_count": 0,
+        "illegal_frame_reference_count": 0,
+        "cross_boundary_reference_count": 0,
+        "mean_wall_seconds": 2.865,
+        "peak_vram_used_mib": 4838,
+        "qc_status_counts": {
+          "VALID": 3
+        },
+        "finding_counts_by_check": {},
+        "finding_counts_by_scope": {},
+        "motion_phase_uncertain_rate": 0.0,
+        "evidence_quality_partial_or_insufficient_rate": 0.0,
+        "whole_annotation_abstained_rate": 0.0,
+        "events_nonempty_rate": 0.0,
+        "decisive_motion_phase_rate": 1.0,
+        "motion_phase_distribution": {
+          "approach": 2,
+          "grasp": 1
+        },
+        "gripper_state_distribution": {
+          "open": 2,
+          "closed": 1
+        },
+        "evidence_quality_distribution": {
+          "sufficient": 3
+        },
+        "object_relation_distribution": {
+          "object_static": 2,
+          "gripper_around": 1
+        },
+        "event_type_distribution": {},
+        "event_outcome_distribution": {},
+        "grasp_phase_count": 1,
+        "closed_gripper_count": 1,
+        "grasp_phase_with_closed_gripper_count": 1,
+        "closed_gripper_to_grasp_rate": 1.0,
+        "phase_gripper_contingency": {
+          "approach|open": 2,
+          "grasp|closed": 1
+        },
+        "semantic_accuracy": "NOT_ESTIMABLE",
+        "semantic_accuracy_note": "No independent human semantic reference was collected; accuracy / precision / recall / F1 are NOT_ESTIMABLE. Do not fabricate them.",
+        "event_assessment_distribution": "NOT_APPLICABLE",
+        "event_assessment_insufficient_evidence_rate": "NOT_APPLICABLE",
+        "event_visible_rate": "NOT_APPLICABLE",
+        "event_assessment_note": "v0.1 had no event_assessment field; this metric is NOT_APPLICABLE and must not be compared across versions as if identical."
+      },
+      "microset": {
+        "version": "P2_G3_SEMANTIC_JSON_V0_1_CANDIDATE",
+        "denominator": 12,
+        "model_requests_attempted": 12,
+        "json_parse_rate": 1.0,
+        "schema_valid_rate": 0.9167,
+        "frame_reference_valid_rate": 1.0,
+        "review_required_rate": 0.0833,
+        "truncated_output_count": 0,
+        "illegal_frame_reference_count": 0,
+        "cross_boundary_reference_count": 0,
+        "mean_wall_seconds": 2.805,
+        "peak_vram_used_mib": 4838,
+        "qc_status_counts": {
+          "INVALID_MODEL_OUTPUT": 1,
+          "REVIEW_REQUIRED": 1,
+          "VALID": 10
+        },
+        "finding_counts_by_check": {
+          "MISSING_REQUIRED_FIELD": 1,
+          "EVIDENCE_SUFFICIENCY_CANDIDATE": 1,
+          "LABEL_NOTE_CONFLICT_CANDIDATE": 1
+        },
+        "finding_counts_by_scope": {
+          "DETERMINISTIC": 1,
+          "CANDIDATE": 2
+        },
+        "motion_phase_uncertain_rate": 0.0,
+        "evidence_quality_partial_or_insufficient_rate": 0.0,
+        "whole_annotation_abstained_rate": 0.0,
+        "events_nonempty_rate": 0.0833,
+        "decisive_motion_phase_rate": 1.0,
+        "motion_phase_distribution": {
+          "grasp": 5,
+          "approach": 7
+        },
+        "gripper_state_distribution": {
+          "closed": 5,
+          "open": 7
+        },
+        "evidence_quality_distribution": {
+          "sufficient": 12
+        },
+        "object_relation_distribution": {
+          "gripper_around": 11,
+          "object_static": 1
+        },
+        "event_type_distribution": {
+          "grasp_attempt": 1
+        },
+        "event_outcome_distribution": {
+          "success": 1
+        },
+        "grasp_phase_count": 5,
+        "closed_gripper_count": 5,
+        "grasp_phase_with_closed_gripper_count": 5,
+        "closed_gripper_to_grasp_rate": 1.0,
+        "phase_gripper_contingency": {
+          "grasp|closed": 5,
+          "approach|open": 7
+        },
+        "semantic_accuracy": "NOT_ESTIMABLE",
+        "semantic_accuracy_note": "No independent human semantic reference was collected; accuracy / precision / recall / F1 are NOT_ESTIMABLE. Do not fabricate them.",
+        "event_assessment_distribution": "NOT_APPLICABLE",
+        "event_assessment_insufficient_evidence_rate": "NOT_APPLICABLE",
+        "event_visible_rate": "NOT_APPLICABLE",
+        "event_assessment_note": "v0.1 had no event_assessment field; this metric is NOT_APPLICABLE and must not be compared across versions as if identical."
+      }
+    },
+    "v0_2": {
+      "all": {
+        "version": "P2_G3_SEMANTIC_JSON_V0_2_CANDIDATE",
+        "denominator": 15,
+        "model_requests_attempted": 15,
+        "json_parse_rate": 1.0,
+        "schema_valid_rate": 0.9333,
+        "frame_reference_valid_rate": 1.0,
+        "review_required_rate": 0.4,
+        "truncated_output_count": 0,
+        "illegal_frame_reference_count": 0,
+        "cross_boundary_reference_count": 0,
+        "mean_wall_seconds": 4.516,
+        "peak_vram_used_mib": 4838,
+        "qc_status_counts": {
+          "INVALID_MODEL_OUTPUT": 1,
+          "REVIEW_REQUIRED": 6,
+          "VALID": 8
+        },
+        "finding_counts_by_check": {
+          "MISSING_REQUIRED_FIELD": 1,
+          "EVIDENCE_QUALITY_WITHOUT_CITATION": 3,
+          "PHASE_NOTE_MOTION_CONFLICT_CANDIDATE": 4
+        },
+        "finding_counts_by_scope": {
+          "DETERMINISTIC": 4,
+          "CANDIDATE": 4
+        },
+        "motion_phase_uncertain_rate": 0.0,
+        "evidence_quality_partial_or_insufficient_rate": 0.0,
+        "whole_annotation_abstained_rate": 0.0,
+        "events_nonempty_rate": 0.8,
+        "decisive_motion_phase_rate": 0.8,
+        "motion_phase_distribution": {
+          "idle": 3,
+          "grasp": 6,
+          "retract": 1,
+          "approach": 5
+        },
+        "gripper_state_distribution": {
+          "open": 8,
+          "closed": 7
+        },
+        "evidence_quality_distribution": {
+          "sufficient": 15
+        },
+        "object_relation_distribution": {
+          "object_static": 3,
+          "gripper_contact_visible": 7,
+          "gripper_around": 5
+        },
+        "event_type_distribution": {
+          "grasp_attempt": 11,
+          "release_attempt": 1
+        },
+        "event_outcome_distribution": {
+          "unclear": 12
+        },
+        "grasp_phase_count": 6,
+        "closed_gripper_count": 7,
+        "grasp_phase_with_closed_gripper_count": 6,
+        "closed_gripper_to_grasp_rate": 0.8571,
+        "phase_gripper_contingency": {
+          "idle|open": 3,
+          "grasp|closed": 6,
+          "retract|closed": 1,
+          "approach|open": 5
+        },
+        "semantic_accuracy": "NOT_ESTIMABLE",
+        "semantic_accuracy_note": "No independent human semantic reference was collected; accuracy / precision / recall / F1 are NOT_ESTIMABLE. Do not fabricate them.",
+        "event_assessment_distribution": {
+          "no_event_visible": 3,
+          "event_visible": 12
+        },
+        "event_assessment_insufficient_evidence_rate": 0.0,
+        "event_visible_rate": 0.8
+      },
+      "known_cases": {
+        "version": "P2_G3_SEMANTIC_JSON_V0_2_CANDIDATE",
+        "denominator": 3,
+        "model_requests_attempted": 3,
+        "json_parse_rate": 1.0,
+        "schema_valid_rate": 0.6667,
+        "frame_reference_valid_rate": 1.0,
+        "review_required_rate": 0.6667,
+        "truncated_output_count": 0,
+        "illegal_frame_reference_count": 0,
+        "cross_boundary_reference_count": 0,
+        "mean_wall_seconds": 3.863,
+        "peak_vram_used_mib": 4838,
+        "qc_status_counts": {
+          "INVALID_MODEL_OUTPUT": 1,
+          "REVIEW_REQUIRED": 2
+        },
+        "finding_counts_by_check": {
+          "MISSING_REQUIRED_FIELD": 1,
+          "EVIDENCE_QUALITY_WITHOUT_CITATION": 2,
+          "PHASE_NOTE_MOTION_CONFLICT_CANDIDATE": 1
+        },
+        "finding_counts_by_scope": {
+          "DETERMINISTIC": 3,
+          "CANDIDATE": 1
+        },
+        "motion_phase_uncertain_rate": 0.0,
+        "evidence_quality_partial_or_insufficient_rate": 0.0,
+        "whole_annotation_abstained_rate": 0.0,
+        "events_nonempty_rate": 0.3333,
+        "decisive_motion_phase_rate": 0.3333,
+        "motion_phase_distribution": {
+          "idle": 2,
+          "grasp": 1
+        },
+        "gripper_state_distribution": {
+          "open": 2,
+          "closed": 1
+        },
+        "evidence_quality_distribution": {
+          "sufficient": 3
+        },
+        "object_relation_distribution": {
+          "object_static": 2,
+          "gripper_contact_visible": 1
+        },
+        "event_type_distribution": {
+          "grasp_attempt": 1
+        },
+        "event_outcome_distribution": {
+          "unclear": 1
+        },
+        "grasp_phase_count": 1,
+        "closed_gripper_count": 1,
+        "grasp_phase_with_closed_gripper_count": 1,
+        "closed_gripper_to_grasp_rate": 1.0,
+        "phase_gripper_contingency": {
+          "idle|open": 2,
+          "grasp|closed": 1
+        },
+        "semantic_accuracy": "NOT_ESTIMABLE",
+        "semantic_accuracy_note": "No independent human semantic reference was collected; accuracy / precision / recall / F1 are NOT_ESTIMABLE. Do not fabricate them.",
+        "event_assessment_distribution": {
+          "no_event_visible": 2,
+          "event_visible": 1
+        },
+        "event_assessment_insufficient_evidence_rate": 0.0,
+        "event_visible_rate": 0.3333
+      },
+      "microset": {
+        "version": "P2_G3_SEMANTIC_JSON_V0_2_CANDIDATE",
+        "denominator": 12,
+        "model_requests_attempted": 12,
+        "json_parse_rate": 1.0,
+        "schema_valid_rate": 1.0,
+        "frame_reference_valid_rate": 1.0,
+        "review_required_rate": 0.3333,
+        "truncated_output_count": 0,
+        "illegal_frame_reference_count": 0,
+        "cross_boundary_reference_count": 0,
+        "mean_wall_seconds": 4.68,
+        "peak_vram_used_mib": 4838,
+        "qc_status_counts": {
+          "REVIEW_REQUIRED": 4,
+          "VALID": 8
+        },
+        "finding_counts_by_check": {
+          "PHASE_NOTE_MOTION_CONFLICT_CANDIDATE": 3,
+          "EVIDENCE_QUALITY_WITHOUT_CITATION": 1
+        },
+        "finding_counts_by_scope": {
+          "CANDIDATE": 3,
+          "DETERMINISTIC": 1
+        },
+        "motion_phase_uncertain_rate": 0.0,
+        "evidence_quality_partial_or_insufficient_rate": 0.0,
+        "whole_annotation_abstained_rate": 0.0,
+        "events_nonempty_rate": 0.9167,
+        "decisive_motion_phase_rate": 0.9167,
+        "motion_phase_distribution": {
+          "grasp": 5,
+          "retract": 1,
+          "approach": 5,
+          "idle": 1
+        },
+        "gripper_state_distribution": {
+          "closed": 6,
+          "open": 6
+        },
+        "evidence_quality_distribution": {
+          "sufficient": 12
+        },
+        "object_relation_distribution": {
+          "gripper_contact_visible": 6,
+          "gripper_around": 5,
+          "object_static": 1
+        },
+        "event_type_distribution": {
+          "grasp_attempt": 10,
+          "release_attempt": 1
+        },
+        "event_outcome_distribution": {
+          "unclear": 11
+        },
+        "grasp_phase_count": 5,
+        "closed_gripper_count": 6,
+        "grasp_phase_with_closed_gripper_count": 5,
+        "closed_gripper_to_grasp_rate": 0.8333,
+        "phase_gripper_contingency": {
+          "grasp|closed": 5,
+          "retract|closed": 1,
+          "approach|open": 5,
+          "idle|open": 1
+        },
+        "semantic_accuracy": "NOT_ESTIMABLE",
+        "semantic_accuracy_note": "No independent human semantic reference was collected; accuracy / precision / recall / F1 are NOT_ESTIMABLE. Do not fabricate them.",
+        "event_assessment_distribution": {
+          "event_visible": 11,
+          "no_event_visible": 1
+        },
+        "event_assessment_insufficient_evidence_rate": 0.0,
+        "event_visible_rate": 0.9167
+      }
+    }
+  },
+  "gates_by_version": {
+    "v0_1": {
+      "known_cases": {
+        "truncated_outputs": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "illegal_frame_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "cross_boundary_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "json_parse_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "schema_valid_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "frame_reference_valid_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "no_invalid_output_classified_valid": {
+          "note": "Enforced structurally: INVALID_MODEL_OUTPUT is decided before VALID, and a schema-invalid label can never be reported VALID.",
+          "pass": true
+        },
+        "all_gates_pass": true
+      },
+      "microset": {
+        "truncated_outputs": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "illegal_frame_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "cross_boundary_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "json_parse_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "schema_valid_rate": {
+          "observed": 0.9167,
+          "min": 0.9,
+          "pass": true
+        },
+        "frame_reference_valid_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "no_invalid_output_classified_valid": {
+          "note": "Enforced structurally: INVALID_MODEL_OUTPUT is decided before VALID, and a schema-invalid label can never be reported VALID.",
+          "pass": true
+        },
+        "all_gates_pass": true
+      },
+      "all": {
+        "truncated_outputs": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "illegal_frame_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "cross_boundary_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "json_parse_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "schema_valid_rate": {
+          "observed": 0.9333,
+          "min": 0.9,
+          "pass": true
+        },
+        "frame_reference_valid_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "no_invalid_output_classified_valid": {
+          "note": "Enforced structurally: INVALID_MODEL_OUTPUT is decided before VALID, and a schema-invalid label can never be reported VALID.",
+          "pass": true
+        },
+        "all_gates_pass": true
+      }
+    },
+    "v0_2": {
+      "known_cases": {
+        "truncated_outputs": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "illegal_frame_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "cross_boundary_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "json_parse_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "schema_valid_rate": {
+          "observed": 0.6667,
+          "min": 0.9,
+          "pass": false
+        },
+        "frame_reference_valid_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "no_invalid_output_classified_valid": {
+          "note": "Enforced structurally: INVALID_MODEL_OUTPUT is decided before VALID, and a schema-invalid label can never be reported VALID.",
+          "pass": true
+        },
+        "all_gates_pass": false
+      },
+      "microset": {
+        "truncated_outputs": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "illegal_frame_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "cross_boundary_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "json_parse_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "schema_valid_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "frame_reference_valid_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "no_invalid_output_classified_valid": {
+          "note": "Enforced structurally: INVALID_MODEL_OUTPUT is decided before VALID, and a schema-invalid label can never be reported VALID.",
+          "pass": true
+        },
+        "all_gates_pass": true
+      },
+      "all": {
+        "truncated_outputs": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "illegal_frame_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "cross_boundary_references": {
+          "observed": 0,
+          "max": 0,
+          "pass": true
+        },
+        "json_parse_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "schema_valid_rate": {
+          "observed": 0.9333,
+          "min": 0.9,
+          "pass": true
+        },
+        "frame_reference_valid_rate": {
+          "observed": 1.0,
+          "min": 0.9,
+          "pass": true
+        },
+        "no_invalid_output_classified_valid": {
+          "note": "Enforced structurally: INVALID_MODEL_OUTPUT is decided before VALID, and a schema-invalid label can never be reported VALID.",
+          "pass": true
+        },
+        "all_gates_pass": true
+      }
+    }
+  },
+  "paired_comparison": [
+    {
+      "metric": "JSON 可解析率",
+      "v0_1": 1.0,
+      "v0_2": 1.0,
+      "note": ""
+    },
+    {
+      "metric": "Schema 合法率",
+      "v0_1": 0.9333,
+      "v0_2": 0.9333,
+      "note": "各自按对应版本的 Schema 判定；v0.1 无 event_assessment 要求"
+    },
+    {
+      "metric": "帧引用合法率",
+      "v0_1": 1.0,
+      "v0_2": 1.0,
+      "note": ""
+    },
+    {
+      "metric": "非法帧引用数",
+      "v0_1": 0,
+      "v0_2": 0,
+      "note": ""
+    },
+    {
+      "metric": "跨段引用数",
+      "v0_1": 0,
+      "v0_2": 0,
+      "note": ""
+    },
+    {
+      "metric": "主要动作类别分布",
+      "v0_1": {
+        "approach": 9,
+        "grasp": 6
+      },
+      "v0_2": {
+        "idle": 3,
+        "grasp": 6,
+        "retract": 1,
+        "approach": 5
+      },
+      "note": ""
+    },
+    {
+      "metric": "声明式动作阶段比例",
+      "v0_1": 1.0,
+      "v0_2": 0.8,
+      "note": ""
+    },
+    {
+      "metric": "grasp 阶段数",
+      "v0_1": 6,
+      "v0_2": 6,
+      "note": ""
+    },
+    {
+      "metric": "closed 夹爪数",
+      "v0_1": 6,
+      "v0_2": 7,
+      "note": ""
+    },
+    {
+      "metric": "grasp 与 closed 同时出现数",
+      "v0_1": 6,
+      "v0_2": 6,
+      "note": ""
+    },
+    {
+      "metric": "closed→grasp 共变率",
+      "v0_1": 1.0,
+      "v0_2": 0.8571,
+      "note": ""
+    },
+    {
+      "metric": "非空事件比例",
+      "v0_1": 0.0667,
+      "v0_2": 0.8,
+      "note": ""
+    },
+    {
+      "metric": "evidence_quality 分布",
+      "v0_1": {
+        "sufficient": 15
+      },
+      "v0_2": {
+        "sufficient": 15
+      },
+      "note": ""
+    },
+    {
+      "metric": "motion_phase uncertain 率",
+      "v0_1": 0.0,
+      "v0_2": 0.0,
+      "note": ""
+    },
+    {
+      "metric": "evidence_quality partial/insufficient 比例",
+      "v0_1": 0.0,
+      "v0_2": 0.0,
+      "note": ""
+    },
+    {
+      "metric": "整条标注完全弃权率",
+      "v0_1": 0.0,
+      "v0_2": 0.0,
+      "note": ""
+    },
+    {
+      "metric": "event_assessment 分布",
+      "v0_1": "NOT_APPLICABLE",
+      "v0_2": {
+        "no_event_visible": 3,
+        "event_visible": 12
+      },
+      "note": "v0.1 无此字段 → NOT_APPLICABLE，不得跨版本当作同一指标比较"
+    },
+    {
+      "metric": "event_visible 比例",
+      "v0_1": "NOT_APPLICABLE",
+      "v0_2": 0.8,
+      "note": ""
+    },
+    {
+      "metric": "REVIEW_REQUIRED 比例",
+      "v0_1": 0.0667,
+      "v0_2": 0.4,
+      "note": ""
+    },
+    {
+      "metric": "冲突候选总数",
+      "v0_1": {
+        "DETERMINISTIC": 1,
+        "CANDIDATE": 2
+      },
+      "v0_2": {
+        "DETERMINISTIC": 4,
+        "CANDIDATE": 4
+      },
+      "note": ""
+    },
+    {
+      "metric": "截断次数",
+      "v0_1": 0,
+      "v0_2": 0,
+      "note": ""
+    },
+    {
+      "metric": "平均耗时 (s)",
+      "v0_1": 2.817,
+      "v0_2": 4.516,
+      "note": ""
+    },
+    {
+      "metric": "显存峰值 (MiB)",
+      "v0_1": 4838,
+      "v0_2": 4838,
+      "note": ""
+    },
+    {
+      "metric": "人工参考符合情况",
+      "v0_1": "NOT_ESTIMABLE",
+      "v0_2": "NOT_ESTIMABLE",
+      "note": "无独立人工金标 → NOT_ESTIMABLE"
+    }
+  ],
+  "paired_markdown": "| 指标 | v0.1 | v0.2 | 说明 |\n| --- | --- | --- | --- |\n| JSON 可解析率 | 1.0 | 1.0 |  |\n| Schema 合法率 | 0.9333 | 0.9333 | 各自按对应版本的 Schema 判定；v0.1 无 event_assessment 要求 |\n| 帧引用合法率 | 1.0 | 1.0 |  |\n| 非法帧引用数 | 0 | 0 |  |\n| 跨段引用数 | 0 | 0 |  |\n| 主要动作类别分布 | approach=9, grasp=6 | approach=5, grasp=6, idle=3, retract=1 |  |\n| 声明式动作阶段比例 | 1.0 | 0.8 |  |\n| grasp 阶段数 | 6 | 6 |  |\n| closed 夹爪数 | 6 | 7 |  |\n| grasp 与 closed 同时出现数 | 6 | 6 |  |\n| closed→grasp 共变率 | 1.0 | 0.8571 |  |\n| 非空事件比例 | 0.0667 | 0.8 |  |\n| evidence_quality 分布 | sufficient=15 | sufficient=15 |  |\n| motion_phase uncertain 率 | 0.0 | 0.0 |  |\n| evidence_quality partial/insufficient 比例 | 0.0 | 0.0 |  |\n| 整条标注完全弃权率 | 0.0 | 0.0 |  |\n| event_assessment 分布 | NOT_APPLICABLE | event_visible=12, no_event_visible=3 | v0.1 无此字段 → NOT_APPLICABLE，不得跨版本当作同一指标比较 |\n| event_visible 比例 | NOT_APPLICABLE | 0.8 |  |\n| REVIEW_REQUIRED 比例 | 0.0667 | 0.4 |  |\n| 冲突候选总数 | CANDIDATE=2, DETERMINISTIC=1 | CANDIDATE=4, DETERMINISTIC=4 |  |\n| 截断次数 | 0 | 0 |  |\n| 平均耗时 (s) | 2.817 | 4.516 |  |\n| 显存峰值 (MiB) | 4838 | 4838 |  |\n| 人工参考符合情况 | NOT_ESTIMABLE | NOT_ESTIMABLE | 无独立人工金标 → NOT_ESTIMABLE |",
+  "semantic_accuracy": "NOT_ESTIMABLE",
+  "gate_note": "Engineering-contract gates pre-registered before the run and not adjusted afterwards. They are not semantic accuracy thresholds."
+}
