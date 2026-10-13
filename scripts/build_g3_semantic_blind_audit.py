@@ -24,14 +24,17 @@ DEFAULT_RGB_CACHE = (
     Path.home() / "embody" / "_local_vlm_deploy" / "rgb_g3_v02"
     / "g3_taxonomy_v02_20261013_r2"
 )
-DEFAULT_OUT = ROOT / "outputs" / "p2_g3_semantic_blind_audit" / "g3_v02_microset_12"
+DEFAULT_OUT = ROOT / "outputs" / "p2_g3_semantic_blind_audit" / "g3c_v02_microset_12_multi_event"
 TEMPLATE = ROOT / "scripts/g3_semantic_blind_audit_template.html"
+REVIEW_JS = ROOT / "scripts/g3c_multi_event.js"
 SOURCE_FIELDS = (
     "sample_order", "cohort", "episode_id", "segment_id", "start_frame",
     "end_frame", "segment_length", "target_keyframes", "frame_png_sha256s",
     "phase_ref", "event_assessment_ref", "event_type_ref", "evidence_quality_ref",
     "reviewer_id", "reviewed_at_utc", "explanation",
 )
+MULTI_EVENT_FIELDS = ("event_types_ref", "grasp_attempt_frames_ref", "release_attempt_frames_ref", "object_motion_frames_ref")
+OUTPUT_FIELDS = SOURCE_FIELDS + MULTI_EVENT_FIELDS
 ANSWER_FIELDS = frozenset((
     "phase_ref", "event_assessment_ref", "event_type_ref", "evidence_quality_ref",
     "reviewer_id", "reviewed_at_utc", "explanation",
@@ -175,7 +178,14 @@ def build_bundle(
         raise AuditBundleError(f"Output already exists (no overwrite): {output}")
     if not template.is_file():
         raise AuditBundleError(f"HTML template missing: {template}")
+    if not REVIEW_JS.is_file():
+        raise AuditBundleError(f"G3C reviewer JS missing: {REVIEW_JS}")
     html = template.read_text(encoding="utf-8")
+    if '<script src="g3c_multi_event.js"></script>' not in html:
+        raise AuditBundleError("G3C JS is not linked")
+    reviewer_js = REVIEW_JS.read_text(encoding="utf-8")
+    if not reviewer_js.startswith('"use strict";'):
+        raise AuditBundleError("Invalid G3C JS source")
     if html.count("__AUDIT_DATA_JSON__") != 1:
         raise AuditBundleError("Expected exactly one data insertion point")
 
@@ -212,9 +222,9 @@ def build_bundle(
             "images": [{k: v for k, v in img.items() if k != "original"} for img in imgs],
         })
     payload = {
-        "contract": "P2_G3_SEMANTIC_BLIND_HUMAN_REFERENCE_V1",
+        "contract": "P2_G3_SEMANTIC_BLIND_HUMAN_REFERENCE_V2_MULTI_EVENT",
         "source_manifest_sha256": source_sha,
-        "fields": list(SOURCE_FIELDS),
+        "fields": list(OUTPUT_FIELDS),
         "rows": visible_rows,
     }
     payload_json = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
@@ -238,6 +248,7 @@ def build_bundle(
                 if sha256_file(dest) != img["png_sha256"]:
                     raise AuditBundleError(f"Copy hash mismatch: {dest}")
         (tmp / "index.html").write_text(rendered, encoding="utf-8")
+        (tmp / "g3c_multi_event.js").write_text(reviewer_js, encoding="utf-8")
         (tmp / "bundle_manifest.json").write_text(
             json.dumps({
                 "contract": payload["contract"],
@@ -248,16 +259,19 @@ def build_bundle(
                     for item in manifest_images for im in item
                 },
                 "model_prediction_embedded": False,
+                "audit_version": "G3C_MULTI_EVENT_V2",
+                "source_fields": list(SOURCE_FIELDS),
+                "output_fields": list(OUTPUT_FIELDS),
             }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
         (tmp / "README.txt").write_text(
-            "P2-G3 Semantic Blind Audit (12 Development segments)\n"
+            "P2-G3C Multi-Event Semantic Blind Audit (12 Development segments)\n"
             "No VLM predictions are in this package.\n"
             "Run from the bundle directory:\n"
             "  python -m http.server 8767 --bind 127.0.0.1\n"
             "Visit http://127.0.0.1:8767/\n"
             "CSV progress stays in your browser until explicitly exported.\n"
-            "Export regularly; an import option is provided.\n"
+            "Import legacy CSV or G3C CSV; export regularly and review all event citations.\n"
             "Do not upload local PNGs or filled human CSV to public GitHub.\n",
             encoding="utf-8"
         )
