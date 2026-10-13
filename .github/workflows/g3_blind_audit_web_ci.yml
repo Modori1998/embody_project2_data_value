@@ -5,12 +5,14 @@ on:
     paths:
       - "scripts/build_g3_semantic_blind_audit.py"
       - "scripts/g3_semantic_blind_audit_template.html"
+      - "scripts/g3c_multi_event.js"
       - "tests/test_g3_semantic_blind_audit_web.py"
       - "0-doc/10-design-review/evidence/P2_G3_Semantic_Blind_Audit_12_Source_20261013.csv"
       - ".github/workflows/g3_blind_audit_web_ci.yml"
   push:
     branches:
       - "feat/p2-g3-semantic-blind-audit-web-20261013"
+      - "feat/p2-g3c-multievent-blind-audit-20261013"
 
 permissions:
   contents: read
