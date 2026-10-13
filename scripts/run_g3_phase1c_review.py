@@ -1,6 +1,9 @@
 """Local Phase 1C reviewer; Python standard library only."""
 import argparse
+import base64
+import binascii
 import csv
+import hmac
 import json
 import mimetypes
 import sys
@@ -41,7 +44,9 @@ document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].include
 </script></html>'''
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--assets',type=Path,required=True);p.add_argument('--selection',type=Path,default=Path('0-doc/90-implementation-local/phase1c_review_selection_manifest.csv'));p.add_argument('--results',type=Path,default=Path('outputs/g3_phase1c_reviews'));p.add_argument('--port',type=int,default=8765);args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--assets',type=Path,required=True);p.add_argument('--selection',type=Path,default=Path('0-doc/90-implementation-local/phase1c_review_selection_manifest.csv'));p.add_argument('--results',type=Path,default=Path('outputs/g3_phase1c_reviews'));p.add_argument('--port',type=int,default=8765);p.add_argument('--auth-file',type=Path,help='file containing remote access password');args=p.parse_args()
+    access_password=args.auth_file.read_text(encoding='utf-8').strip() if args.auth_file else None
+    if args.auth_file and not access_password:raise ValueError('empty auth file')
     rows=read_csv(args.selection);selected={r['segment_id']:r for r in rows};assets=args.assets.resolve();results=args.results.resolve()
     phase=read_csv(assets/'ab_review_sheet_UNSCORED.csv');keyrows=read_csv(assets/'ab_blinding_key_SEALED.csv');keys={r['segment_id']:r for r in keyrows};validate_assets(phase,keyrows,read_csv(assets/'evidence_frame_manifest.csv'),assets)
     for r in rows:
@@ -49,11 +54,21 @@ def main():
         for k in ('blinded_panel1','blinded_panel2','analyst_sheet'):
             if sha(assets/source[k])!=r[k+'_sha256']:raise ValueError('asset hash mismatch: '+r['segment_id'])
     class Handler(BaseHTTPRequestHandler):
+        def authorized(self):
+            if access_password is None:return True
+            header=self.headers.get('Authorization','')
+            try:
+                scheme,encoded=header.split(' ',1)
+                user,password=base64.b64decode(encoded,validate=True).decode().split(':',1)
+                if scheme=='Basic' and user=='reviewer' and hmac.compare_digest(password,access_password):return True
+            except (ValueError,UnicodeError,binascii.Error):pass
+            self.send_response(401);self.send_header('WWW-Authenticate','Basic realm="G3 Phase 1C review"');self.send_header('Content-Length','0');self.end_headers();return False
         def reply(self,content,kind='application/json',code=200):
             if isinstance(content,(dict,list)):content=json.dumps(content,ensure_ascii=False).encode()
             elif isinstance(content,str):content=content.encode()
             self.send_response(code);self.send_header('Content-Type',kind+'; charset=utf-8');self.send_header('Content-Length',str(len(content)));self.end_headers();self.wfile.write(content)
         def do_GET(self):
+            if not self.authorized():return
             u=urlparse(self.path);q=parse_qs(u.query);reviewer=q.get('reviewer',['owner'])[0]
             if u.path=='/':return self.reply(PAGE,'text/html')
             if u.path=='/api/selection':return self.reply([{k:v for k,v in r.items() if k not in ('panel1_is','panel2_is')} for r in rows])
@@ -80,6 +95,7 @@ def main():
                 s=io.StringIO();fields=list(blank(rows[0],reviewer));w=csv.DictWriter(s,fieldnames=fields,extrasaction='ignore');w.writeheader();w.writerows(values);return self.reply(s.getvalue(),'text/csv')
             self.reply({'error':'not found'},code=404)
         def do_POST(self):
+            if not self.authorized():return
             if self.path!='/api/save':return self.reply({'error':'not found'},code=404)
             try:
                 n=int(self.headers.get('Content-Length','0'))
