@@ -1,0 +1,234 @@
+{
+  "scope": "OPTIONAL_BOUNDARY_REGRESSION_EXCLUDED_FROM_BASELINE",
+  "episode_id": "data/demo_47",
+  "segment_id": "demo_47-S0003",
+  "target_interval": [
+    50,
+    90
+  ],
+  "target_keyframes": [
+    50,
+    70,
+    90
+  ],
+  "neighbour_context_frames": [
+    {
+      "frame_index": 49,
+      "role": "PREV_SEGMENT_END",
+      "origin_segment_id": "demo_47-S0002"
+    },
+    {
+      "frame_index": 91,
+      "role": "NEXT_SEGMENT_START",
+      "origin_segment_id": "demo_47-S0004"
+    },
+    {
+      "frame_index": 94,
+      "role": "NEXT_SEGMENT_MIDDLE",
+      "origin_segment_id": "demo_47-S0004"
+    }
+  ],
+  "endpoint_note": "A single clean result does NOT prove neighbour mis-attribution is solved. It only shows the guard executes and reports what the model cited.",
+  "variants": [
+    {
+      "variant": "target_only",
+      "input_manifest": [
+        {
+          "frame_index": 50,
+          "role": "TARGET_KEYFRAME",
+          "source_episode_id": "data/demo_47",
+          "origin_segment_id": "demo_47-S0003",
+          "target_segment_id": "demo_47-S0003",
+          "is_target_segment_frame": true,
+          "pixel_sha256": "ed8ebe3220c14a6028b9714554e2387f1da31fd7868cf33d451c403faeadf55a"
+        },
+        {
+          "frame_index": 70,
+          "role": "TARGET_KEYFRAME",
+          "source_episode_id": "data/demo_47",
+          "origin_segment_id": "demo_47-S0003",
+          "target_segment_id": "demo_47-S0003",
+          "is_target_segment_frame": true,
+          "pixel_sha256": "7773fc8aa0462345a024d1a1ef6f2dc2eafe14b83199a788cd46d5c99f644d29"
+        },
+        {
+          "frame_index": 90,
+          "role": "TARGET_KEYFRAME",
+          "source_episode_id": "data/demo_47",
+          "origin_segment_id": "demo_47-S0003",
+          "target_segment_id": "demo_47-S0003",
+          "is_target_segment_frame": true,
+          "pixel_sha256": "66db6fbc56220aae41da9a1a498b4553401f344ebd0f48a1fc306e52a46dbe19"
+        }
+      ],
+      "image_order": [
+        50,
+        70,
+        90
+      ],
+      "prompt_sha256": "672ca4bf21cd6b1f93a1f8a8bcf5e205461aa19f3bec29812fd3066d58c81538",
+      "http_status": 200,
+      "wall_seconds": 2.122,
+      "raw_response_text": "{\n  \"motion_phase\": \"grasp\",\n  \"object_relation\": [\n    \"gripper_around\"\n  ],\n  \"gripper_state\": \"closed\",\n  \"events\": [],\n  \"evidence_frame_indices\": [50, 70, 90],\n  \"evidence_quality\": \"sufficient\",\n  \"observation_note\": \"Robot's gripper is closed around the red can. The can is stationary and not yet moved. No motion or placement is observed within the segment.\"\n}",
+      "raw_response_sha256": "f722792a4fa7933bfafc9c7448feb795c5048836fd214c1d544e4087e66b95f9",
+      "validation": {
+        "status": "VALID",
+        "parse_ok": true,
+        "schema_ok": true,
+        "frame_evidence_ok": true,
+        "truncated": false,
+        "abstained": false,
+        "cited_frames": [
+          50,
+          70,
+          90
+        ],
+        "invalid_references": [],
+        "cross_boundary_references": [],
+        "findings": []
+      },
+      "model_payload": {
+        "motion_phase": "grasp",
+        "object_relation": [
+          "gripper_around"
+        ],
+        "gripper_state": "closed",
+        "events": [],
+        "evidence_frame_indices": [
+          50,
+          70,
+          90
+        ],
+        "evidence_quality": "sufficient",
+        "observation_note": "Robot's gripper is closed around the red can. The can is stationary and not yet moved. No motion or placement is observed within the segment."
+      }
+    },
+    {
+      "variant": "target_plus_neighbour",
+      "input_manifest": [
+        {
+          "frame_index": 49,
+          "role": "PREV_SEGMENT_END",
+          "source_episode_id": "data/demo_47",
+          "origin_segment_id": "demo_47-S0002",
+          "target_segment_id": "demo_47-S0003",
+          "is_target_segment_frame": false,
+          "pixel_sha256": "ba4d76d99cfeaea81732e5b8b30153a189345f2580c77ef17f7ffc4c90855e6b"
+        },
+        {
+          "frame_index": 91,
+          "role": "NEXT_SEGMENT_START",
+          "source_episode_id": "data/demo_47",
+          "origin_segment_id": "demo_47-S0004",
+          "target_segment_id": "demo_47-S0003",
+          "is_target_segment_frame": false,
+          "pixel_sha256": "656847a206d9259fff6fc76d8806521644cd356bc7f375ff7451eb2802599d79"
+        },
+        {
+          "frame_index": 94,
+          "role": "NEXT_SEGMENT_MIDDLE",
+          "source_episode_id": "data/demo_47",
+          "origin_segment_id": "demo_47-S0004",
+          "target_segment_id": "demo_47-S0003",
+          "is_target_segment_frame": false,
+          "pixel_sha256": "995146e163eaac99ce433d100aee4cc6bc46a3091c33bb8d9ad882a0a6384b67"
+        },
+        {
+          "frame_index": 50,
+          "role": "TARGET_KEYFRAME",
+          "source_episode_id": "data/demo_47",
+          "origin_segment_id": "demo_47-S0003",
+          "target_segment_id": "demo_47-S0003",
+          "is_target_segment_frame": true,
+          "pixel_sha256": "ed8ebe3220c14a6028b9714554e2387f1da31fd7868cf33d451c403faeadf55a"
+        },
+        {
+          "frame_index": 70,
+          "role": "TARGET_KEYFRAME",
+          "source_episode_id": "data/demo_47",
+          "origin_segment_id": "demo_47-S0003",
+          "target_segment_id": "demo_47-S0003",
+          "is_target_segment_frame": true,
+          "pixel_sha256": "7773fc8aa0462345a024d1a1ef6f2dc2eafe14b83199a788cd46d5c99f644d29"
+        },
+        {
+          "frame_index": 90,
+          "role": "TARGET_KEYFRAME",
+          "source_episode_id": "data/demo_47",
+          "origin_segment_id": "demo_47-S0003",
+          "target_segment_id": "demo_47-S0003",
+          "is_target_segment_frame": true,
+          "pixel_sha256": "66db6fbc56220aae41da9a1a498b4553401f344ebd0f48a1fc306e52a46dbe19"
+        }
+      ],
+      "image_order": [
+        49,
+        91,
+        94,
+        50,
+        70,
+        90
+      ],
+      "prompt_sha256": "1df2cf8513e23484f31af8b1bcadef6a88655c18e3e39d963c9da047da36f145",
+      "http_status": 200,
+      "wall_seconds": 2.709,
+      "raw_response_text": "{\n  \"motion_phase\": \"grasp\",\n  \"object_relation\": [\n    \"gripper_around\"\n  ],\n  \"gripper_state\": \"closed\",\n  \"events\": [\n    {\n      \"event_type\": \"grasp_attempt\",\n      \"event_outcome\": \"success\"\n    }\n  ],\n  \"evidence_frame_indices\": [\n    50,\n    70,\n    90\n  ],\n  \"evidence_quality\": \"sufficient\",\n  \"observation_note\": \"Robot's gripper is closed and surrounding the red can. The can is visible and stationary. No motion is observed in the segment.\"\n}",
+      "raw_response_sha256": "9e5f3f602b79ea4b6d11e45cd2e407139088c2cb4e5ac96971fd925b4938301d",
+      "validation": {
+        "status": "INVALID_MODEL_OUTPUT",
+        "parse_ok": true,
+        "schema_ok": false,
+        "frame_evidence_ok": true,
+        "truncated": false,
+        "abstained": false,
+        "cited_frames": [
+          50,
+          70,
+          90
+        ],
+        "invalid_references": [],
+        "cross_boundary_references": [],
+        "findings": [
+          {
+            "check_id": "MISSING_REQUIRED_FIELD",
+            "scope": "DETERMINISTIC",
+            "message": "events[0] 缺少字段 'evidence_frame_indices'。",
+            "field": "events",
+            "detail": {
+              "event_index": 0
+            }
+          },
+          {
+            "check_id": "EVIDENCE_SUFFICIENCY_CANDIDATE",
+            "scope": "CANDIDATE",
+            "message": "events[0] 断言确定性结果 'success'，但少于 2 个支持帧，无法体现事件前后变化。",
+            "field": "events",
+            "detail": {
+              "event_index": 0
+            }
+          }
+        ]
+      },
+      "model_payload": {
+        "motion_phase": "grasp",
+        "object_relation": [
+          "gripper_around"
+        ],
+        "gripper_state": "closed",
+        "events": [
+          {
+            "event_type": "grasp_attempt",
+            "event_outcome": "success"
+          }
+        ],
+        "evidence_frame_indices": [
+          50,
+          70,
+          90
+        ],
+        "evidence_quality": "sufficient",
+        "observation_note": "Robot's gripper is closed and surrounding the red can. The can is visible and stationary. No motion is observed in the segment."
+      }
+    }
+  ]
+}

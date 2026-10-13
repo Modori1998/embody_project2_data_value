@@ -1,0 +1,11 @@
+sample_order,episode_id,segment_id,annotation_review_status,review_reasons,candidate_finding_count,deterministic_finding_count,cross_boundary_references,invalid_references,training_disposition
+1,data/demo_120,demo_120-S0005,VALID,,0,0,,,NOT_EVALUATED
+2,data/demo_165,demo_165-S0003,VALID,,0,0,,,NOT_EVALUATED
+3,data/demo_196,demo_196-S0002,VALID,,0,0,,,NOT_EVALUATED
+4,data/demo_227,demo_227-S0005,VALID,,0,0,,,NOT_EVALUATED
+5,data/demo_277,demo_277-S0005,VALID,,0,0,,,NOT_EVALUATED
+6,data/demo_292,demo_292-S0002,VALID,,0,0,,,NOT_EVALUATED
+7,data/demo_33,demo_33-S0001,VALID,,0,0,,,NOT_EVALUATED
+8,data/demo_47,demo_47-S0003,INVALID_MODEL_OUTPUT,EVIDENCE_SUFFICIENCY_CANDIDATE;MISSING_REQUIRED_FIELD,1,1,,,NOT_EVALUATED
+9,data/demo_74,demo_74-S0003,VALID,,0,0,,,NOT_EVALUATED
+10,data/demo_75,demo_75-S0001,VALID,,0,0,,,NOT_EVALUATED
