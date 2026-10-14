@@ -51,6 +51,14 @@ def motion_block(segment, episode, *, gripper_state=None, left_boundary_type=Non
     ):
         raise ValueError("STOP_SEGMENT_IDENTITY")
     selected = {key: result[key] for key in ALLOWED_MOTION_KEYS}
+    selected["eef_start_xyz_m"] = [float(v) for v in episode.eef_pos[get("start_frame")]]
+    selected["eef_end_xyz_m"] = [float(v) for v in episode.eef_pos[get("end_frame")]]
+    if gripper_state is None:
+        raise ValueError("STOP_GRIPPER_STATE_NOT_MATERIALIZED")
+    start, end = get("start_frame"), get("end_frame")
+    selected["gripper_state_change_within_segment"] = any(
+        gripper_state[j] != gripper_state[j - 1] for j in range(start + 1, end + 1)
+    )
     def finite(v):
         if isinstance(v, (int, float)) and not isinstance(v, bool):
             return math.isfinite(v)
