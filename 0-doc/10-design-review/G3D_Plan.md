@@ -8,4 +8,4 @@
 
 Resource budget: 8 gate calls, then 24 full calls; paired repeats only on observed substantive instability. No GPU job may be terminated for this experiment.
 
-Current preflight: 36/36 PNG SHA match; Q4 service at `127.0.0.1:8080` is unreachable and another GPU Python process is active. Status `EXPERIMENT_NOT_RUN`. Full run remains gated.
+Execution update, 2026-10-14: the frozen Q4 service was started locally after verifying HDF5 and 36/36 PNG SHA. The four-segment gate stopped after three successful responses because the fourth image decode stalled and the request timed out. Status `SMALL_GATE_FAILED`; the full 12-pair run remains prohibited. Another Python GPU process subsequently appeared, so the G3D-owned server was stopped. Preserve the partial responses only for diagnosis. Next: ensure GPU exclusivity without stopping other jobs, investigate the image decode stall, then repeat the *entire* four-segment gate in a fresh immutable output folder. Only if 8/8 pass may the 12-pair run begin.
