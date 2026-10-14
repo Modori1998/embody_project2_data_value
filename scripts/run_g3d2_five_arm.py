@@ -57,6 +57,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--pilot-summary", type=Path)
     parser.add_argument("--base-url", default="http://127.0.0.1:8080")
+    parser.add_argument("--protocol", choices=("fallback_json_object_retry_v1",), required=True)
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError("STOP_OUTPUT_EXISTS")
@@ -64,7 +65,7 @@ def main():
         if not args.pilot_summary or not args.pilot_summary.is_file():
             raise ValueError("STOP_PILOT_REQUIRED")
         pilot = json.loads(args.pilot_summary.read_text(encoding="utf-8"))
-        if pilot.get("calls") != 20 or not pilot.get("gate_pass"):
+        if pilot.get("calls") != 20 or not pilot.get("gate_pass") or pilot.get("protocol") != args.protocol:
             raise ValueError("STOP_PILOT_GATE_FAILED")
     gpu_preflight()
     frozen = json.loads((FROZEN / "run_manifest.json").read_text(encoding="utf-8"))
@@ -141,6 +142,7 @@ def main():
            "model_gguf_sha256": sha256(Path(models[0]["id"])), "mmproj_sha256": sha256(args.mmproj),
            "model_service_id": models[0]["id"], "context_length": 4096,
            "sampling": frozen["sampling_parameters"], "groups": GROUPS,
+           "protocol": args.protocol, "max_structure_attempts": 2, "max_service_attempts": 3,
            "sample_order": [r["segment_id"] for r in selected], "expected_calls": len(selected)*5,
            "rgb_sha256": {r["segment_id"]: r["frame_png_sha256s"] for r in selected}}
     (args.output / "run_manifest.json").write_text(json.dumps(run, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -160,29 +162,64 @@ def main():
                     "prompt_sha256": hashlib.sha256(content[0]["text"].encode()).hexdigest(),
                     "rgb_sha256": [sha256(path) for path in paths]}
             append(args.output / "inputs.jsonl", {**meta, "state_text": state, "request": payload})
-            started = time.perf_counter()
-            try:
-                status, body, raw = probe._http_json(args.base_url + "/v1/chat/completions", payload, 120)
-            except Exception as exc:
-                status, body, raw = 0, {"_error": f"{type(exc).__name__}: {exc}"}, ""
-            response = probe.parse_response(body) if status == 200 else {}
-            qc = V.validate_model_output_v0_2(response.get("text"), manifest=frames, identity=identity,
-                finish_reason=response.get("finish_reason"),
-                processing_error=None if status == 200 else str(body.get("_error", status)))
-            record = {**meta, "http_status": status, "raw_response": body, "raw_http": raw,
-                      "parsed": qc.parsed, "qc": qc.to_dict(), "wall_seconds": time.perf_counter()-started,
-                      "prompt_tokens": response.get("prompt_tokens"),
-                      "completion_tokens": response.get("completion_tokens"), "gpu": probe.gpu_snapshot()}
-            append(args.output / "responses.jsonl", record)
-            records[segment_id, group] = record
-            print(segment_id, group, qc.status, f'{record["wall_seconds"]:.2f}s', flush=True)
-            if status != 200 or not (qc.parse_ok and qc.schema_ok and qc.frame_evidence_ok) or qc.truncated:
-                failures.append(f"{segment_id}:{group}:{qc.status}")
-                break
-        if failures:
-            break
-    summary = {"stage": args.stage, "calls": len(records), "expected_calls": len(selected)*5,
-               "failures": failures, "gate_pass": not failures and len(records)==len(selected)*5}
+            service_errors = structure_errors = 0
+            attempt = 0
+            final = None
+            while True:
+                attempt += 1
+                started = time.perf_counter()
+                try:
+                    status, body, raw = probe._http_json(args.base_url + "/v1/chat/completions", payload, 120)
+                except Exception as exc:
+                    status, body, raw = 0, {"_error": f"{type(exc).__name__}: {exc}"}, ""
+                response = probe.parse_response(body) if status == 200 else {}
+                qc = V.validate_model_output_v0_2(response.get("text"), manifest=frames, identity=identity,
+                    finish_reason=response.get("finish_reason"),
+                    processing_error=None if status == 200 else str(body.get("_error", status)))
+                record = {**meta, "attempt": attempt, "http_status": status, "raw_response": body,
+                          "raw_http": raw, "parsed": qc.parsed, "qc": qc.to_dict(),
+                          "wall_seconds": time.perf_counter()-started,
+                          "prompt_tokens": response.get("prompt_tokens"),
+                          "completion_tokens": response.get("completion_tokens"), "gpu": probe.gpu_snapshot()}
+                append(args.output / "responses.jsonl", record)
+                print(segment_id, group, attempt, qc.status, f'{record["wall_seconds"]:.2f}s', flush=True)
+                if status == 200 and qc.parse_ok and qc.schema_ok and qc.frame_evidence_ok and not qc.truncated:
+                    final = record
+                    break
+                if status in (0, 429, 500, 502, 503, 504):
+                    service_errors += 1
+                    error_text = json.dumps(body, ensure_ascii=False).lower()
+                    if any(token in error_text for token in ("out of memory", "cuda out of memory", "cuda error")):
+                        raise RuntimeError("STOP_GPU_RESOURCE_ERROR")
+                    if service_errors >= 3:
+                        break
+                elif status == 200:
+                    structure_errors += 1
+                    if structure_errors >= 2:
+                        break
+                else:
+                    break
+            records[segment_id, group] = final
+            if final is None:
+                failures.append(f"{segment_id}:{group}:FAILED_AFTER_{attempt}_ATTEMPTS")
+    summary = {"stage": args.stage, "protocol": args.protocol, "calls": len(records),
+               "expected_calls": len(selected)*5, "failures": failures,
+               "gate_pass": not failures and len(records)==len(selected)*5}
+    attempts = [json.loads(line) for line in (args.output / "responses.jsonl").open(encoding="utf-8")]
+    first = [r for r in attempts if r["attempt"] == 1]
+    valid = lambda r: r["http_status"] == 200 and r["qc"]["parse_ok"] and r["qc"]["schema_ok"] and r["qc"]["frame_evidence_ok"] and not r["qc"]["truncated"]
+    summary["reliability"] = {
+        "first_attempt_schema_valid": sum(r["http_status"] == 200 and r["qc"]["schema_ok"] for r in first),
+        "first_attempt_total": len(first),
+        "retry_recovered": sum(r is not None and r["attempt"] > 1 for r in records.values()),
+        "retry_eligible": sum(not valid(r) for r in first),
+        "final_valid": sum(r is not None for r in records.values()),
+        "failed_cells": len(failures), "total_attempts": len(attempts),
+        "extra_attempts": len(attempts) - len(first),
+        "prompt_tokens": sum(r["prompt_tokens"] or 0 for r in attempts),
+        "completion_tokens": sum(r["completion_tokens"] or 0 for r in attempts),
+        "wall_seconds": sum(r["wall_seconds"] for r in attempts),
+    }
     if args.stage == "full" and summary["gate_pass"]:
         human = {r["segment_id"]: r for r in csv.DictReader(args.human_reference.open(encoding="utf-8-sig")) if r["cohort"] == "microset"}
         if set(human) != {r["segment_id"] for r in rows}:
