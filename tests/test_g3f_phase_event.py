@@ -58,8 +58,54 @@ def test_v0_2_2_removes_conflict_and_adds_self_check_but_keeps_contract():
 def test_prompt_version_registry_fails_closed():
     assert P.prompt_version_info("v0_2_1")["prompt_template_sha256"] == FROZEN_V021_SHA
     assert P.prompt_version_info("v0_2_2")["prompt_version"].endswith("V0_2_2_CANDIDATE")
+    assert P.prompt_version_info("v0_2_3")["prompt_version"].endswith("V0_2_3_CANDIDATE")
     with pytest.raises(ValueError, match="STOP_UNKNOWN_PROMPT_VERSION"):
         P.prompt_version_info("v9")
+
+
+# --- v0.2.3 minimal semantic fix ------------------------------------------- #
+FROZEN_V022_SHA = "61ac6bcea3a67a92b6dbd3a3d55209f990ad09f147aba84cb4b8b1cf892c4702"
+FROZEN_V023_SHA = "cb9fa472a27332bb39ba37d373edfd7c3b361217137972a0553f9171ba7373c1"
+
+
+def test_historical_prompt_bytes_do_not_drift():
+    assert P.template_sha256_v0_2_1() == FROZEN_V021_SHA
+    assert P.template_sha256_v0_2_2() == FROZEN_V022_SHA
+    assert P.template_sha256_v0_2_3() == FROZEN_V023_SHA
+
+
+def test_v0_2_3_is_the_single_sentence_fix_only():
+    # exactly one line removed, exactly one line added vs v0.2.1
+    diff = P.template_diff_v0_2_1_v0_2_3()
+    added = [l for l in diff.splitlines() if l.startswith("+") and not l.startswith("+++")]
+    removed = [l for l in diff.splitlines() if l.startswith("-") and not l.startswith("---")]
+    assert len(added) == 1 and len(removed) == 1, diff
+    assert "长距离" in removed[0]
+    # it must NOT carry the v0.2.2 expansion or self-check
+    assert "长距离的连续搬运" not in P.PROMPT_TEMPLATE_V0_2_3
+    assert "输出前一致性自检" not in P.PROMPT_TEMPLATE_V0_2_3
+    assert "无论发生在 lift、transport、place" not in P.PROMPT_TEMPLATE_V0_2_3
+    # the frozen replacement sentence is present
+    assert "无论主要动作阶段是什么" in P.PROMPT_TEMPLATE_V0_2_3
+    assert "则不得据此添加 object_motion" in P.PROMPT_TEMPLATE_V0_2_3
+    # contract blocks still rendered from the frozen schema
+    assert "{required_fields}" in P.PROMPT_TEMPLATE_V0_2_3
+    assert "{enums}" in P.PROMPT_TEMPLATE_V0_2_3
+
+
+def test_v0_2_3_keeps_every_required_key_and_enum():
+    rendered_fields = P.render_required_fields_v0_2()
+    for key in S.MODEL_OWNED_FIELDS_V0_2:
+        assert key in rendered_fields
+    rendered_enums = P.render_enum_block_v0_2()
+    for values in S.ENUM_TABLE_V0_2.values():
+        for value in values:
+            assert value in rendered_enums
+    # no new phase or event type may be introduced
+    assert S.MOTION_PHASE_V0_2 == (
+        "approach", "grasp", "lift", "transport", "place", "retract", "idle",
+        "other", "uncertain")
+    assert S.EVENT_TYPE_V0_2 == ("grasp_attempt", "release_attempt", "object_motion")
 
 
 # --- QC rules -------------------------------------------------------------- #

@@ -57,7 +57,7 @@ def main() -> int:
         key = (record["segment_id"], arm_field(record))
         if is_valid(record) or key not in records:
             records[key] = record
-    arms = [a for a in ("A", "B") if any(k[1] == a for k in records)] or list(GROUPS)
+    arms = sorted({k[1] for k in records})
     # keep only finally-valid predictions; a failed cell has no prediction to review
     final = {k: r for k, r in records.items() if is_valid(r)}
 

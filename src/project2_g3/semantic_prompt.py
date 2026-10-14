@@ -346,17 +346,66 @@ def template_sha256_v0_2_2() -> str:
     return prompt_sha256(PROMPT_TEMPLATE_V0_2_2)
 
 
+def render_prompt_v0_2_3(
+    *,
+    source_episode_id: str,
+    segment_id: str,
+    start_frame: int,
+    end_frame: int,
+    frames: Sequence[Any],
+    task_text: str = DEFAULT_TASK_TEXT,
+) -> str:
+    """Return the exact v0.2.3 prompt string for one segment request."""
+
+    return PROMPT_TEMPLATE_V0_2_3.format(
+        task_text=task_text,
+        source_episode_id=source_episode_id,
+        segment_id=segment_id,
+        start_frame=int(start_frame),
+        end_frame=int(end_frame),
+        frame_table=render_frame_table(frames),
+        enums=render_enum_block_v0_2(),
+        required_fields=render_required_fields_v0_2(),
+        phase_rules=render_phase_rules_v0_2(),
+        event_rules=render_event_rules_v0_2(),
+        rubric=render_rubric_v0_2(),
+    )
+
+
+def template_sha256_v0_2_3() -> str:
+    return prompt_sha256(PROMPT_TEMPLATE_V0_2_3)
+
+
+def template_file_content_v0_2_3() -> str:
+    header = (
+        f"# {SEMANTIC_PROMPT_VERSION_V0_2_3}\n"
+        f"# schema_version: {S.SEMANTIC_SCHEMA_VERSION_V0_2}\n"
+        "# status: MINIMAL_SEMANTIC_FIX (only the one conflicting carry sentence\n"
+        "#   replaced; no v0.2.2 expansion, no self-check, schema/rules unchanged)\n"
+        "#\n"
+        f"# v0.2.1 template_sha256: {template_sha256_v0_2_1()}\n"
+        f"# v0.2.3 template_sha256: {template_sha256_v0_2_3()}\n"
+        "#\n"
+        "# Diff vs v0.2.1:\n"
+        + "".join(f"# {line}" for line in template_diff_v0_2_1_v0_2_3().splitlines(keepends=True))
+        + "\n"
+    )
+    return header + PROMPT_TEMPLATE_V0_2_3
+
+
 #: Prompt versions selectable by the G3F paired runner.  ``v0_2_1`` is the frozen
-#: baseline A; ``v0_2_2`` is the Phase–Event candidate B.
-PROMPT_VERSIONS = ("v0_2_1", "v0_2_2")
+#: baseline A; ``v0_2_2`` is the Phase–Event candidate B; ``v0_2_3`` is the
+#: minimal semantically-correct candidate C.
+PROMPT_VERSIONS = ("v0_2_1", "v0_2_2", "v0_2_3")
 
 
 def prompt_version_info(version: str) -> dict[str, str]:
     if version not in PROMPT_VERSIONS:
         raise ValueError("STOP_UNKNOWN_PROMPT_VERSION")
-    name, renderer = {
-        "v0_2_1": (SEMANTIC_PROMPT_VERSION_V0_2_1, render_prompt_v0_2_1),
-        "v0_2_2": (SEMANTIC_PROMPT_VERSION_V0_2_2, render_prompt_v0_2_2),
+    name = {
+        "v0_2_1": SEMANTIC_PROMPT_VERSION_V0_2_1,
+        "v0_2_2": SEMANTIC_PROMPT_VERSION_V0_2_2,
+        "v0_2_3": SEMANTIC_PROMPT_VERSION_V0_2_3,
     }[version]
     return {"version": version, "prompt_version": name,
             "prompt_template_sha256": prompt_sha256(_prompt_template(version))}
@@ -365,11 +414,13 @@ def prompt_version_info(version: str) -> dict[str, str]:
 def render_prompt_for_version(version: str, **kwargs: Any) -> str:
     if version not in PROMPT_VERSIONS:
         raise ValueError("STOP_UNKNOWN_PROMPT_VERSION")
-    return {"v0_2_1": render_prompt_v0_2_1, "v0_2_2": render_prompt_v0_2_2}[version](**kwargs)
+    return {"v0_2_1": render_prompt_v0_2_1, "v0_2_2": render_prompt_v0_2_2,
+            "v0_2_3": render_prompt_v0_2_3}[version](**kwargs)
 
 
 def _prompt_template(version: str) -> str:
-    return {"v0_2_1": PROMPT_TEMPLATE_V0_2_1, "v0_2_2": PROMPT_TEMPLATE_V0_2_2}[version]
+    return {"v0_2_1": PROMPT_TEMPLATE_V0_2_1, "v0_2_2": PROMPT_TEMPLATE_V0_2_2,
+            "v0_2_3": PROMPT_TEMPLATE_V0_2_3}[version]
 
 
 def template_diff_v0_2_1_v0_2_2() -> str:
@@ -381,6 +432,18 @@ def template_diff_v0_2_1_v0_2_2() -> str:
         PROMPT_TEMPLATE_V0_2_1.splitlines(keepends=True),
         PROMPT_TEMPLATE_V0_2_2.splitlines(keepends=True),
         fromfile="PROMPT_TEMPLATE_V0_2_1", tofile="PROMPT_TEMPLATE_V0_2_2",
+    ))
+
+
+def template_diff_v0_2_1_v0_2_3() -> str:
+    """Unified-ish diff of the single sentence change between v0.2.1 and v0.2.3."""
+
+    import difflib
+
+    return "".join(difflib.unified_diff(
+        PROMPT_TEMPLATE_V0_2_1.splitlines(keepends=True),
+        PROMPT_TEMPLATE_V0_2_3.splitlines(keepends=True),
+        fromfile="PROMPT_TEMPLATE_V0_2_1", tofile="PROMPT_TEMPLATE_V0_2_3",
     ))
 
 
@@ -562,6 +625,27 @@ PROMPT_TEMPLATE_V0_2_1 = PROMPT_TEMPLATE_V0_2.replace(
 PROMPT_TEMPLATE_V0_2_2 = PROMPT_TEMPLATE_V0_2_1.replace(
     _V022_CARRY_SENTENCE, _V022_REPLACEMENT, 1,
 ).replace(_V022_ANCHOR, _V022_SELF_CHECK + _V022_ANCHOR, 1)
+
+# =========================================================================== #
+# v0.2.3 prompt (P2-G3F-P1 minimal semantic fix; the semantically-correct
+# candidate).  Built from v0.2.1 by replacing ONLY the one conflicting
+# sentence.  It deliberately does NOT include the v0.2.2 ten-line expansion
+# nor the pre-output self-check, so C−B isolates over-triggering.
+# =========================================================================== #
+
+SEMANTIC_PROMPT_VERSION_V0_2_3 = "P2_G3_ARGUS_INSPIRED_PROMPT_V0_2_3_CANDIDATE"
+
+#: The single replacement sentence frozen in ``G3F_P1_Design.md``.
+_V023_REPLACEMENT = (
+    "- 持续搬运本身不要求当前 Segment 重新发生 grasp_attempt 或 release_attempt；"
+    "但如果至少两张可比目标帧明确支持物体发生可分辨位移，无论主要动作阶段是什么，"
+    "都应标注 object_motion。如果只有夹爪或 EEF 移动、物体位移不可辨认，"
+    "则不得据此添加 object_motion。"
+)
+
+PROMPT_TEMPLATE_V0_2_3 = PROMPT_TEMPLATE_V0_2_1.replace(
+    _V022_CARRY_SENTENCE, _V023_REPLACEMENT, 1,
+)
 
 
 def render_enum_block_v0_2() -> str:
