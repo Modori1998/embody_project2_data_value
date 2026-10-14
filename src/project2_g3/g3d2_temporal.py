@@ -94,7 +94,7 @@ def build_content(*, group, identity, frames, paths, task_text, segment, episode
             label = f"Frame {frame.frame_index} — {role}; target Segment {identity.segment_id}."
             if group == "T2":
                 if i == 0:
-                    label += " Robot state at this frame is the first endpoint in interval 1."
+                    label += ("\nRobot state at this frame: " + json.dumps({"frame_index": frame.frame_index, "eef_xyz_m": intervals[0]["eef_start_xyz_m"], "gripper_aperture_qpos": intervals[0]["gripper_start_aperture_qpos"], "gripper_state": intervals[0]["gripper_start_state"]}, sort_keys=True, allow_nan=False) + "\nAperture is left-finger qpos minus right-finger qpos; OPEN/CLOSED comes from frozen G1 state. An endpoint state is not an event.")
                 else:
                     label += (f"\nInterval {i}: frame {frames[i-1].frame_index} → frame {frame.frame_index}: "
                               + json.dumps(intervals[i-1], sort_keys=True, allow_nan=False)

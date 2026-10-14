@@ -54,3 +54,4 @@ def test_actual_interleaving_and_state_matrix():
     assert state1 == state2 and state1 and state3
     assert t0[0]["text"] == t1[0]["text"][:len(t0[0]["text"])] == t2[0]["text"]
     assert "Interval 1" in t2[3]["text"] and "Interval 2" in t2[5]["text"]
+    assert "eef_xyz_m" in t2[1]["text"] and "gripper_aperture_qpos" in t2[1]["text"]
