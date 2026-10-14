@@ -1,0 +1,29 @@
+name: G3 Blind Audit Web Tests
+
+on:
+  pull_request:
+    paths:
+      - "scripts/build_g3_semantic_blind_audit.py"
+      - "scripts/g3_semantic_blind_audit_template.html"
+      - "tests/test_g3_semantic_blind_audit_web.py"
+      - "0-doc/10-design-review/evidence/P2_G3_Semantic_Blind_Audit_12_Source_20261013.csv"
+      - ".github/workflows/g3_blind_audit_web_ci.yml"
+  push:
+    branches:
+      - "feat/p2-g3-semantic-blind-audit-web-20261013"
+
+permissions:
+  contents: read
+
+jobs:
+  offline-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install pytest
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Verify offline G3 audit builder
+        run: python -m pytest -q tests/test_g3_semantic_blind_audit_web.py
