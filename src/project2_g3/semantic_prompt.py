@@ -316,6 +316,92 @@ def template_sha256_v0_2_1() -> str:
     return prompt_sha256(PROMPT_TEMPLATE_V0_2_1)
 
 
+def render_prompt_v0_2_2(
+    *,
+    source_episode_id: str,
+    segment_id: str,
+    start_frame: int,
+    end_frame: int,
+    frames: Sequence[Any],
+    task_text: str = DEFAULT_TASK_TEXT,
+) -> str:
+    """Return the exact v0.2.2 prompt string for one segment request."""
+
+    return PROMPT_TEMPLATE_V0_2_2.format(
+        task_text=task_text,
+        source_episode_id=source_episode_id,
+        segment_id=segment_id,
+        start_frame=int(start_frame),
+        end_frame=int(end_frame),
+        frame_table=render_frame_table(frames),
+        enums=render_enum_block_v0_2(),
+        required_fields=render_required_fields_v0_2(),
+        phase_rules=render_phase_rules_v0_2(),
+        event_rules=render_event_rules_v0_2(),
+        rubric=render_rubric_v0_2(),
+    )
+
+
+def template_sha256_v0_2_2() -> str:
+    return prompt_sha256(PROMPT_TEMPLATE_V0_2_2)
+
+
+#: Prompt versions selectable by the G3F paired runner.  ``v0_2_1`` is the frozen
+#: baseline A; ``v0_2_2`` is the Phase–Event candidate B.
+PROMPT_VERSIONS = ("v0_2_1", "v0_2_2")
+
+
+def prompt_version_info(version: str) -> dict[str, str]:
+    if version not in PROMPT_VERSIONS:
+        raise ValueError("STOP_UNKNOWN_PROMPT_VERSION")
+    name, renderer = {
+        "v0_2_1": (SEMANTIC_PROMPT_VERSION_V0_2_1, render_prompt_v0_2_1),
+        "v0_2_2": (SEMANTIC_PROMPT_VERSION_V0_2_2, render_prompt_v0_2_2),
+    }[version]
+    return {"version": version, "prompt_version": name,
+            "prompt_template_sha256": prompt_sha256(_prompt_template(version))}
+
+
+def render_prompt_for_version(version: str, **kwargs: Any) -> str:
+    if version not in PROMPT_VERSIONS:
+        raise ValueError("STOP_UNKNOWN_PROMPT_VERSION")
+    return {"v0_2_1": render_prompt_v0_2_1, "v0_2_2": render_prompt_v0_2_2}[version](**kwargs)
+
+
+def _prompt_template(version: str) -> str:
+    return {"v0_2_1": PROMPT_TEMPLATE_V0_2_1, "v0_2_2": PROMPT_TEMPLATE_V0_2_2}[version]
+
+
+def template_diff_v0_2_1_v0_2_2() -> str:
+    """Unified-ish diff of the only two changes between v0.2.1 and v0.2.2."""
+
+    import difflib
+
+    return "".join(difflib.unified_diff(
+        PROMPT_TEMPLATE_V0_2_1.splitlines(keepends=True),
+        PROMPT_TEMPLATE_V0_2_2.splitlines(keepends=True),
+        fromfile="PROMPT_TEMPLATE_V0_2_1", tofile="PROMPT_TEMPLATE_V0_2_2",
+    ))
+
+
+def template_file_content_v0_2_2() -> str:
+    header = (
+        f"# {SEMANTIC_PROMPT_VERSION_V0_2_2}\n"
+        f"# schema_version: {S.SEMANTIC_SCHEMA_VERSION_V0_2}\n"
+        "# status: PHASE_EVENT_COHERENCE_FIX (only the conflicting carry sentence\n"
+        "#   plus a pre-output self-check changed; schema/enums/rules/QC unchanged)\n"
+        "#\n"
+        f"# supersedes prompt implementation: {SEMANTIC_PROMPT_VERSION_V0_2_1}\n"
+        f"# v0.2.1 template_sha256: {template_sha256_v0_2_1()}\n"
+        f"# v0.2.2 template_sha256: {template_sha256_v0_2_2()}\n"
+        "#\n"
+        "# Diff vs v0.2.1:\n"
+        + "".join(f"# {line}" for line in template_diff_v0_2_1_v0_2_2().splitlines(keepends=True))
+        + "\n"
+    )
+    return header + PROMPT_TEMPLATE_V0_2_2
+
+
 def template_file_content_v0_2_1() -> str:
     header = (
         f"# {SEMANTIC_PROMPT_VERSION_V0_2_1}\n"
@@ -404,6 +490,58 @@ PROMPT_TEMPLATE_V0_2 = """你是一个机器人示范的语义标注助手。你
 """
 
 
+# =========================================================================== #
+# v0.2.2 prompt (P2-G3F minimal targeted Phase–Event coherence fix)
+#
+# v0.2.1 is left byte-identical.  v0.2.2 makes ONE targeted semantic change:
+# it removes the sentence that licensed ``transport``/``lift`` with ``events=[]``
+# and replaces it with the frozen Phase–Event coherence statement, then adds a
+# short pre-output self-check.  No schema, enum, phase rule, event rule, rubric,
+# sampling parameter or RGB input is changed.
+# =========================================================================== #
+
+SEMANTIC_PROMPT_VERSION_V0_2_2 = "P2_G3_ARGUS_INSPIRED_PROMPT_V0_2_2_CANDIDATE"
+
+#: The single v0.2.1 sentence that created the Phase–Event conflict.  A sustained
+#: ``transport`` segment can legitimately have ``events=[]`` under this wording,
+#: although the frozen schema defines ``object_motion`` as any discernible object
+#: displacement between comparable frames.
+_V022_CARRY_SENTENCE = (
+    "- 长距离的连续搬运可能确实 `events=[]`；**不要**为了凑事件率而编造事件。"
+)
+
+#: Generic replacement; contains no known-answer leakage for any Development
+#: segment.  Frozen in ``G3F_Phase_Event_Prompt_Design.md``.
+_V022_REPLACEMENT = "\n".join((
+    "- motion_phase 表示整个 Segment 的主要可见动作阶段，events[] 表示该 Segment "
+    "内所有有视觉证据支持的事件。二者独立判断，但必须保持语义一致。",
+    "- 如果可比目标帧明确显示物体发生可分辨位移，无论发生在 lift、transport、"
+    "place 或其他阶段，都应输出 object_motion。",
+    "- 对于持续搬运，如果物体随夹爪移动的视觉证据充分，应同时满足 "
+    "motion_phase=transport 与 events[] 包含 object_motion。",
+    "- 持续搬运不要求当前 Segment 内重新发生 grasp_attempt 或 release_attempt。"
+    "这些事件只有在当前 Segment 中观察到相应局部变化过程时才输出。",
+    "- EEF 位移或夹爪 CLOSED 状态本身不能证明物体移动。如果物体位移不可观察，"
+    "不得仅凭机器人状态输出 object_motion，也不得缺乏相应视觉证据而确认 transport。",
+    "- `lift` 若由可见物体上移证据支持，应有 `object_motion`。",
+    "- `object_motion` 不要求主阶段一定是 transport。",
+    "- 抓取阶段也可能存在物体移动。",
+    "- approach 期间意外碰动物体，也可能存在 object_motion。",
+    "- 事件可以跨不同时间区间发生，不应由单一主导 Phase 排除其他事件。",
+))
+
+#: Short pre-output self-check (no hidden reasoning text, no new JSON field).
+_V022_SELF_CHECK = (
+    "# 7.1 输出前一致性自检\n"
+    "在输出最终 JSON 前，核对 motion_phase、object_relation、events[] 和 "
+    "observation_note 是否与同一组视觉证据一致。如果判断为 transport/lift，"
+    "检查是否存在相应的可见物体位移以及 object_motion 事件；如证据不足，"
+    "应修正不受支持的判断，而不是编造事件。\n\n"
+)
+
+_V022_ANCHOR = "# 8. observation_note"
+
+
 #: Anchor present in the frozen v0.2 template, used to insert the required-field
 #: block without editing ``PROMPT_TEMPLATE_V0_2`` itself.
 _V02_ANCHOR = "# 4. motion_phase 的可观察条件（逐条执行）"
@@ -417,6 +555,13 @@ PROMPT_TEMPLATE_V0_2_1 = PROMPT_TEMPLATE_V0_2.replace(
     "{required_fields}\n\n" + _V02_ANCHOR,
     1,
 )
+
+#: v0.2.2 template = v0.2.1 with the carry sentence replaced and the self-check
+#: inserted.  Built by anchored replacement so v0.2.1 stays byte-identical and
+#: the diff is exactly one removed sentence plus two additions.
+PROMPT_TEMPLATE_V0_2_2 = PROMPT_TEMPLATE_V0_2_1.replace(
+    _V022_CARRY_SENTENCE, _V022_REPLACEMENT, 1,
+).replace(_V022_ANCHOR, _V022_SELF_CHECK + _V022_ANCHOR, 1)
 
 
 def render_enum_block_v0_2() -> str:
