@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="color-scheme" content="light"/>
+<title>P2-G3F-P1｜12 Segment 金标与 VLM 结果对照</title>
+<style>
+:root{--bg:#f6f8fb;--paper:#fff;--ink:#17283e;--muted:#627185;--line:#e3e9f0;--navy:#243b5d;--blue:#2563eb;--bluebg:#eff5ff;--green:#0b806d;--greenbg:#e9f7f2;--red:#c94150;--redbg:#fff0f1;--amber:#ab6c13;--amberbg:#fff7e8;--shadow:0 5px 24px rgba(32,48,75,.045)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #9bbafe;outline-offset:2px}button:disabled{opacity:.4;cursor:not-allowed}a{color:var(--blue)}.topline{height:5px;background:var(--navy)}.shell{width:min(1560px,calc(100% - 56px));margin:auto}.top{min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:800;letter-spacing:.03em;font-size:14px;display:flex;align-items:center;gap:10px}.brandmark{background:var(--navy);color:white;padding:5px 8px;border-radius:7px;font-size:13px}.topright{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.tiny{font-size:12px;color:var(--muted)}.tag{display:inline-flex;align-items:center;border:1px solid var(--line);background:white;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--muted)}.tag.warn{background:var(--amberbg);color:var(--amber);border-color:#f4e4c2}.tag.good{background:var(--greenbg);color:var(--green);border-color:#ceeadd}.btn{border:1px solid #d3dce8;background:white;color:var(--navy);font-weight:700;padding:9px 13px;border-radius:9px;transition:background .12s}.btn:hover{background:#f0f4fa}.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}.btn.primary:hover{background:#344c6f}.btn.small{font-size:12px;padding:6px 10px}.hero{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:31px 34px;box-shadow:var(--shadow);margin-bottom:20px}.eyebrow{font-size:11px;font-weight:800;color:#4f6686;letter-spacing:.15em;text-transform:uppercase}.hero h1{font-size:clamp(25px,3vw,38px);line-height:1.32;letter-spacing:-.8px;margin:10px 0 12px}.hero p{max-width:900px;font-size:14px;color:var(--muted);margin:0}.hero-meta{margin-top:19px;display:flex;align-items:center;flex-wrap:wrap;gap:9px}.sectiontitle{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:26px 0 12px}.sectiontitle h2{font-size:20px;letter-spacing:-.25px;margin:0}.sectiontitle p{margin:2px 0 0;color:var(--muted);font-size:12px}.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric{padding:18px 19px;background:white;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);min-width:0}.metric .m-title{font-size:13px;font-weight:750;margin-bottom:12px}.metric .m-legend{display:flex;justify-content:space-between;align-items:center;gap:6px;margin:8px 0;font-size:12px}.metric .m-legend .key{white-space:nowrap;font-weight:700;color:var(--muted)}.metric .m-legend .value{font-variant-numeric:tabular-nums;font-size:17px;font-weight:800;color:var(--ink)}.minibar{height:5px;width:100%;background:#edf0f4;border-radius:7px;overflow:hidden}.minibar>span{display:block;height:100%;border-radius:7px;background:var(--navy)}.metric .subnote{color:var(--muted);font-size:11px;margin-top:9px}.version-a{--tone:#7289a6}.version-b{--tone:#cf9944}.version-c{--tone:#3765a7}.version-mark{display:inline-block;background:var(--tone);width:8px;height:8px;border-radius:50%;margin-right:6px}.insight-strip{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin-top:13px}.panel{background:white;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow)}.panel h3{margin:0 0 8px;font-size:15px}.panel p{margin:5px 0;color:var(--muted);font-size:12.5px}.chip-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.token{border:1px solid var(--line);border-radius:6px;padding:3px 8px;background:#f7f9fc;font-size:11px;font-weight:750;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.token.good{background:var(--greenbg);border-color:#cfe9dc;color:#086958}.token.bad{background:var(--redbg);border-color:#f6ced2;color:#ad2f3a}.token.extra{background:var(--amberbg);border-color:#f2deb6;color:#915b14}.token.neutral{background:var(--bluebg);border-color:#d8e5fd;color:#305d9d}.token.muted{color:#718094;background:#f3f5f8}.workspace{display:grid;grid-template-columns:264px minmax(0,1fr);gap:16px;align-items:start}.navigator{background:white;border:1px solid var(--line);border-radius:12px;overflow:hidden;position:sticky;top:12px;max-height:calc(100vh - 26px);display:flex;flex-direction:column}.navhead{padding:16px;border-bottom:1px solid var(--line)}.navhead h3{font-size:14px;margin:0 0 10px}.search{width:100%;height:37px;border:1px solid var(--line);border-radius:8px;padding:0 11px;color:var(--ink);background:#fcfdff;outline:none}.filtergrid{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}.filterbtn{background:#f7f9fc;border:1px solid #e5eaf2;color:#68798d;border-radius:6px;padding:5px 7px;font-size:11px}.filterbtn.selected{background:var(--navy);color:white;border-color:var(--navy)}.navlist{overflow:auto;padding:6px}.navcase{display:block;width:100%;background:transparent;border:1px solid transparent;border-radius:8px;padding:11px 12px;text-align:left;margin:2px 0}.navcase:hover{background:#f6f8fc}.navcase.active{background:#edf4ff;border-color:#d7e5f9}.navcase .num{font-size:13px;font-weight:850;letter-spacing:-.1px;color:var(--ink)}.navcase .desc{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:5px;margin-top:2px}.navcase .level{font-size:10px;color:var(--red);font-weight:750}.navcase .level.ok{color:var(--green)}.navfoot{padding:10px 15px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}.detail{min-width:0}.casehero{padding:23px 24px;background:white;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.casehero-top{display:flex;justify-content:space-between;gap:15px;align-items:start}.casehero h2{margin:5px 0 7px;line-height:1.3;letter-spacing:-.3px;font-size:25px}.casehero p{margin:7px 0;color:var(--muted);font-size:13px}.case-actions{display:flex;gap:7px;flex-shrink:0}.barrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:13px}.focus-label{font-size:11px;color:#6b7d95;font-weight:800;letter-spacing:.02em}.goldline{margin-top:14px;border-top:1px solid var(--line);padding-top:14px;display:flex;align-items:center;gap:13px;flex-wrap:wrap}.goldline .gtitle{font-size:11px;font-weight:800;color:#586e89}.vispanel{background:white;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:12px;box-shadow:var(--shadow)}.vispanel-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.vispanel h3{margin:0;font-size:15px}.frames{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}.frame{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fbfcff}.frame-top{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;font-size:11px;color:#506783;border-bottom:1px solid var(--line);font-weight:750}.frame-empty{height:160px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#96a3b4;text-align:center;gap:8px;padding:16px;font-size:11px;background:repeating-linear-gradient(45deg,#fafcff,#fafcff 14px,#f5f8fc 14px,#f5f8fc 28px)}.frame-empty svg{width:28px;height:28px;opacity:.6}.frame img{width:100%;display:block;aspect-ratio: 16 / 9;object-fit:contain;background:#f2f4f7;image-rendering:auto;cursor:zoom-in}.frame img:hover{outline:2px solid #a3c7ff;outline-offset:-2px}.imghint{color:#8896a9;font-size:11px;margin-top:9px}.armhead{display:flex;align-items:center;justify-content:space-between;margin:18px 0 9px}.armhead h3{margin:0;font-size:16px}.arms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.armcard{background:white;border:1px solid var(--line);border-radius:11px;padding:15px 14px 13px;min-width:0;box-shadow:var(--shadow);border-top:3px solid var(--tone)}.armcard .armname{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:850;gap:5px}.armcard .armnote{color:var(--muted);font-size:11px;margin:3px 0 14px}.statblock{margin-top:11px;border-top:1px solid #e9edf3;padding-top:10px}.statblock .label{font-size:10px;color:#8090a5;text-transform:uppercase;letter-spacing:.035em;font-weight:800;margin-bottom:5px}.phasevalue{font-size:15px;font-weight:850}.phasevalue.ok{color:var(--green)}.phasevalue.wrong{color:var(--red)}.smallhint{display:block;font-size:11px;color:#8190a4}.armcard .result{margin-top:14px;min-height:26px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}.note{font-size:11px;color:var(--muted);background:#f7f9fc;border-radius:6px;padding:9px 10px;min-height:70px;line-height:1.8;overflow-wrap:anywhere}.notetag{font-size:10px;color:#6b829f;margin:0 0 4px}.blurb{margin-top:12px;color:#586b84;font-size:12px;min-height:54px}.badge-status{padding:3px 7px;border-radius:5px;background:var(--greenbg);color:var(--green);font-size:10px;font-weight:850;white-space:nowrap}.badge-status.wrong{background:var(--redbg);color:var(--red)}.badge-status.neutral{background:#f1f4f8;color:#77869a}.section-box{background:white;border:1px solid var(--line);border-radius:11px;margin-top:12px;padding:18px;box-shadow:var(--shadow)}.section-box h3{margin:0 0 8px;font-size:14px}.section-box p{margin:6px 0;font-size:12.5px;color:#566981}.inlinewarn{padding:10px 12px;border:1px solid #efdcbf;border-radius:8px;background:#fffaf0;color:#795622;font-size:12px}.upload{background:white;border:1px solid var(--line);border-radius:12px;padding:18px;margin:20px 0;box-shadow:var(--shadow)}.upload-inner{display:grid;grid-template-columns:1.4fr 1fr;gap:25px;align-items:center}.upload h3{margin:0 0 5px;font-size:16px}.upload p{font-size:12px;color:var(--muted);margin:0 0 9px}.upload-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.upload input[type=file]{position:absolute;width:1px;height:1px;opacity:0}.upload .status{text-align:right;font-size:11px;color:var(--muted);margin-top:8px}.imported{color:var(--green)!important;font-weight:700}.matrix{background:white;border:1px solid var(--line);border-radius:12px;overflow:auto;box-shadow:var(--shadow)}.matrix table{border-collapse:collapse;width:100%;min-width:890px}.matrix th{position:sticky;top:0;background:#f2f6fa;text-align:left;font-size:11px;color:#526781;padding:13px 12px;font-weight:800;white-space:nowrap}.matrix td{border-top:1px solid var(--line);padding:11px 12px;vertical-align:middle;font-size:11px}.matrix tbody tr{cursor:pointer}.matrix tbody tr:hover{background:#f5f9fe}.matrix .cellphase{display:block;font-size:12px;font-weight:800}.matrix .evt-small{display:block;font-size:10px;color:#788ba0}.matrix td.bad .cellphase{color:var(--red)}.matrix td.good .cellphase{color:var(--green)}.legend{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:11px}.legend b{color:var(--ink)}.sources{font-size:11px;color:var(--muted);line-height:1.9;padding:25px 0 34px}.sources a{word-break:break-all}.modal{position:fixed;inset:0;background:rgba(15,29,49,.7);z-index:20;display:flex;align-items:center;justify-content:center;padding:24px}.modal.hidden{display:none}.modalbox{background:white;border-radius:13px;padding:14px;max-width:95vw;max-height:95vh;display:flex;flex-direction:column;gap:9px}.modalbox img{max-height:78vh;max-width:90vw;object-fit:contain}.modalbox button{align-self:flex-end}.rawdetails{margin-top:10px}.rawdetails summary{cursor:pointer;font-size:11px;font-weight:800;color:#527399;padding:6px 0}.rawdetails pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;line-height:1.6;background:#f5f7fa;border:1px solid var(--line);padding:12px;max-height:240px;overflow:auto;border-radius:7px}.rawdetails .promptpre{max-height:390px}.rulebox{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.rulebox article{border:1px solid var(--line);padding:15px;border-radius:9px;background:#fcfdff}.rulebox h4{margin:0 0 5px;font-size:13px}.rulebox p{margin:0;font-size:12px;color:var(--muted)}.notice{font-size:12px;border:1px solid #d8e6f8;color:#3f6082;border-radius:9px;background:#f2f7ff;padding:10px 13px;margin-top:13px}.noresult{padding:16px;color:var(--muted);font-size:12px}.kbd{border:1px solid #cdd8e4;border-bottom-width:2px;padding:1px 5px;font-size:10px;background:white;border-radius:4px;color:#5e7189}.footerbadge{font-family:ui-monospace,monospace;font-size:11px}.sec-note{color:var(--muted);font-size:11px;margin-bottom:6px}.readonly{font-size:10px;padding:2px 6px;border:1px solid #dce5ef;background:#f4f7fb;color:#6a7b8e;border-radius:4px;font-weight:800}
+@media(max-width:1200px){.summary{grid-template-columns:repeat(2,1fr)}.arms{grid-template-columns:1fr}.armcard{padding:14px}.note{min-height:auto}.blurb{min-height:auto}.workspace{grid-template-columns:242px 1fr}}
+@media(max-width:800px){.shell{width:calc(100% - 24px)}.top{flex-wrap:wrap;padding:12px 0}.hero{padding:22px}.summary{grid-template-columns:1fr 1fr}.insight-strip,.upload-inner,.workspace{grid-template-columns:1fr}.navigator{position:static;max-height:340px}.upload-actions{justify-content:flex-start}.upload .status{text-align:left}.frames{gap:6px}.frame-empty{height:105px;font-size:10px}.frame-top{padding:6px}.casehero-top{flex-direction:column}.case-actions{width:100%}.rulebox{grid-template-columns:1fr}.casehero{padding:16px}.metric{padding:13px}}
+@media(max-width:470px){.summary{grid-template-columns:1fr}.frames{grid-template-columns:1fr}.frame img{max-height:330px}.frame-empty{height:130px}}
+@media print{body{background:white}.top,.upload,.navigator,.case-actions,.sectiontitle .btn,.modal{display:none!important}.workspace,.insight-strip{display:block}.shell{width:100%}.hero,.metric,.panel,.casehero,.vispanel,.armcard{box-shadow:none;break-inside:avoid}.arms{display:flex;gap:7px}.armcard{flex:1}.matrix{break-before:page}}
+</style>
+</head>
+<body>
+<div class="topline"></div>
+<div class="shell">
+<nav class="top"><div class="brand"><span class="brandmark">P2</span> Semantic QC / 案例汇报 <span class="tag">G3F-P1</span></div><div class="topright"><span class="tiny">GitHub main · 4c810bd · 2026-10-14</span><span class="tag warn">Development only</span><button class="btn small" onclick="document.getElementById('importPanel').scrollIntoView({behavior:'smooth'})">导入本地证据 ↗</button></div></nav>
+<header class="hero">
+  <div class="eyebrow">Robot Demonstration · Evidence-vs-Label Audit</div>
+  <h1>同一段动作，人工和 VLM 到底差在哪里？</h1>
+  <p>逐案例核对 <b>人工金标</b>、原始 Prompt <b>A · v0.2.1</b>、扩写语义 Prompt <b>B · v0.2.2</b> 与最小修复 <b>C · v0.2.3</b>。重点区分主阶段判断错误、漏掉物体位移、凭空增加事件和输出自相矛盾。</p>
+  <div class="hero-meta"><span class="tag">12 个冻结 Segment</span><span class="tag">36 / 36 结构合法</span><span class="tag">同一组 RGB · 同一模型</span><span class="tag warn">不代表 Held-out 泛化</span></div>
+</header>
+<section aria-label="全局指标">
+<div class="sectiontitle"><div><h2>01 · 先看总体差异</h2><p>同一批 12 个 Development Segment；每个指标由下方逐案例表重新汇总。</p></div><span class="tiny" id="integrity">正在核对...</span></div>
+<div class="summary" id="summaryCards"></div>
+<div class="insight-strip">
+  <div class="panel"><h3>Object Motion：两种相反错误同时存在</h3><p>人工正例只有 3 条。B 找回 2 条，但在 7 条负例上额外报告；C 降低误报，却又漏掉全部 3 条正例。</p><div id="objectMotionBars"></div></div>
+  <div class="panel"><h3>这页应该怎么看？</h3><p><span class="token good">正确 TP</span> 是模型报出的事件与金标重合；<span class="token bad">漏报 FN</span> 是人工标了而模型没有报；<span class="token extra">误报 FP</span> 是模型报了人工却没有标。</p><p>主阶段 <code>transport</code>（搬运）和事件 <code>object_motion</code>（物体移动）是不同字段。完整事件集正确 <b>≠</b> 主阶段正确。</p><p>点下方的案例列表，查看 A/B/C 是在哪一个字段偏离了金标。</p></div>
+</div>
+</section>
+<section class="upload" id="importPanel">
+  <div class="upload-inner"><div><h3>补上真实 RGB 与模型原始理由 <span class="readonly">可选 · 本地处理</span></h3><p>这个 HTML 已有 12 条金标和三版本预测。若想看到真正的 36 张图片、完整 <code>observation_note</code>、JSON 和实际 Prompt，可以从你本地的实验目录导入。</p><div class="chip-row"><span class="tag">outputs/g3f_p1/full_r1/</span><span class="tag">outputs 对 GitHub 忽略</span><span class="tag good">读取文件不上传网络</span></div></div>
+  <div><div class="upload-actions"><label class="btn primary" for="filesInput">导入实验 JSONL / CSV</label><input id="filesInput" type="file" accept=".jsonl,.json,.csv" multiple/><label class="btn" for="folderInput">选择 3 帧 RGB 文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory directory multiple/></div><div class="status" id="importStatus" role="status">当前为 GitHub 汇总数据 · 图片与完整文本尚未载入</div></div></div>
+  <div class="notice">建议一次选中 <b>run_manifest.json、per_segment.jsonl、responses.jsonl、inputs.jsonl</b>；图片可选择本地 RGB Cache 文件夹。导入时会检查 Segment / Arm / 人工标签与报告是否匹配，避免错误拼接历史不同轮次的推理结果。</div>
+</section>
+<div class="sectiontitle" id="casebook"><div><h2>02 · 按 Segment 查错</h2><p>左侧选择案例；右侧展示金标、目标帧、三个版本的 Phase 和 Event 对照。</p></div><span class="tiny">切换案例：<span class="kbd">←</span> <span class="kbd">→</span>（未在输入框时）</span></div>
+<div class="workspace">
+<aside class="navigator"><div class="navhead"><h3>案例导航 <span id="navCount" class="tiny">12 / 12</span></h3><input id="searchInput" class="search" placeholder="搜索 demo_159 或 transport…" aria-label="搜索案例"/><div class="filtergrid" id="filters"><button class="filterbtn selected" data-filter="all">全部</button><button class="filterbtn" data-filter="om-miss">漏报物体移动</button><button class="filterbtn" data-filter="om-fp">误报物体移动</button><button class="filterbtn" data-filter="phase">阶段错误</button><button class="filterbtn" data-filter="exact">事件完全正确</button></div><div style="margin-top:10px"><label class="tiny" for="focusArm">筛选依据版本 </label><select id="focusArm" class="search" style="height:32px;margin-top:3px"><option value="C">C · 最小修复 v0.2.3</option><option value="B">B · 扩写版 v0.2.2</option><option value="A">A · 旧版 v0.2.1</option></select></div></div><div class="navlist" id="caseNav"></div><div class="navfoot">病例顺序与冻结 microset 一致；没有通过事后挑选样本。</div></aside>
+<main class="detail" id="caseDetail" aria-live="polite"></main>
+</div>
+<div class="sectiontitle" id="comparison"><div><h2>03 · 12 条横向总表</h2><p>每格第一行是主阶段，第二行是事件集合。红色代表相对金标至少存在 Phase 或 Event 差异。</p></div><button class="btn small" onclick="document.getElementById('casebook').scrollIntoView({behavior:'smooth'})">返回逐案例 ↑</button></div>
+<div class="matrix" id="matrixWrap"></div>
+<div class="sectiontitle" id="rubric"><div><h2>04 · 事件定义和后续调查点</h2><p>避免误把机器人末端移动当作物体移动，也避免把抓取和搬运当成互斥标签。</p></div></div>
+<div class="rulebox">
+ <article><h4>Phase / 主阶段</h4><p><b>transport</b>（搬运）只有在 <code>motion_phase</code> 中；条件是可见物体随夹爪一起移动。一个 Segment 最终只选一个主阶段。</p></article>
+ <article><h4>Event / 局部事件</h4><p><b>object_motion</b> 要求目标帧之间物体有可辨认位移。它不要求同段重新执行抓取，也不能由 EEF 路径长度直接推断。</p></article>
+ <article><h4>Note / 文字描述</h4><p>文字说物体静止，却输出 <code>object_motion</code>，属于字段间矛盾，可通过 QC 标记，但 QC 不能直接修改标签。</p></article>
+</div>
+<div class="section-box" style="margin-top:12px"><h3>Prompt 版本实际上改了什么？</h3><div class="rulebox"><article><h4>A · v0.2.1（冻结历史基线）</h4><p>包含已确认冲突的句子：「长距离的连续搬运可能确实 <code>events=[]</code>；不要为了凑事件率而编造事件。」</p></article><article><h4>B · v0.2.2（扩写实验）</h4><p>用十条 Phase–Event 规则替换冲突句，并增加输出前一致性自检。<b>恢复 2 个 Object Motion 正例，却新增 7 个误报。</b></p></article><article><h4>C · v0.2.3（最小修复）</h4><p>仅替换那一句话；强调可见物体位移应报告 <code>object_motion</code>，但不能由 EEF 或夹爪状态直接推断。<b>误报降至 2，正例恢复为 0。</b></p></article></div><p>要查看某一条 Segment 实际发送的完整 Prompt，请在上方导入 <code>inputs.jsonl</code>，然后展开该组预测卡片中的「实际请求 Prompt」。</p></div>
+<footer class="sources">
+ <b>数据出处和限制</b>：GitHub <a href="https://github.com/Modori1998/embody_project2_data_value/blob/main/0-doc/10-design-review/G3F_P1_Results.md" target="_blank" rel="noopener">G3F_P1_Results.md</a>（12 条人工参考 / A、B、C 标签 / 指标 / 关键 note 摘录）；<a href="https://github.com/Modori1998/embody_project2_data_value/blob/main/0-doc/10-design-review/evidence/P2_G3_Taxonomy_v0_2_20261013/sample_manifest.csv" target="_blank" rel="noopener">冻结 sample_manifest.csv</a>（各 Segment 目标帧索引）；<a href="https://github.com/Modori1998/embody_project2_data_value/blob/main/src/project2_g3/semantic_schema.py" target="_blank" rel="noopener">semantic_schema.py</a>（术语定义）。仓库提交 <span class="footerbadge">4c810bd376662495f0737f84ee12542a3a0a074a</span>。这里默认没有原始图片及完整生成文本；未注明为「原始文本」的简述均为基于输出标签的差异解释，不代表 VLM 的推理过程。浏览器导入只在本机内存中处理；不会持久存储，不调用 API。<div style="margin-top:8px">P2-G3F-P1 · Owner review reader · 2026-10-14</div>
+</footer>
+</div>
+<div class="modal hidden" id="imageModal" role="dialog" aria-modal="true" aria-label="放大图像" onclick="if(event.target===this)closeModal()"><div class="modalbox"><button class="btn small" onclick="closeModal()">关闭 ×</button><img alt="原始 RGB 放大图" id="zoomImage"/><span class="tiny" id="zoomTitle"></span></div></div>
+<script id="preset" type="application/json">[
+  {
+    "id": "demo_2-S0003",
+    "episode": "demo_2",
+    "frames": [
+      63,
+      84,
+      106
+    ],
+    "gold": {
+      "phase": "transport",
+      "events": [
+        "grasp_attempt",
+        "object_motion"
+      ]
+    },
+    "arms": {
+      "A": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      },
+      "C": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ],
+        "note_excerpt": "物体位于桌面上，未见明显位移。"
+      }
+    },
+    "finding": "三个搬运金标之一；扩写版 B 恢复物体移动，但没有纠正主阶段。"
+  },
+  {
+    "id": "demo_4-S0003",
+    "episode": "demo_4",
+    "frames": [
+      69,
+      102,
+      136
+    ],
+    "gold": {
+      "phase": "transport",
+      "events": [
+        "grasp_attempt",
+        "object_motion"
+      ]
+    },
+    "arms": {
+      "A": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "C": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ],
+        "note_excerpt": "物体位于桌面上，未见明显位移。"
+      }
+    },
+    "finding": "三个搬运金标之一；三个版本都判成抓取，漏掉物体移动。"
+  },
+  {
+    "id": "demo_28-S0003",
+    "episode": "demo_28",
+    "frames": [
+      14,
+      38,
+      62
+    ],
+    "gold": {
+      "phase": "approach",
+      "events": [
+        "grasp_attempt"
+      ]
+    },
+    "arms": {
+      "A": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      },
+      "C": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt"
+        ]
+      }
+    },
+    "finding": "A/C 事件正确；扩写版 B 多报物体移动。"
+  },
+  {
+    "id": "demo_180-S0001",
+    "episode": "demo_180",
+    "frames": [
+      0,
+      1,
+      3
+    ],
+    "gold": {
+      "phase": "idle",
+      "events": []
+    },
+    "arms": {
+      "A": {
+        "phase": "idle",
+        "events": []
+      },
+      "B": {
+        "phase": "idle",
+        "events": [
+          "object_motion"
+        ]
+      },
+      "C": {
+        "phase": "idle",
+        "events": [
+          "grasp_attempt"
+        ]
+      }
+    },
+    "finding": "原始 A 完全正确；B 多报物体移动，C 多报抓取尝试。"
+  },
+  {
+    "id": "demo_159-S0003",
+    "episode": "demo_159",
+    "frames": [
+      81,
+      115,
+      150
+    ],
+    "gold": {
+      "phase": "transport",
+      "events": [
+        "grasp_attempt",
+        "object_motion"
+      ]
+    },
+    "arms": {
+      "A": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "transport",
+        "events": [
+          "object_motion"
+        ]
+      },
+      "C": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ],
+        "note_excerpt": "物体位于夹爪…物体位于托盘上，未见明显位移。"
+      }
+    },
+    "finding": "B 把主阶段纠正为搬运、恢复物体移动，却漏了抓取尝试；A/C 漏掉物体移动。"
+  },
+  {
+    "id": "demo_169-S0002",
+    "episode": "demo_169",
+    "frames": [
+      4,
+      16,
+      28
+    ],
+    "gold": {
+      "phase": "approach",
+      "events": []
+    },
+    "arms": {
+      "A": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      },
+      "C": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      }
+    },
+    "finding": "人工没有事件；三个版本都误报抓取，B 还误报物体移动。"
+  },
+  {
+    "id": "demo_172-S0004",
+    "episode": "demo_172",
+    "frames": [
+      166,
+      167,
+      169
+    ],
+    "gold": {
+      "phase": "place",
+      "events": [
+        "release_attempt"
+      ]
+    },
+    "arms": {
+      "A": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "C": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      }
+    },
+    "finding": "真实为放置/释放；三个版本都误判成抓取，既错阶段又错事件。"
+  },
+  {
+    "id": "demo_232-S0002",
+    "episode": "demo_232",
+    "frames": [
+      4,
+      26,
+      49
+    ],
+    "gold": {
+      "phase": "approach",
+      "events": []
+    },
+    "arms": {
+      "A": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      },
+      "C": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ],
+        "note_excerpt": "杯子在桌面上静止"
+      }
+    },
+    "finding": "人工没有事件；三个版本均误报抓取，B/C 额外误报物体移动。"
+  },
+  {
+    "id": "demo_71-S0003",
+    "episode": "demo_71",
+    "frames": [
+      34,
+      70,
+      106
+    ],
+    "gold": {
+      "phase": "approach",
+      "events": [
+        "grasp_attempt"
+      ]
+    },
+    "arms": {
+      "A": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      },
+      "C": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      }
+    },
+    "finding": "三个版本都错主阶段；A/C 事件正确，B 多报物体移动。"
+  },
+  {
+    "id": "demo_72-S0002",
+    "episode": "demo_72",
+    "frames": [
+      4,
+      46,
+      88
+    ],
+    "gold": {
+      "phase": "approach",
+      "events": []
+    },
+    "arms": {
+      "A": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      },
+      "C": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt"
+        ]
+      }
+    },
+    "finding": "人工没有事件；三个版本都误报抓取，B 额外误报物体移动。"
+  },
+  {
+    "id": "demo_183-S0003",
+    "episode": "demo_183",
+    "frames": [
+      67,
+      85,
+      104
+    ],
+    "gold": {
+      "phase": "grasp",
+      "events": [
+        "grasp_attempt"
+      ]
+    },
+    "arms": {
+      "A": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "C": {
+        "phase": "grasp",
+        "events": [
+          "grasp_attempt"
+        ]
+      }
+    },
+    "finding": "三版均正确：作为模型真正识别抓取阶段的正向对照。"
+  },
+  {
+    "id": "demo_216-S0002",
+    "episode": "demo_216",
+    "frames": [
+      4,
+      37,
+      70
+    ],
+    "gold": {
+      "phase": "approach",
+      "events": [
+        "grasp_attempt"
+      ]
+    },
+    "arms": {
+      "A": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt"
+        ]
+      },
+      "B": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      },
+      "C": {
+        "phase": "approach",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ],
+        "note_excerpt": "Can is stationary on the table."
+      }
+    },
+    "finding": "A 完全正确，B/C 多报物体移动。"
+  }
+]</script>
+<script>
+'use strict';
+const data=JSON.parse(document.getElementById('preset').textContent);
+const names={grasp_attempt:'抓取尝试',release_attempt:'释放尝试',object_motion:'物体移动'};
+const phases={approach:'靠近',grasp:'抓取阶段',lift:'提起',transport:'搬运',place:'放置',retract:'撤离',idle:'静止',other:'其他',uncertain:'不确定'};
+const meta={A:{title:'A · v0.2.1',short:'旧版 / 含已知冲突',class:'version-a'},B:{title:'B · v0.2.2',short:'扩写规则 + 自检',class:'version-b'},C:{title:'C · v0.2.3',short:'最小语义修复',class:'version-c'}};
+const eventAll=['grasp_attempt','object_motion','release_attempt'];
+let selected='demo_159-S0003', focus='C',filter='all',query='';
+let images=new Map(), prompts=new Map(), rawPredictions=new Map(), qcRecords=new Map(), humanEvidence=new Map(), expectedImageHashes=new Map(), verifiedImageHashes=new Set();
+let imported={per:false,response:false,prompt:false,image:0,human:false};
+const esc=s=>String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+const same=(a,b)=>JSON.stringify([...a].sort())===JSON.stringify([...b].sort());
+const caseFor=id=>data.find(x=>x.id===id);
+const rowPred=(row,arm)=>rawPredictions.get(row.id+'|'+arm)||row.arms[arm];
+function stats(arm){let tp=0,fp=0,fn=0,phase=0,exact=0,per={};for(let e of eventAll)per[e]={tp:0,fp:0,fn:0};for(const d of data){const gold=new Set(d.gold.events),pred=rowPred(d,arm),got=new Set(pred.events||[]); phase+=pred.phase===d.gold.phase;exact+=same(gold,got);for(const e of eventAll){let t=gold.has(e),p=got.has(e);if(t&&p){tp++;per[e].tp++}else if(p){fp++;per[e].fp++}else if(t){fn++;per[e].fn++}}}return{tp,fp,fn,phase,exact,f1:2*tp/(2*tp+fp+fn),per}}
+function labelPhase(v){return (phases[v]||v)+' / '+v;}
+function eventTokens(gold,pred,isGold=false){let g=new Set(gold),p=new Set(pred),out=[];for(const e of eventAll){let t=g.has(e),a=p.has(e);if(isGold&&t)out.push(`<span class="token neutral">${names[e]}<small>${esc(e)}</small></span>`);else if(t&&a)out.push(`<span class="token good">✓ ${names[e]}</span>`);else if(t&&!a)out.push(`<span class="token bad">− ${names[e]} · 漏报</span>`);else if(!t&&a)out.push(`<span class="token extra">+ ${names[e]} · 误报</span>`)}return out.length?out.join(''):`<span class="token muted">无事件</span>`}
+function miniEvents(events){if(!events.length)return '无事件';return events.map(e=>({grasp_attempt:'Grasp',object_motion:'OM',release_attempt:'Release'}[e]||e)).join(' + ')}
+function errorFlags(d,a){let p=rowPred(d,a),g=d.gold,gs=new Set(g.events),ps=new Set(p.events||[]);let missing=[...gs].filter(x=>!ps.has(x)),extra=[...ps].filter(x=>!gs.has(x)),phase=p.phase!==g.phase;return{missing,extra,phase,eventok:missing.length===0&&extra.length===0,exact:missing.length===0&&extra.length===0&& !phase}}
+function renderSummary(){const a=stats('A'),b=stats('B'),c=stats('C');let cards=[{title:'Multi-event Micro-F1',fmt:x=>x.f1.toFixed(3),max:1,note:'事件类型总 TP/FP/FN 聚合'},{title:'完整 Event Set 正确数',fmt:x=>x.exact+'/12',v:x=>x.exact,max:12,note:'事件集合匹配；不要求 Phase 一致'},{title:'Motion Phase 正确数',fmt:x=>x.phase+'/12',v:x=>x.phase,max:12,note:'主阶段单选，与事件独立打分'},{title:'Object Motion：TP / FP / FN',fmt:x=>`${x.per.object_motion.tp} / ${x.per.object_motion.fp} / ${x.per.object_motion.fn}`,v:x=>x.per.object_motion.tp,max:3,note:'3 条金标正例；FP 越少越好'}];document.getElementById('summaryCards').innerHTML=cards.map(card=>`<div class="metric"><div class="m-title">${card.title}</div>${'ABC'.split('').map(v=>{let stat={A:a,B:b,C:c}[v], n=card.v?card.v(stat):stat.f1;return `<div class="m-legend ${meta[v].class}"><span class="key"><i class="version-mark"></i>${v}</span><span class="value">${card.fmt(stat)}</span></div><div class="minibar"><span style="background:var(--tone);width:${Math.max(0,n/card.max*100)}%"></span></div>`}).join('')}<div class="subnote">${card.note}</div></div>`).join('');document.getElementById('objectMotionBars').innerHTML='ABC'.split('').map(v=>{let k=stats(v).per.object_motion;let s=k.tp+k.fp;return `<div class="m-legend ${meta[v].class}"><span class="key"><i class="version-mark"></i>${meta[v].title}</span><span class="value" style="font-size:12px"><span style="color:var(--green)">${k.tp} TP</span> · <span style="color:var(--red)">${k.fp} FP</span> · ${k.fn} FN</span></div><div style="height:12px;background:#eff3f7;border-radius:4px;overflow:hidden;display:flex" title="TP ${k.tp}，FP ${k.fp}"><span style="width:${k.tp/9*100}%;background:#1a987d"></span><span style="width:${k.fp/9*100}%;background:#d87070"></span></div>`}).join('');const ok=a.f1.toFixed(3)==='0.636'&&b.f1.toFixed(3)==='0.533'&&c.f1.toFixed(3)==='0.560'&&a.exact===5&&b.exact===2&&c.exact===3;document.getElementById('integrity').innerHTML= ok?'<span class="tag good">与 GitHub 汇总核对一致</span>':'<span class="tag warn">核算与原汇总不一致，请核查导入数据</span>'}
+function matchFilter(d){let x=errorFlags(d,focus),text=(d.id+' '+d.gold.phase+' '+d.finding).toLowerCase();if(query&&!text.includes(query.toLowerCase()))return false;switch(filter){case'om-miss':return x.missing.includes('object_motion');case'om-fp':return x.extra.includes('object_motion');case'phase':return x.phase;case'exact':return x.eventok;default:return true}}
+function renderNav(){let filtered=data.filter(matchFilter);document.getElementById('navCount').textContent=filtered.length+' / 12';document.getElementById('caseNav').innerHTML=filtered.length?filtered.map(d=>{let flags=errorFlags(d,focus),num=d.id.replace('demo_',''),bad=flags.missing.length+flags.extra.length+(flags.phase?1:0);return `<button class="navcase ${selected===d.id?'active':''}" onclick="selectCase('${d.id}')" aria-current="${selected===d.id?'true':'false'}"><div class="num">${esc(d.id)}</div><div class="desc"><span>${esc(phases[d.gold.phase])} · ${d.gold.events.length?miniEvents(d.gold.events):'无事件'}</span><span class="level ${bad===0?'ok':''}">${bad===0?'事件&阶段正确':flags.phase?'阶段/事件偏差':'事件偏差'}</span></div></button>`}).join(''):'<div class="noresult">没有匹配的案例。可清除筛选。</div>'}
+function summarySentence(d,arm){let f=errorFlags(d,arm),p=rowPred(d,arm),parts=[];if(f.phase)parts.push(`主阶段应为 ${phases[d.gold.phase]}，却判成 ${phases[p.phase]||p.phase}`);else parts.push(`主阶段正确（${phases[p.phase]||p.phase}）`);if(f.missing.length)parts.push(`漏掉 ${f.missing.map(e=>names[e]).join('、')}`);if(f.extra.length)parts.push(`多报 ${f.extra.map(e=>names[e]).join('、')}`);if(!f.missing.length&&!f.extra.length)parts.push('事件集合正确');return parts.join('；')+'。'}
+const emptyPicture='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="4" width="20" height="16" rx="2"></rect><circle cx="8" cy="9" r="2"></circle><path d="m3 17 6-5 4 3 3-5 5 7"></path></svg>';
+function renderImages(d){return `<div class="frames">${d.frames.map((f,i)=>{let k=d.id+'|'+f,url=images.get(k);return `<div class="frame"><div class="frame-top"><span>${['START','MIDDLE','END'][i]} · f${f}</span><span>${i+1}/3</span></div>${url?`<img src="${url}" alt="${esc(d.id)} frame ${f}" onclick="zoom('${esc(k)}')"/>`:`<div class="frame-empty">${emptyPicture}<span>原始 RGB 尚未导入<br/>${esc(d.id)}_f${String(f).padStart(5,'0')}.png</span></div>`}</div>`}).join('')}</div>`}
+function safeJson(obj){return esc(JSON.stringify(obj,null,2))}
+function renderDetail(){let d=caseFor(selected);if(!d)return;let evidence=humanEvidence.get(d.id);const evidenceHTML=evidence&&evidence.frames? Object.entries(evidence.frames).filter(([,a])=>a&&a.length).map(([e,arr])=>`<span class="token neutral">${esc(names[e]||e)} 证据：${esc(arr.join(' → '))}</span>`).join(''):'<span class="tiny">金标逐事件证据帧尚未导入；表内显示的是完整事件集合而非各事件支持帧。</span>';let promptCount=['A','B','C'].filter(v=>prompts.has(d.id+'|'+v)).length;
+const content=`<div class="casehero"><div class="casehero-top"><div><div class="eyebrow">CASE STUDY / ${esc(d.episode)} · Segment ${esc(d.id.split('-S')[1])}</div><h2>${esc(d.id)} <span class="tag">f${d.frames[0]} – f${d.frames[2]}</span></h2><p>${esc(d.finding)}</p></div><div class="case-actions"><button class="btn small" onclick="prevCase()">← 上一条</button><button class="btn small" onclick="nextCase()">下一条 →</button></div></div><div class="goldline"><span class="gtitle">人工金标 / Human Gold</span><span class="token neutral"><b>Phase</b> ${esc(labelPhase(d.gold.phase))}</span><div class="chip-row">${eventTokens(d.gold.events,d.gold.events,true)}</div></div><div class="barrow"><span class="focus-label">人工逐事件证据</span>${evidenceHTML}</div>${evidence?.explanation?`<p class="tiny" style="margin-top:9px"><b>人工审核解释：</b>${esc(evidence.explanation)}</p>`:""}</div>
+<div class="vispanel"><div class="vispanel-head"><h3>冻结 RGB 目标帧</h3><span class="tag ${d.frames.length===3&&d.frames.every(f=>images.has(d.id+'|'+f))?'good':'warn'}">${d.frames.filter(f=>images.has(d.id+'|'+f)).length} / 3 张已加载</span></div>${renderImages(d)}<div class="imghint">目标帧依据 GitHub 冻结 manifest。若导入 run_manifest.json，网页会尝试逐张核对 PNG 的 SHA-256；否则仅按文件名匹配。点图片可放大。</div></div>
+<div class="armhead"><h3>三版本逐字段对照</h3><div class="legend"><span><span class="token good">✓ 与金标一致</span></span><span><span class="token bad">− 漏报</span></span><span><span class="token extra">+ 误报</span></span></div></div>
+<div class="arms">${'ABC'.split('').map(arm=>{let p=rowPred(d,arm),flags=errorFlags(d,arm),raw=rawPredictions.get(d.id+'|'+arm),note=p.observation_note || d.arms[arm].note_excerpt,excerpt=!p.observation_note&&!!note,isExact=flags.eventok,isPhaseOk=!flags.phase,qc=qcRecords.get(d.id+'|'+arm)||{};return `<section class="armcard ${meta[arm].class}"><div class="armname"><span><i class="version-mark"></i>${meta[arm].title}</span><span class="badge-status ${isExact?'':'wrong'}">${isExact?'事件正确':'事件不符'}</span></div><div class="armnote">${meta[arm].short}</div><div class="statblock"><div class="label">Motion Phase / 主阶段</div><div class="phasevalue ${isPhaseOk?'ok':'wrong'}">${isPhaseOk?'✓ ':'× '}${esc(labelPhase(p.phase))}</div>${!isPhaseOk?`<span class="smallhint">金标：${esc(labelPhase(d.gold.phase))}</span>`:''}</div><div class="statblock"><div class="label">Events / 具体事件</div><div class="chip-row">${eventTokens(d.gold.events,p.events||[])}</div></div><div class="blurb">${esc(summarySentence(d,arm))}</div><div class="statblock"><div class="label">Observation Note / 模型原话</div><div class="notetag">${note?(excerpt?'GitHub 汇报中的原文摘录（非完整响应）':'本地原始 Response'): 'GitHub 汇总未包含该组完整原话'}</div><div class="note">${note?esc(note):'导入 outputs/g3f_p1/full_r1/responses.jsonl 后显示。'}</div></div>${qc.findings?.length?`<div class="inlinewarn" style="margin-top:9px">QC：${qc.findings.map(f=>esc(f.check_id||'review')).join('；')}</div>`:''}${raw?`<details class="rawdetails"><summary>展开真实 VLM JSON ▾</summary><pre>${safeJson(raw)}</pre></details>`:`<details class="rawdetails"><summary>展开本次汇总标签 ▾</summary><pre>${safeJson({motion_phase:p.phase,events:p.events})}</pre></details>`}${prompts.has(d.id+'|'+arm)?`<details class="rawdetails"><summary>展开实际请求 Prompt ▾</summary><pre class="promptpre">${esc(prompts.get(d.id+'|'+arm))}</pre></details>`:''}</section>`}).join('')}</div>
+<div class="section-box"><h3>这条案例的核对结论</h3><p><b>人工：</b>${esc(phases[d.gold.phase])}（${esc(d.gold.phase)}），事件 ${esc(d.gold.events.length?d.gold.events.map(e=>names[e]).join('、'):'无')}。</p><p><b>A：</b>${esc(summarySentence(d,'A'))}</p><p><b>B：</b>${esc(summarySentence(d,'B'))}</p><p><b>C：</b>${esc(summarySentence(d,'C'))}</p>${!promptCount?`<div class="notice">目前的解释只基于已提交的最终 Phase/Event 和少量报告摘录。要判断模型“到底看见了什么”，还需要在上方导入完整 <code>responses.jsonl</code> 和真实 RGB；不要把标签偏差直接等同于视觉感知失败。</div>`:''}</div>`;
+document.getElementById('caseDetail').innerHTML=content;
+}
+function renderMatrix(){document.getElementById('matrixWrap').innerHTML=`<table><thead><tr><th>Segment（点击查看）</th><th>人工金标</th>${'ABC'.split('').map(v=>`<th>${meta[v].title}</th>`).join('')}<th>关注差异</th></tr></thead><tbody>${data.map(d=>`<tr onclick="selectCase('${d.id}');document.getElementById('casebook').scrollIntoView({behavior:'smooth'})"><td style="font-weight:850;color:var(--navy)">${esc(d.id)}</td><td><span class="cellphase">${esc(phases[d.gold.phase])} / ${d.gold.phase}</span><span class="evt-small">${esc(miniEvents(d.gold.events))}</span></td>${'ABC'.split('').map(v=>{let f=errorFlags(d,v),p=rowPred(d,v);return `<td class="${f.exact?'good':'bad'}"><span class="cellphase">${esc(phases[p.phase]||p.phase)} ${f.phase?'×':'✓'}</span><span class="evt-small">${esc(miniEvents(p.events||[]))} ${f.eventok?'✓':'×'}</span></td>`}).join('')}<td style="max-width:270px;color:var(--muted)">${esc(d.finding)}</td></tr>`).join('')}</tbody></table>`}
+function renderAll(){renderSummary();renderNav();renderDetail();renderMatrix()}
+function selectCase(id){selected=id;renderNav();renderDetail()}
+function prevCase(){let list=data.filter(matchFilter),i=list.findIndex(d=>d.id===selected),n=list[(i-1+list.length)%list.length];if(n)selectCase(n.id)}
+function nextCase(){let list=data.filter(matchFilter),i=list.findIndex(d=>d.id===selected),n=list[(i+1)%list.length];if(n)selectCase(n.id)}
+function zoom(key){let u=images.get(key);if(!u)return;document.getElementById('zoomImage').src=u;document.getElementById('zoomTitle').textContent=key.replace('|',' · frame ');document.getElementById('imageModal').classList.remove('hidden')}
+function closeModal(){document.getElementById('imageModal').classList.add('hidden')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(e.key==='ArrowLeft'){prevCase()}if(e.key==='ArrowRight'){nextCase()}});
+document.getElementById('searchInput').addEventListener('input',e=>{query=e.target.value;renderNav()});document.getElementById('focusArm').addEventListener('change',e=>{focus=e.target.value;renderNav()});document.getElementById('filters').addEventListener('click',e=>{let b=e.target.closest('[data-filter]');if(!b)return;filter=b.dataset.filter;document.querySelectorAll('.filterbtn').forEach(x=>x.classList.toggle('selected',x===b));renderNav()});
+function canonicalEvents(v){return (Array.isArray(v)?v:[]).map(x=>typeof x==='string'?x:x?.event_type).filter(x=>eventAll.includes(x))}
+function validateAndStage(rows,type){let staged=new Map(),expected=new Set(data.map(d=>d.id));if(type==='per'){for(const row of rows){if(!expected.has(row.segment_id))continue;let d=caseFor(row.segment_id);let gold=row.human||{};let ge=canonicalEvents(gold.events);if(gold.motion_phase!==d.gold.phase||!same(ge,d.gold.events))throw Error(`金标不匹配：${d.id}。请确认选的是 G3F-P1/full_r1，而非其他 Run。`);for(const arm of 'ABC'){let p=row[arm];if(!p)throw Error(`${d.id} 缺少 ${arm} 预测`);let pe=canonicalEvents(p.events);if(p.motion_phase!==d.arms[arm].phase||!same(pe,d.arms[arm].events))throw Error(`${d.id}/${arm} 标签与 GitHub G3F-P1 汇总不匹配，已拒绝混入。`);staged.set(d.id+'|'+arm,{...p,phase:p.motion_phase,events:pe})}}if(staged.size!==36)throw Error(`per_segment.jsonl 只匹配到 ${staged.size}/36 个单元`);return staged}
+if(type==='responses'){for(const row of rows){if(!expected.has(row.segment_id)||!('ABC'.includes(row.arm))||!row.parsed)continue;let d=caseFor(row.segment_id),p=row.parsed,key=d.id+'|'+row.arm;let pe=canonicalEvents(p.events);if(p.motion_phase!==d.arms[row.arm].phase||!same(pe,d.arms[row.arm].events))throw Error(`${key} 与报告标签不一致，拒绝导入不同 Run`);if(!staged.has(key)||(row.attempt||1)<(staged.get(key).attempt||1))staged.set(key,{...p,phase:p.motion_phase,events:pe,attempt:row.attempt,review:row.phase_event_qc})}if(staged.size!==36)throw Error(`responses.jsonl 只匹配到 ${staged.size}/36 个单元；请确认是 full_r1`);return staged}
+if(type==='inputs'){for(const row of rows){if(!expected.has(row.segment_id)||!('ABC'.includes(row.arm)))continue;let content=row.request?.messages?.[0]?.content,txt=Array.isArray(content)?content.find(x=>x.type==='text')?.text:null;if(!txt)continue;staged.set(row.segment_id+'|'+row.arm,txt)}if(staged.size!==36)throw Error(`inputs.jsonl 只匹配到 ${staged.size}/36 个单元；请确认是 full_r1`);return staged}
+return staged}
+function csvRows(text){let res=[],r=[],v='',quote=false;for(let i=0;i<text.length;i++){let c=text[i];if(quote){if(c==='"'&&text[i+1]==='"'){v+='"';i++}else if(c==='"')quote=false;else v+=c}else if(c==='"')quote=true;else if(c===','){r.push(v);v=''}else if(c==='\n'){r.push(v.replace(/\r$/,''));if(r.some(x=>x!==''))res.push(r);r=[];v=''}else v+=c}r.push(v.replace(/\r$/,''));if(r.some(x=>x!==''))res.push(r);return res}
+function importHumanCSV(text){let records=csvRows(text.replace(/^\ufeff/,''));if(!records.length)return;let keys=records[0],objects=records.slice(1).map(r=>Object.fromEntries(keys.map((k,i)=>[k,r[i]||'']))),next=new Map();for(const o of objects){let d=caseFor(o.segment_id);if(!d)continue;if(o.phase_ref!==d.gold.phase||!same((o.event_types_ref||'').split(';').filter(Boolean),d.gold.events))throw Error(`人工 CSV 金标与汇总不匹配：${d.id}`);if(o.target_keyframes&& !same(o.target_keyframes.split(';').map(Number),d.frames))throw Error(`目标帧身份不匹配：${d.id}`);let frames={};for(const e of eventAll){let v=o[e+'_frames_ref']||'';frames[e]=v?v.split(';').filter(Boolean).map(Number):[]}for(let [e,nums] of Object.entries(frames))if(nums.some(n=>!d.frames.includes(n)))throw Error(`${d.id} 人工事件证据引用了目标帧外编号`);next.set(d.id,{frames,explanation:o.explanation||''})}if(next.size!==12)throw Error(`人工 CSV 仅匹配 ${next.size}/12 条记录`);humanEvidence=next;imported.human=true}
+async function parseJSONL(file){let str=await file.text();const lines=str.trim().split(/\r?\n/).filter(Boolean);return lines.map((line,i)=>{try{return JSON.parse(line)}catch(e){throw Error(`${file.name}:${i+1} 无法解析 JSONL`)}})}
+function showImport(msg,failed=false){let box=document.getElementById('importStatus');box.textContent=msg;box.classList.toggle('imported',!failed)}
+document.getElementById('filesInput').addEventListener('change',async e=>{const files=[...e.target.files];if(!files.length)return;let logs=[];for(const f of files){try{if(f.name==='run_manifest.json'){let m=JSON.parse(await f.text());let order=m.sample_order||[];if(order.length!==12||!same(order,data.map(x=>x.id)))throw Error('实验 Segment 矩阵不匹配');if(!m.arms?.A||!m.arms?.B||!m.arms?.C)throw Error('不是三臂实验 Run Manifest');let next=new Map();for(const d of data){let h=m.rgb_sha256?.[d.id];if(typeof h!=='string'||h.split(';').length!==3)throw Error(d.id+' 缺少 RGB SHA');h.split(';').forEach((hash,i)=>{if(!/^[a-f0-9]{64}$/.test(hash))throw Error('非法 PNG SHA');next.set(d.id+'|'+d.frames[i],hash)})}expectedImageHashes=next;logs.push('Run Manifest 校验通过，已取得 36 张 PNG SHA')}else if(f.name==='per_segment.jsonl'){let items=await parseJSONL(f);let stage=validateAndStage(items,'per');for(const [k,v] of stage)rawPredictions.set(k,v);imported.per=true;logs.push('完整 36 组预测已加载')}else if(f.name==='responses.jsonl'){let items=await parseJSONL(f);let stage=validateAndStage(items,'responses');for(const [k,v] of stage){rawPredictions.set(k,v);if(v.review)qcRecords.set(k,v.review)}imported.response=true;logs.push('完整模型 Response + QC 已加载')}else if(f.name==='inputs.jsonl'){let items=await parseJSONL(f);let stage=validateAndStage(items,'inputs');for(const [k,v] of stage)prompts.set(k,v);imported.prompt=true;logs.push('实际 36 条 Prompt 已加载')}else if(f.name.toLowerCase().endsWith('.csv')){importHumanCSV(await f.text());logs.push('人工金标逐事件证据已加载')}else logs.push(`忽略未知文件：${f.name}`)}catch(err){logs.push('拒绝 '+f.name+'：'+err.message)}}showImport(logs.join('；'),logs.every(x=>x.startsWith('拒绝')));renderAll();e.target.value=''});
+document.getElementById('folderInput').addEventListener('change',async e=>{let files=[...e.target.files].filter(f=>/\.png$/i.test(f.name)),found=0,verified=0,missing=[],rejected=[];for(const u of images.values())URL.revokeObjectURL(u);images.clear();verifiedImageHashes.clear();for(const d of data){for(const idx of d.frames){let key=d.id+'|'+idx;let file=files.find(f=>f.name.startsWith(d.id+'_f')&&Number((f.name.match(/_f0*(\d+)\.png$/i)||[])[1])===idx);if(!file){missing.push(d.id+':f'+idx);continue}if(expectedImageHashes.size){try{if(!crypto?.subtle){rejected.push(key+'：浏览器不支持 SHA-256');continue}let hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await file.arrayBuffer()))).map(b=>b.toString(16).padStart(2,'0')).join('');if(hash!==expectedImageHashes.get(key)){rejected.push(key+'：SHA-256 不匹配');continue}verifiedImageHashes.add(key);verified++}catch(err){rejected.push(key+'：校验异常');continue}}images.set(key,URL.createObjectURL(file));found++}}imported.image=found;let msg=`RGB 已加载 ${found}/36 张`+(expectedImageHashes.size?`，其中 SHA-256 已验证 ${verified}/36 张`:'（仅文件名匹配，尚未核验 PNG SHA）')+(missing.length?`；缺少 ${missing.length} 张`:'')+(rejected.length?`；拒绝 ${rejected.length} 张：${rejected.slice(0,2).join('、')}`:'');showImport(msg,!!rejected.length);renderDetail();e.target.value=''});
+renderAll();
+</script>
+</body></html>
