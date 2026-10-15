@@ -3,6 +3,7 @@
 import hashlib
 
 from scripts import run_g3g_pilot as G
+from project2_g3 import semantic_schema as S
 
 
 def test_frozen_smoke_prompt_identity():
@@ -21,3 +22,12 @@ def test_task_a_rejects_missing_or_wrong_frame_evidence():
     value["can_visible"]["evidence_frame_indices"] = [63]
     del value["gripper_open_close_change"]
     assert not G.valid_a(value, "demo_2-S0003", [63, 84, 106])
+
+
+def test_schema_protocol_changes_only_task_b_and_is_arm_independent():
+    for arm in ("4B", "8B"):
+        assert arm in G.EXPECTED
+        assert G.response_format("A", True) == {"type": "json_object"}
+        assert G.response_format("B", True) == {
+            "type": "json_object", "schema": S.json_schema_v0_2()}
+        assert G.response_format("B", False) == {"type": "json_object"}

@@ -95,6 +95,13 @@ def valid_a(value: object, segment_id: str, indices: list[int]) -> bool:
     return True
 
 
+def response_format(task: str, schema_constrained: bool) -> dict:
+    """Keep historical Pilot wire format unless the G3G-P1 protocol is selected."""
+    if task == "B" and schema_constrained:
+        return {"type": "json_object", "schema": S.json_schema_v0_2()}
+    return {"type": "json_object"}
+
+
 def sample_resources(stop: threading.Event, samples: list) -> None:
     while not stop.is_set():
         ram = psutil.virtual_memory()
@@ -119,6 +126,8 @@ def main() -> int:
     parser.add_argument("--backend", type=Path, required=True)
     parser.add_argument("--gpu-layers", type=int, required=True)
     parser.add_argument("--resume", action="store_true", help="Continue from recorded terminal cells without extra attempts")
+    parser.add_argument("--schema-constrained", action="store_true",
+                        help="G3G-P1 Task B field-level constraint; Task A stays frozen")
     args = parser.parse_args()
     arm = args.arm
     out = args.run_dir
@@ -192,6 +201,9 @@ def main() -> int:
                 "order": [[r["segment_id"], t] for r, _, _, t, _, _, _ in plan],
                 "frames": {r["segment_id"]: {"indices": idx, "png_sha256": r["frame_png_sha256s"].split(";"),
                                               "dimensions": dims} for r, idx, _, _, _, _, dims in plan}}
+    if args.schema_constrained:
+        manifest["schema_constrained"] = True
+        manifest["task_response_format"] = {task: response_format(task, True) for task in TASKS}
     manifest_path = out / f"{arm}_run_manifest.json"
     if args.resume:
         previous = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -212,7 +224,7 @@ def main() -> int:
         sid = row["segment_id"]
         payload = {"model": model_id, "messages": [{"role": "user", "content": content}],
                    "max_tokens": 512, "temperature": 0.0, "seed": 1234, "stream": False,
-                   "response_format": {"type": "json_object"}}
+                   "response_format": response_format(task, args.schema_constrained)}
         input_record = {"segment_id": sid, "task": task,
             "content_sha256": content_sha, "prompt_sha256": hashlib.sha256(content[0]["text"].encode()).hexdigest(),
             "png_sha256": row["frame_png_sha256s"].split(";"), "frame_indices": indices,
