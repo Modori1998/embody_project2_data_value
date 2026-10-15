@@ -102,6 +102,15 @@ def response_format(task: str, schema_constrained: bool) -> dict:
     return {"type": "json_object"}
 
 
+def selected_segments(frozen: dict, development: bool) -> tuple[str, ...]:
+    if not development:
+        return SEGMENTS
+    selected = tuple(frozen["cohorts"]["microset"]["segments"])
+    if len(selected) != 12 or len(set(selected)) != 12:
+        raise ValueError("STOP_FROZEN_DEVELOPMENT_COHORT_DRIFT")
+    return selected
+
+
 def sample_resources(stop: threading.Event, samples: list) -> None:
     while not stop.is_set():
         ram = psutil.virtual_memory()
@@ -128,7 +137,11 @@ def main() -> int:
     parser.add_argument("--resume", action="store_true", help="Continue from recorded terminal cells without extra attempts")
     parser.add_argument("--schema-constrained", action="store_true",
                         help="G3G-P1 Task B field-level constraint; Task A stays frozen")
+    parser.add_argument("--development", action="store_true",
+                        help="Run all 12 frozen G3C microset segments; requires --schema-constrained")
     args = parser.parse_args()
+    if args.development and not args.schema_constrained:
+        raise ValueError("STOP_DEVELOPMENT_REQUIRES_SCHEMA_CONSTRAINT")
     arm = args.arm
     out = args.run_dir
     out.mkdir(parents=True, exist_ok=True)
@@ -137,6 +150,7 @@ def main() -> int:
     if args.resume and not (out / f"{arm}_responses.jsonl").is_file():
         raise FileNotFoundError("STOP_RESUME_RECORDS_MISSING")
     frozen = json.loads((FROZEN / "run_manifest.json").read_text(encoding="utf-8"))
+    segments = selected_segments(frozen, args.development)
     if P.template_sha256_v0_2_3() != PROMPT_B_SHA:
         raise ValueError("STOP_PROMPT_DRIFT")
     schema_hash = hashlib.sha256(json.dumps(S.json_schema_v0_2(), sort_keys=True, ensure_ascii=False).encode()).hexdigest()
@@ -156,7 +170,7 @@ def main() -> int:
     model_id = models["data"][0]["id"]
     rows = {r["segment_id"]: r for r in csv.DictReader((FROZEN / "sample_manifest.csv").open(encoding="utf-8-sig"))}
     prepared = []
-    for sid in SEGMENTS:
+    for sid in segments:
         row = rows[sid]
         paths = verified_frames(row, RGB)
         indices = [int(i) for i in row["target_keyframes"].split(";")]
@@ -204,6 +218,9 @@ def main() -> int:
     if args.schema_constrained:
         manifest["schema_constrained"] = True
         manifest["task_response_format"] = {task: response_format(task, True) for task in TASKS}
+    if args.development:
+        manifest["run_scope"] = "G3G_DEVELOPMENT_12_SEGMENTS"
+        manifest["frozen_cohort"] = list(segments)
     manifest_path = out / f"{arm}_run_manifest.json"
     if args.resume:
         previous = json.loads(manifest_path.read_text(encoding="utf-8"))

@@ -1,6 +1,7 @@
 """Focused checks for G3G Pilot request identity and Task A QC."""
 
 import hashlib
+import json
 
 from scripts import run_g3g_pilot as G
 from project2_g3 import semantic_schema as S
@@ -31,3 +32,18 @@ def test_schema_protocol_changes_only_task_b_and_is_arm_independent():
         assert G.response_format("B", True) == {
             "type": "json_object", "schema": S.json_schema_v0_2()}
         assert G.response_format("B", False) == {"type": "json_object"}
+
+
+def test_development_uses_frozen_twelve_segment_order():
+    frozen = json.loads((G.FROZEN / "run_manifest.json").read_text(encoding="utf-8"))
+    assert G.selected_segments(frozen, False) == G.SEGMENTS
+    selected = G.selected_segments(frozen, True)
+    assert len(selected) == len(set(selected)) == 12
+    assert set(G.SEGMENTS) <= set(selected)
+    frozen["cohorts"]["microset"]["segments"] = selected[:11]
+    try:
+        G.selected_segments(frozen, True)
+    except ValueError as exc:
+        assert "STOP_FROZEN_DEVELOPMENT_COHORT_DRIFT" in str(exc)
+    else:
+        raise AssertionError("Expected frozen cohort drift stop")
