@@ -32,6 +32,7 @@ def schedule(anchors: list[int], count: int) -> list[int]:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--short-controls", action="store_true", help="Approved matrix: ten 3/6/12 triples plus two 3/4 controls")
     args = parser.parse_args()
     rows = [r for r in csv.DictReader(FROZEN.open(encoding="utf-8-sig")) if r["cohort"] == "microset"]
     if len(rows) != 12 or len({r["segment_id"] for r in rows}) != 12:
@@ -39,7 +40,8 @@ def main() -> None:
     planned = []
     for row in rows:
         anchors = list(map(int, row["target_keyframes"].split(";")))
-        for count in (3, 6, 12):
+        counts = (3, 4) if args.short_controls and int(row["segment_length"]) < 12 else (3, 6, 12)
+        for count in counts:
             try:
                 indices = schedule(anchors, count)
                 status = "SCHEDULE_ONLY_RGB_NOT_MATERIALIZED"
@@ -51,7 +53,7 @@ def main() -> None:
                 "nominal_timestamps_s": [i / 20.0 for i in indices],
                 "timestamp_basis": "G1 nominal control clock 20 Hz; not measured video PTS",
                 "status": status})
-    result = {"version": "ARGUS_FRAME_SCHEDULE_DRAFT_V1", "selection": "largest_gap_floor_midpoint_earliest_tie",
+    result = {"version": "ARGUS_FRAME_SCHEDULE_APPROVED_V1" if args.short_controls else "ARGUS_FRAME_SCHEDULE_DRAFT_V1", "selection": "largest_gap_floor_midpoint_earliest_tie",
         "source_manifest_sha256": hashlib.sha256(FROZEN.read_bytes()).hexdigest(),
         "inference_calls": 0, "rgb_materialized": False,
         "blocked_cells": sum(r["status"].startswith("STOP_") for r in planned), "cells": planned}

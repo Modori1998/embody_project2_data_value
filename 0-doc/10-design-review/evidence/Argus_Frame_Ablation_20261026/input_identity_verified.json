@@ -1,0 +1,2187 @@
+{
+  "input_manifest_sha256": "2499a63834474e1c51f6bae7d8a7be7ca3b148a448cc91eb7b793f35f0d03449",
+  "schedule_sha256": "44b3e7df94bbca249ce9536b35986f3eae2f9f30c9ac8a2f508dc7ca607cbde7",
+  "unique_frames": 128,
+  "planned_cells": 34,
+  "original_frames_hash_verified": 36,
+  "payload_checks": 34,
+  "historical_C_3frame_payloads_equal": 12,
+  "frames": {
+    "demo_2-S0003:63": {
+      "frame_index": 63,
+      "nominal_timestamp_s": 3.15,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "c83d14ff8b476dcc4e877a8300417573786c0c9d97be04dfd7dd4837f429b6be",
+      "pixel_sha256": "decd134fa2f01139c9bb71c9d26891cb0ec97997a34d0e880e717a83c3955b23",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:68": {
+      "frame_index": 68,
+      "nominal_timestamp_s": 3.4,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "2bfe86010749c9c0ee43f308b0d24ff0d6f19785efc4f937aed33be999384fce",
+      "pixel_sha256": "6c3b286a94952468b53fdd521e98c1672d0ae407b738db5972ab0274e48adc80",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:73": {
+      "frame_index": 73,
+      "nominal_timestamp_s": 3.65,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "bb765d5f648ba8fd67c4b68869c4b4e3fe2c33122c16a42cf34d0916a6acbd38",
+      "pixel_sha256": "55a685bf9482a232acec332854c8b54f844f4456274937acd6e48d3476b5c801",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:78": {
+      "frame_index": 78,
+      "nominal_timestamp_s": 3.9,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "ac171ec0dea3c8e8732ead160151e6c5a45a52ea4c4d32046088f33bca4e4173",
+      "pixel_sha256": "7390b9e0e6e99e1d808f191afa8bb6d609388202e9c801963205e2afb5fc8ae8",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:81": {
+      "frame_index": 81,
+      "nominal_timestamp_s": 4.05,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a459685164d500e7b2b91d81e49586fab309d5371e6d973df15b787d50ca0d8a",
+      "pixel_sha256": "837195f0aae1abb51a4b6a5d729cad1991782ceb782b03b3cb48ce0d9dd21bd1",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:84": {
+      "frame_index": 84,
+      "nominal_timestamp_s": 4.2,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "15e1925eca8dd6818539865e2a592cc08d4e49e4ffeb08cc687c3a20aa789073",
+      "pixel_sha256": "7bb8d6b21b526d252b0bdf384e0eb4f05d465416326f55c9c8a6cba8a083320d",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:89": {
+      "frame_index": 89,
+      "nominal_timestamp_s": 4.45,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a9aeac43cc0d2f014822466ddee3316ab5c7009a2dde86c38226b37902881817",
+      "pixel_sha256": "5a4ad14a85f8c2aa72f38cb7711f3a647635601bf8741943cd26f1f2a1738ce6",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:92": {
+      "frame_index": 92,
+      "nominal_timestamp_s": 4.6,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "da288e476ba3903ae2530377c2bb137dc6e2a3de81555b7c6efbbf523072daf1",
+      "pixel_sha256": "3166f22b8d83979930dff7a380944445464accf0f96166ae436ed0223e23180b",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:95": {
+      "frame_index": 95,
+      "nominal_timestamp_s": 4.75,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "9ebe2afb7dcac560ede4e420414184696c0ac76c42663e97724e1532fb3574a5",
+      "pixel_sha256": "ad1e8380c97483bc2ecf8a92bd04732fcde7f10293e5be4031cf857864303b36",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:100": {
+      "frame_index": 100,
+      "nominal_timestamp_s": 5.0,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "ea18ebae20d2f19e33e20caeac67eb65f04de7690df7b4f909a938dfa5037347",
+      "pixel_sha256": "8cf9f8d080a998a94930473ee30ec92fa44c5827f44ea404da2f2f7503ea8d19",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:103": {
+      "frame_index": 103,
+      "nominal_timestamp_s": 5.15,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "4c43b1751554a3aaea7f4d3cb4b81d7ef78d40ca2f4b353af56788f00be1cfae",
+      "pixel_sha256": "87eabda2aa0be047f0d19e11b8b324964c851b9d2c080d964c5eec27bbf24c8e",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_2-S0003:106": {
+      "frame_index": 106,
+      "nominal_timestamp_s": 5.3,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "dfc5c7e0210655f5823bb59e8ac5263de96a1f40fb70796bbbee73b89bd42bea",
+      "pixel_sha256": "c0c90e25257a16a700fd23955d9a99db73b5414229e057d775864ded41d2d9f5",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:69": {
+      "frame_index": 69,
+      "nominal_timestamp_s": 3.45,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "abf5b2bcf8be4625ef8fadee33ac9348e82b47f171b83f2b068feb856b2f1fdf",
+      "pixel_sha256": "73f72e2f9ee54aaf0fe09bbc83957418c4cea68fd4bcdc2d999bf086d705244c",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:77": {
+      "frame_index": 77,
+      "nominal_timestamp_s": 3.85,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "b86cead8f7d6aa2176b7a5f5d611187c109fb3620cf2f416a547af4ce7fbe5a3",
+      "pixel_sha256": "c65deb717e755db25582d412112cf8d53ef9ab31ee52656987f3417ef37671be",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:85": {
+      "frame_index": 85,
+      "nominal_timestamp_s": 4.25,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a41212cb4877f3969de74b5260a82a7251f57c3000f442e61ad6d0136d4127c8",
+      "pixel_sha256": "ab7a60da5c7a5b0cf1871f9385bf91c19ca9026a21cc69bf096fd54a9d39f7b3",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:93": {
+      "frame_index": 93,
+      "nominal_timestamp_s": 4.65,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "21cf0ee4eda0c6493b013349c3eaaa907584a3afeccd1dee16985494ed6432fe",
+      "pixel_sha256": "c9edbc7cde95b9134cc253bc341714fe03aa11b1c6c7367aadd18d7ac3ae4963",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:97": {
+      "frame_index": 97,
+      "nominal_timestamp_s": 4.85,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "343c2f7e713242e7ac1831fc0e969c1b0402229c683bf8ec9c6fd82507d06227",
+      "pixel_sha256": "290c7c6b3d53223575b5baf90e61429d3a7602c1d5301903ef64bebe23f57a60",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:102": {
+      "frame_index": 102,
+      "nominal_timestamp_s": 5.1,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "55872233ba5669d23dd53e0a00145968545a62a4414638222556a14906be4bdb",
+      "pixel_sha256": "f589bc9befe4a345eafd677ed3cedc5ac459481b402ffdf0b4a4de3bbad76ebd",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:110": {
+      "frame_index": 110,
+      "nominal_timestamp_s": 5.5,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "c1e9a78c1d489f3ff674765a7ef868fe69b34d2fe08b5253820920454c3e368c",
+      "pixel_sha256": "8b67906d1c97f16c2c31293a78084559e6da5c0ef9cc5ea3745836c3f1dc594d",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:114": {
+      "frame_index": 114,
+      "nominal_timestamp_s": 5.7,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "462be9e07fe8fb300c30cfaa798524d79887ab55e0d58cbad576d661ca85f8cc",
+      "pixel_sha256": "79f0d1cf06a093ad680bc4232f8376418b68ba9317c11ddb00d5e3a5265e0c19",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:119": {
+      "frame_index": 119,
+      "nominal_timestamp_s": 5.95,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "56d7b3863093917a3572c31e9151084eb0711c306415fbf526d03e1a6e08fd7c",
+      "pixel_sha256": "bf1fd109a04bf67eb899015165925ffffa9a7142824bac0708a274d473ef727d",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:127": {
+      "frame_index": 127,
+      "nominal_timestamp_s": 6.35,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "6905b3d2d2309eeb8bc377ffdda290f79079a1ef7867b903900e15344406c46b",
+      "pixel_sha256": "ee8770ff8fac36d72d01b0cf292990c70599908314932c3c47c4d91a4c79f75d",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:131": {
+      "frame_index": 131,
+      "nominal_timestamp_s": 6.55,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "b2a973a81b4e7d0d9e22a452068ef7798f21c9694bea5f30dfe471159bb2f6f1",
+      "pixel_sha256": "108a00c62c51e96f4ef465f5d81cb0474b3a99f918b740778cbab58807543bd1",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_4-S0003:136": {
+      "frame_index": 136,
+      "nominal_timestamp_s": 6.8,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "8304c36c4836117e411b0c83e96c703befdeab68631b46095fb39c476a2ca3a5",
+      "pixel_sha256": "684dfc22800de0f3623bc575c31f3f281c5e8b9a5347c3538b97c5a3f5a65900",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:14": {
+      "frame_index": 14,
+      "nominal_timestamp_s": 0.7,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "fb0f9b7820abc65daf43328d173f69ebdc97cfeb3108a28e607467ce3f34a3be",
+      "pixel_sha256": "851ab1adcd16eb9228309ac0f975c7a5326171bfa680327cba3f1943e9d23cb8",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:17": {
+      "frame_index": 17,
+      "nominal_timestamp_s": 0.85,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "26c22e597863a4f549a466cf889b1885f3816bc52c9f5ad3237f66acad0aebfa",
+      "pixel_sha256": "1eded960243f3cb09cfc9a5f4d34e507a00da389277bd427013d5324d188d639",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:20": {
+      "frame_index": 20,
+      "nominal_timestamp_s": 1.0,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "2f2ce40bdadb64c7371da2c9f4ad3c82f6e4deb0a4e36f78e189eb95cb397357",
+      "pixel_sha256": "a5dc5b3c87a173cb853516e358a4e22a1ded6887e9de8556ad5f019bd3c2befa",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:23": {
+      "frame_index": 23,
+      "nominal_timestamp_s": 1.15,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a44001cf73b5404fcf51b4225d083ceacd67cba221b1f46b0c36bb9d73f871e7",
+      "pixel_sha256": "07fe362089ab0231534f390fab97c657cbe9e006f0280676ed607ac8ff1bc3d7",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:26": {
+      "frame_index": 26,
+      "nominal_timestamp_s": 1.3,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "ffdd0a55954f821e2a584275aee28d384a7e9d7fa5e2f35d1ce3fbd6ea8dbfca",
+      "pixel_sha256": "e29d33aee28ffa4e4476f72fbd5c1dae118e1b6dae05a7829edb28d7bd7a82fb",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:29": {
+      "frame_index": 29,
+      "nominal_timestamp_s": 1.45,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a7e0eead4f076d00ec2e29ddb1e367922719c4b3291e6a4d84b6233e22508456",
+      "pixel_sha256": "9e4958a4d6f62cb88db6350a9571d6dea4f869e8580062076b06d32286160aa5",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:32": {
+      "frame_index": 32,
+      "nominal_timestamp_s": 1.6,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "0a842ed70a9d5a623ade07b3ba09a719e7456214b77a3ae9a94d5f8f67f599c5",
+      "pixel_sha256": "373c786bdfa42777be16857ca173d0b6e5acb09ef9c38d38374b658c15763a04",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:38": {
+      "frame_index": 38,
+      "nominal_timestamp_s": 1.9,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "0fa71aff32cd084811755ac914a95628d747d69acb19c68d46a566a9855ea372",
+      "pixel_sha256": "374f80c176ac0a46fdc8748bc75d6ad33ca3c200c0a06fb7556ac18000f0dd22",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:44": {
+      "frame_index": 44,
+      "nominal_timestamp_s": 2.2,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "4c55a8adb6b272ea0cc1e3667b66081d966e1c901f2b68166728a69b7530f1a0",
+      "pixel_sha256": "be6347592d1306bbad8de7090a7e108fa1252b9815bf3b591e470e3e0ba1443c",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:50": {
+      "frame_index": 50,
+      "nominal_timestamp_s": 2.5,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "07d191b565a20b9a21fa1c191bc9c4a8281ca80909e933983530372adf3199a0",
+      "pixel_sha256": "11399d45c2cd5c4743c5ae282fbeb493929dbf9015045d3ac009f9605e189732",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:56": {
+      "frame_index": 56,
+      "nominal_timestamp_s": 2.8,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "100cb2605bec883f022c2cbb3b07c6cd86bfd416054a3218d484fa908d9ce5ed",
+      "pixel_sha256": "44928bb43de00a622038f23d64e9615df5ffd71ec9fba1ab12a099820389e2f3",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_28-S0003:62": {
+      "frame_index": 62,
+      "nominal_timestamp_s": 3.1,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "f1f043109d80b38354b232671782616ab3e805f1535d14773298f19c80aa1ed5",
+      "pixel_sha256": "1c12659d791665c84b97a4d6d73de60547533d75f899f640cbb5398f9d6a681d",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_180-S0001:0": {
+      "frame_index": 0,
+      "nominal_timestamp_s": 0.0,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "0496f5fea55c28d1559427f67084b8ebcd93d450209cf4507f67359c7b76ddd9",
+      "pixel_sha256": "52a70a166ba77944530b616fe69ffda68504b07898315655964baec6ef3e69eb",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_180-S0001:1": {
+      "frame_index": 1,
+      "nominal_timestamp_s": 0.05,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "573b00466eeb4305696a3d912e671cad425a0bd6fabf623ef636530470b4ec93",
+      "pixel_sha256": "34ea07e41efdc5dfa84dbe1e4e94c00308eace482f4d7e78de390a16961cc207",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_180-S0001:2": {
+      "frame_index": 2,
+      "nominal_timestamp_s": 0.1,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "ef1a6f5eeb677ef510936b0c035c383d32c8e2ba6fb2750f63159cbbb87bdb37",
+      "pixel_sha256": "f3a470250a7b4222a239bc7b5e3d1596767c33426c20b883fc0a4129995a00f5",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_180-S0001:3": {
+      "frame_index": 3,
+      "nominal_timestamp_s": 0.15,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "439cda803840827f8f27f5bd658c279e7d7712abee8874ac5906ad91423bf6a9",
+      "pixel_sha256": "804a8f7bb2901ca2e13b994ba2216915ca19b949a82f96ccaa9ae716135a707b",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:81": {
+      "frame_index": 81,
+      "nominal_timestamp_s": 4.05,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "f4844aba7beeeea5cfb8c98bb04e4bf9ee6bb6a17f3a67e72932c75989279fad",
+      "pixel_sha256": "0aa09ab10887aee71206b1a2ec7d85f78b39ebbeaee40f75a196e52d0d855d0e",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:89": {
+      "frame_index": 89,
+      "nominal_timestamp_s": 4.45,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a28077fa82e0287b582fb3302e419e72d2a8c258ef01df6c8bc69d3a133ce110",
+      "pixel_sha256": "728d5eb45bd98c05731f3b72974fc1e10b98766be5686fc3ea9d6afccdb25ea0",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:93": {
+      "frame_index": 93,
+      "nominal_timestamp_s": 4.65,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "07259f341849493b34a961f7137f4096b5db47daca95613d8ba1368595383945",
+      "pixel_sha256": "385ded2885b5fc7cfe67ca1041a1ac819d7e12ae6d64080e62f7866687bc1d59",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:98": {
+      "frame_index": 98,
+      "nominal_timestamp_s": 4.9,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a0382eb412a064d2cc29dff3d81842625b087f0f550ae145a62bb1fe6002adef",
+      "pixel_sha256": "3d8e76a976685248baf75707310ec3a7ef128635e0729d856877f7b7c3a191a6",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:106": {
+      "frame_index": 106,
+      "nominal_timestamp_s": 5.3,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "dd61b3a8bf4d8716c0be7d6c045875cb043eae40e163d74cb86ffc5937d5beb1",
+      "pixel_sha256": "d3aa71b4c521d6ab73f9edd0aa5d1c380ec892754d2f50408b8e3784d6eec7ee",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:110": {
+      "frame_index": 110,
+      "nominal_timestamp_s": 5.5,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "66091527008799ac2667150a8cd4fd41fe36f969ffad1db837da5c8852e44379",
+      "pixel_sha256": "84c893f3295d88aea5322e056b5170afac1f6007b8cf7f6fa5e772bcad562851",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:115": {
+      "frame_index": 115,
+      "nominal_timestamp_s": 5.75,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "8d0eb17b060c295ea9b7fc792e3677b906266eb1cf2ba253f39ee4e3333f3809",
+      "pixel_sha256": "4a7122d976cd61f23146f1f30f0221cbedd58fe7ad4d7f352fbc1c4d59540c54",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:123": {
+      "frame_index": 123,
+      "nominal_timestamp_s": 6.15,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "e8047b27c21ce65155d30a84cea385c08b7f9ff5c108dc46063e692596935b9d",
+      "pixel_sha256": "6fc9d3117338f559ed32f875aef96f67944a89bc0288742c20215a009360bab9",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:127": {
+      "frame_index": 127,
+      "nominal_timestamp_s": 6.35,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "096e2265ddbf2075b7dce5444d2bf3168bd16b571a791e107347c500400d892c",
+      "pixel_sha256": "e90a575a33000578aa11c1518355c0e5217052102b15f23b87af4e3166435c67",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:132": {
+      "frame_index": 132,
+      "nominal_timestamp_s": 6.6,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "9219ce6ce1bc70c340cd6237616419dc24d3e48d0f964565f3648e912380aecd",
+      "pixel_sha256": "2c24df5968da59e4120b20fa0e12c70b2af15752b6da4c19315945479a012045",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:141": {
+      "frame_index": 141,
+      "nominal_timestamp_s": 7.05,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "d77eff52f4ce8aaf9c4429b6e54ea9f5ed0e79a473ef3b60b5a29c30ca192d5d",
+      "pixel_sha256": "8cf87714e3714f1ab25654725b0360240dccdbc34c768ce63e60ef99080f4797",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_159-S0003:150": {
+      "frame_index": 150,
+      "nominal_timestamp_s": 7.5,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "274a29c0ac56108b8d3865b17f77ac9f2d977cf2b42aed97fd9e38fa1251a3bc",
+      "pixel_sha256": "96d52f7343d57d40e0fdaf5dc154ac935df81a0cd30e6aad268739ff407e17bb",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:4": {
+      "frame_index": 4,
+      "nominal_timestamp_s": 0.2,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "d093c4fc6191cc27340400e6b240506763d30b125fd38eb55adaf75b4e54bd0d",
+      "pixel_sha256": "01d4399894cef8b6dc8df281fd639858296140177d1575774b71d070ac6d5f32",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:5": {
+      "frame_index": 5,
+      "nominal_timestamp_s": 0.25,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "e885016267ece59567faa4fe9b5cfd8058a402367f4c67b4d335267803b6ede3",
+      "pixel_sha256": "73608282b7bc0f543ea9481391b1ca4683c9afd6ea6d6f1b173c7e1c689d4cbe",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:7": {
+      "frame_index": 7,
+      "nominal_timestamp_s": 0.35,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "aba2459e0898e92cdb853f01afef1698fb071e08f2742e49ed2e19848c9ee4b8",
+      "pixel_sha256": "93ab3ce297ae3ebca4ed8500c14b927a8699ea9215e4e46457cadb540591d698",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:8": {
+      "frame_index": 8,
+      "nominal_timestamp_s": 0.4,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "ad4d933bb773ac4a867c9fc3d16755316e01f689e702e0160bb2cb58f8009083",
+      "pixel_sha256": "22bb0c2f0457c18ba1f55cf996fa5949627bfd619dd66122f0c8afbf2caafa07",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:10": {
+      "frame_index": 10,
+      "nominal_timestamp_s": 0.5,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a2b298b5b5feb1f678309b5789d1678874c7ddc6c18fd3e573cd46dff1582b2a",
+      "pixel_sha256": "ec9c8f1cfbd429dd4af0740d8690f0ba6d62293ae0549e96ef6433c1c9db5c5f",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:11": {
+      "frame_index": 11,
+      "nominal_timestamp_s": 0.55,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a34b5e71302d00634e73c6c83278552a502fc3f56403d9213d92ade71f8f9d20",
+      "pixel_sha256": "538c4b3e7fbdfe778d664f0fa2c431a70bf3ef38216b37ef15ed150cc38c9b9c",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:13": {
+      "frame_index": 13,
+      "nominal_timestamp_s": 0.65,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "afcf1185e0f740d9c0cc4953c063528778ef9cc9070142ab244bb75f0ca4339f",
+      "pixel_sha256": "c1719732104574bdbe72dd922697fc77af89ddaafd5285b45f1e3e763ec1f2e7",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:16": {
+      "frame_index": 16,
+      "nominal_timestamp_s": 0.8,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "40a09b35cb2fa63fa4ec540563ef5e985a79c1cf42d74fbcd3742d0f9137b300",
+      "pixel_sha256": "8ab81652e61f606156243dee5f15a65b5a1414fa55abe2501484a8b539c5f8cb",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:19": {
+      "frame_index": 19,
+      "nominal_timestamp_s": 0.95,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "52caf33a44ff6f0746f1917c9a724fefe7287bff74483d417de808a0555c1399",
+      "pixel_sha256": "79611048ec100ecb57d5bb81a82df0f1e5ef3c45c99cadd1392cdea4323bf222",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:22": {
+      "frame_index": 22,
+      "nominal_timestamp_s": 1.1,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "d9679d92c9fdc0e7f31bf8a4e256a5cc45c89bac049bcb709671ede3af1e8bcc",
+      "pixel_sha256": "17f828a2e2c1716f8ef7d69085891d668d3d0ad331ccae9ae103ecc9c9955939",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:25": {
+      "frame_index": 25,
+      "nominal_timestamp_s": 1.25,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "53dd789e766593cb484ca99a433c951a8c791674f368f047d254f8759fc41942",
+      "pixel_sha256": "029acda7f1cb6e973fc88a19fa95f764eff744170f5f3ef5b5858116047be043",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_169-S0002:28": {
+      "frame_index": 28,
+      "nominal_timestamp_s": 1.4,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "b991dc9cdbb74b69de0436779c44df7e23582107201ab1c180f5b59709015ab1",
+      "pixel_sha256": "d26ff183532cd831063029cfeb15a3e8208154170151e2bb4251b54cb273bbcc",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_172-S0004:166": {
+      "frame_index": 166,
+      "nominal_timestamp_s": 8.3,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "31883f7b7881c8b953eeb7c08492f23edfac71876e42943a1a62ce793abd6160",
+      "pixel_sha256": "b7f19903bf8325b82bc4f4b49a97eec5cf855004456ce98dd42920fcd9270e09",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_172-S0004:167": {
+      "frame_index": 167,
+      "nominal_timestamp_s": 8.35,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "6f70027306ddd8f8a11e8929ca8993ca11ef64cf20a1d9b4642f5c6c3b0c83b8",
+      "pixel_sha256": "a56f16a8a0de1ce764eee296796edd9210e59421bc0173cf73fc10c9641898ed",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_172-S0004:168": {
+      "frame_index": 168,
+      "nominal_timestamp_s": 8.4,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "7cf76f96a7995e462e18a0ce62deb472011ffccc65173f8e7c986ec9c5ec78a8",
+      "pixel_sha256": "26d06d47ccb0c76c6e7164f84a4e18d5ad1dd832184c246d9d0cc3d8f0399dd4",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_172-S0004:169": {
+      "frame_index": 169,
+      "nominal_timestamp_s": 8.45,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "eb91e85fe276a3abc29e54781192d655448db3c9094b14319a1af42995cc3978",
+      "pixel_sha256": "ebe87815bdaff9fc9e5bfa1bc63c91005ddf3950d567df69c56c268ceb0f9c32",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:4": {
+      "frame_index": 4,
+      "nominal_timestamp_s": 0.2,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "bdb4e026e707c8893356e154afe2e5b9804f7c97d024d2d6ba93421613f6ef86",
+      "pixel_sha256": "805e3f71be82e45bdc7ad6a88acac1e9191b289d682901741509fec616ec638e",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:9": {
+      "frame_index": 9,
+      "nominal_timestamp_s": 0.45,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "cd728c6cc4b63e25642a3608894e6ebf9de3b713be5be42bb226a7a5a7e6cccd",
+      "pixel_sha256": "8426e02383e88663263fd311d5aa16ab1b71b93e14a4f712905af748e80b9950",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:12": {
+      "frame_index": 12,
+      "nominal_timestamp_s": 0.6,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "2149680f814e1385bfa75437d616636c68be409c31fed64ceb496a1f0ef4142e",
+      "pixel_sha256": "0fcc2de4cc4cb598921c9633fbadb13f3d26963a5f2ce274b07c87d7408b1b24",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:15": {
+      "frame_index": 15,
+      "nominal_timestamp_s": 0.75,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "5a0ff52c7bbaba4069a4ce1968ba0c688deb11be4b121d2b7d5e450760504cde",
+      "pixel_sha256": "037f35f35be3675dd0fa299e3a96272998ebbfce4c73ca7c5da0c43a6722c5b5",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:20": {
+      "frame_index": 20,
+      "nominal_timestamp_s": 1.0,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "552e71b5ca0c701dbe76efa81fd562a632aad6421a49316c844d8717052b584f",
+      "pixel_sha256": "d173af5fd01fb44b04ba835bc9900b1096660ed05c91435d8f9f23407032e70a",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:23": {
+      "frame_index": 23,
+      "nominal_timestamp_s": 1.15,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "5b0313462421d3ce48669f19c542f553c5af40ed3bfe4d687ef53cf2ea608514",
+      "pixel_sha256": "0475961113a5750bc2c6c8a7bddddd243951418aac3f5bc5f5dfc7a80a0c9780",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:26": {
+      "frame_index": 26,
+      "nominal_timestamp_s": 1.3,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "bc8cb8155ff1dc2efced561ea75dac1f66b12656c8b37c167d3633cd43387306",
+      "pixel_sha256": "51313ddcb80a18cfb925252bf3bddcab5b5bf09b97062b06531108c115ee5387",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:31": {
+      "frame_index": 31,
+      "nominal_timestamp_s": 1.55,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "03f61e14a31b4dc2d0879220c864bfb656e0c688ab3b81a9486e4c5ee094a310",
+      "pixel_sha256": "c00427322bc938c35d5a32c7928344a345e379bfd3098de66935b165c2c20fb1",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:34": {
+      "frame_index": 34,
+      "nominal_timestamp_s": 1.7,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a9222a3e74204e49d08ca063bf299671f159e451e5cdb5316a7587e2f4df6f8e",
+      "pixel_sha256": "8795ecfa0237024b923f281916c78d0dd20f53044b8a31699b214579eef66c87",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:37": {
+      "frame_index": 37,
+      "nominal_timestamp_s": 1.85,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "f63fab65098fd32af7b651a35f6f8adeb72f942c430087964e57ab7c8838ca80",
+      "pixel_sha256": "9e36edfd11f7107d68b3adb03dbceaa9bff79111e83798666fe61b0c5cedc54b",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:43": {
+      "frame_index": 43,
+      "nominal_timestamp_s": 2.15,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "e3b15624bab14861920c2f942bd174cec4561f37edc6d8e21054971d77eb82da",
+      "pixel_sha256": "26137ab21aaf24a8085bad1d7520928d5575aba1c4ff019f86261dfe58daa5f2",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_232-S0002:49": {
+      "frame_index": 49,
+      "nominal_timestamp_s": 2.45,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "ba82724f000e14e66d57990c96cca0af58bd3b61d6fcbbb231395a0e575b283b",
+      "pixel_sha256": "da3629cda0d5e3368c503659e5e63740feccf31278732d635a1bd2bb593414ef",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:34": {
+      "frame_index": 34,
+      "nominal_timestamp_s": 1.7,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "f6c98cf55860872ab6f8bfbd3333a204d42ed3d9477dbf181f333f216d5b87a9",
+      "pixel_sha256": "48832fdda2c0cf16af9111348fa0d9fc4f18a5d5f069b6c4f68e843720c3b481",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:38": {
+      "frame_index": 38,
+      "nominal_timestamp_s": 1.9,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "fe0376162e2bfecf7395ed80410ccc0f67b53ead0e2e0eec07ed93b84d42ca9d",
+      "pixel_sha256": "5ac758fc70fbfc604450f22df5a2ebdc8768903ccd0e7af744ea5e4f9515b75b",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:43": {
+      "frame_index": 43,
+      "nominal_timestamp_s": 2.15,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "6213fa32981efd12f119f05599bed8c0a0a4b6a5007a3e652c41c545641c1905",
+      "pixel_sha256": "7da11e317051258814f6a41c769b096f9992cb1f18ca67116ec91a120f552c53",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:47": {
+      "frame_index": 47,
+      "nominal_timestamp_s": 2.35,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "672d3a0e279e079e21e0d4ec23bccc3db5556c54b2d412cd66e9480a3e8f1fa5",
+      "pixel_sha256": "a518d35976895d0aef30f500a6d6382f0ad8dd66c4b9af93a4f0f0505f10edfa",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:52": {
+      "frame_index": 52,
+      "nominal_timestamp_s": 2.6,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "4ae9a2277b39baa0ee73e0cc392e4afbff719b81c34d7bfdd413550c406f847c",
+      "pixel_sha256": "a6b1d8e73a5efaf74da1009c32d57ec84a2a2fa068713a563686dfd913ccdc30",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:56": {
+      "frame_index": 56,
+      "nominal_timestamp_s": 2.8,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "b7300ac20024c4d3f5c28724396bed0b3bb02026baf126d43d3ac05a9c50309a",
+      "pixel_sha256": "c9525846f7966f225dd2a32721bdf5bb08d69e993da7d67c36f161e3c4df539b",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:61": {
+      "frame_index": 61,
+      "nominal_timestamp_s": 3.05,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "66e0a8b6fe53d37c48b3bbee5d03139b9b39432f14dbc1f5f68b3d78af4df6f8",
+      "pixel_sha256": "4d68cffd2a3b595f42c9eff57f9e2eb7c3c767c56f52a62888975a7ccf81a486",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:70": {
+      "frame_index": 70,
+      "nominal_timestamp_s": 3.5,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "305d991e4d2d773f904e8e136a9a3431f36d29e372a3f0d656e1aef1e3a38edb",
+      "pixel_sha256": "ece9d4de1a1d5058f0e79ecb38f069c18aca7124913bebfd75e3eacfc7914964",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:79": {
+      "frame_index": 79,
+      "nominal_timestamp_s": 3.95,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "4a4faf031a2ac264921add77d3000dea856c07c87d5b40db7c0b4a895f4e1203",
+      "pixel_sha256": "f55f8408470916c86efa0ca21a5776157b677f8116326f77415eed6e7caf5a30",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:88": {
+      "frame_index": 88,
+      "nominal_timestamp_s": 4.4,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "d5226a2f35bfcab10582cdc4b780da3aedf4445433a54720c0f457a43873c4b1",
+      "pixel_sha256": "066b77f1be69b9c11e962b43ce78f624028d5686dc150cafd25b02c7b1781dea",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:97": {
+      "frame_index": 97,
+      "nominal_timestamp_s": 4.85,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "2f05938bb9ea71570c490fb67ab22993257ef09c2f6ebfc81b174c71f9bb23d3",
+      "pixel_sha256": "ce6191c06b5314f445c366469eb5eacd4dcac783e98ca03a5299b96696b3e805",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_71-S0003:106": {
+      "frame_index": 106,
+      "nominal_timestamp_s": 5.3,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "218f2f4e1bfa5c064eeb29d3718321440c08b3f1a1deda179427f2022c715c2b",
+      "pixel_sha256": "eca1b0b63c405a0790b7af4e356194b57d8851d6a295a8effd7430f8a5874fdb",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:4": {
+      "frame_index": 4,
+      "nominal_timestamp_s": 0.2,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "2914540bb9f2679e5ee3dd54f74a3b69726c2ecc1edb63d844790e44bf798498",
+      "pixel_sha256": "8de920ed04d3c7f9fa3c8cd2fe47a87158eabb5889e011ea7238031690f9db06",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:14": {
+      "frame_index": 14,
+      "nominal_timestamp_s": 0.7,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "91139b99fd397d3739cc2d52be80390ed188f68e9a52222d792b4b2b1ddbfbe5",
+      "pixel_sha256": "a858289218d17cd09e66e3e97a0808f91861c6d804a004d2afd98b98716c070d",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:19": {
+      "frame_index": 19,
+      "nominal_timestamp_s": 0.95,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "96308ea4946af610a2afb4c709c2da2e589b4bcd2d66f41652ab3f4a7da0fa6b",
+      "pixel_sha256": "403ee37573fb71da0088393df8fd178b03bc9fd47a37db3a4126cb6408a279e2",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:25": {
+      "frame_index": 25,
+      "nominal_timestamp_s": 1.25,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "9b55b29722c48d759881b9de51cdba134b83cd38d0d3f6429881bfe642b7f502",
+      "pixel_sha256": "a477218b48d34fa54a4996140e5f70a6418cfa3f740ad7c0d116cc5e8ba10612",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:35": {
+      "frame_index": 35,
+      "nominal_timestamp_s": 1.75,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "4fb3b14ca241df8f7b04274a144be9f5ae039582071b2f42db4db6ed2022939d",
+      "pixel_sha256": "80307523c7fbe61043a6e4f6b2e1908f4cdce7566818b84626878c02c1421323",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:40": {
+      "frame_index": 40,
+      "nominal_timestamp_s": 2.0,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "73cc4dcd3f01aa6818b320a4aa64cd49ff677f74b5fa313986a6dddbf8bce91f",
+      "pixel_sha256": "f2ddf72f66707a124c24869c3c7bbedaf8618714e6e98ec831a326e85590d6f0",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:46": {
+      "frame_index": 46,
+      "nominal_timestamp_s": 2.3,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "0134c725f79aba0d8f9bae05aa733805627feab8eb60e2be237e82855760b36f",
+      "pixel_sha256": "0ffb1613f23d3e5db809c1a2d462e041e48c71f65345423d477920ca2a803c6a",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:56": {
+      "frame_index": 56,
+      "nominal_timestamp_s": 2.8,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "083b4006ee37c0c7d6d529de1df431bf976199b00713dbb3a9b1426e9efc6c98",
+      "pixel_sha256": "950752fdce54b2344c22697fbcdcf5337f8d198f7edffdb0c68f08a47d6927e4",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:61": {
+      "frame_index": 61,
+      "nominal_timestamp_s": 3.05,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "1678758b8bc96dae41cf38f3275d9e9e4d537cb0f86e3aafecacc655a746e350",
+      "pixel_sha256": "81dbab8374dad15a8a85608ef66967f82e6ec33fbc029a8b8a3c438c395a868c",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:67": {
+      "frame_index": 67,
+      "nominal_timestamp_s": 3.35,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "3d53e470920f6cfc665be49c1a6dd2222c08ffd46e7acc2d4f141972de86d8f2",
+      "pixel_sha256": "368b6d83b17a571abfc610bf4f7e227ce404400de3394c4c6f4df4481841e0af",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:77": {
+      "frame_index": 77,
+      "nominal_timestamp_s": 3.85,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "e11a770a80dea67f3bcf3a2cc7dbe49c1ee05b6662a3ba332a99fef188ff76b7",
+      "pixel_sha256": "098ec1bcaabc7b338f325886c9bfc9876b3576de5483326143ca66fb716aafcc",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_72-S0002:88": {
+      "frame_index": 88,
+      "nominal_timestamp_s": 4.4,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "d2f4211dc250031c0fb02645bbff15cccefa4470d4ecd527d3c4223b2619a387",
+      "pixel_sha256": "714a3fbb7b49b61af11d6cd560da2b62cab0428069a3f6c78681858fb46022fb",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:67": {
+      "frame_index": 67,
+      "nominal_timestamp_s": 3.35,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "ef521743e6c8bfa22d72cc4d08bfc74d8ff24a9dc86bfc69ebfd6100da88f41a",
+      "pixel_sha256": "b6cca28032d1a6d0855c72ae0f636890904fdd8b4cfb550cec1315479d738cf6",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:71": {
+      "frame_index": 71,
+      "nominal_timestamp_s": 3.55,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "b4c95d71b9ac5619d9c85a606ce3562c71ca8b85d54a143e0c9403cc0a6b800c",
+      "pixel_sha256": "65fab2ef797a2786dea3b31ffbbf025851f65520e317447b3e33c5dfcc975838",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:73": {
+      "frame_index": 73,
+      "nominal_timestamp_s": 3.65,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "254c988e91dc36f19ce5180d866f6df149f57dcefdd525b60dfe365f1021a3d3",
+      "pixel_sha256": "4dc862260374a6decc287fa6cdb86eaf87c7b7a2d3f31d48cb87e6c24882a256",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:76": {
+      "frame_index": 76,
+      "nominal_timestamp_s": 3.8,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "137390639cbb07753f1a9bd7658f04cced26a613243666c3f5aec68c048275d3",
+      "pixel_sha256": "94d3f3b2cbfbe0920d373d26290ad138b62eeb4655522e396d5e8920e7900f73",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:80": {
+      "frame_index": 80,
+      "nominal_timestamp_s": 4.0,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "3baffcff77d853f4361355de9e2e96d8f41d5336b7dd3f40d69d86a14f95071e",
+      "pixel_sha256": "a5384539bb6b01ae28a9a02c7dad916bc68b2c4a6602bc9cf1048ddcab8ad4a8",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:82": {
+      "frame_index": 82,
+      "nominal_timestamp_s": 4.1,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "d0967783ec40ffa34ada331c9d799cbaa543b82c0f672ae1dee8af35995b31bf",
+      "pixel_sha256": "b74e6901c2f01a5b427ef02eadf03b84a814ac63318573028607fb366cfd450d",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:85": {
+      "frame_index": 85,
+      "nominal_timestamp_s": 4.25,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "253bff388b1f7996cb512841feaa6a861b13e319c3a4a4f83e473953e35553a5",
+      "pixel_sha256": "38b1353d50703a2e5cdf1c2d883309c5951cfb8333322c699c92658afeb1ab8e",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:89": {
+      "frame_index": 89,
+      "nominal_timestamp_s": 4.45,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "dec7e57c17a36f7790650c3dc150eaff74de1a9ec25817298f0eff12b53d9582",
+      "pixel_sha256": "f327c847f00480abef23eb7861a9b38d3429f6e562c47402774a8a406bd809b3",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:91": {
+      "frame_index": 91,
+      "nominal_timestamp_s": 4.55,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "9af8467e2099608ddea78ba385026abe3d20495e8a73451815f3fc721a1b613a",
+      "pixel_sha256": "83dd8ef80b27ee4687aa0fc9a766d0ba6963a0a8b3bd6213c9f16c86b2f9d2e6",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:94": {
+      "frame_index": 94,
+      "nominal_timestamp_s": 4.7,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a3cad3aa3621c05fc5663dd74c6b817d7c765c9db1e8a9b47bed46c52a4a90f2",
+      "pixel_sha256": "bd37b3783232361b13acfad1159808374dabd52cd9bc2196410770a1d103a061",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:99": {
+      "frame_index": 99,
+      "nominal_timestamp_s": 4.95,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a230be22a9011038c34da1049b0ec4f12ab1e6f3f26e44e8a1b3eb8a51e069fa",
+      "pixel_sha256": "3a336990c9b9aa1b4a5441743215f974a089dad1c29e9689480583f1fb2c2c31",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_183-S0003:104": {
+      "frame_index": 104,
+      "nominal_timestamp_s": 5.2,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "41d332c1f8f3e582fb8d58a80e0c208c48dcd446fef1d48153f13411ae2b09d3",
+      "pixel_sha256": "eb79917c46afced0d6dfb82660ef2945dbf56547063e738b80f78feeb61a2a4f",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:4": {
+      "frame_index": 4,
+      "nominal_timestamp_s": 0.2,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "596d7ee28c828e6f28d8ce2f5f70abd81b75352503fec699fc333f036023d101",
+      "pixel_sha256": "a2a6eb3f41422e295c9c99cabb3f1d8c1349592d57d83fa153d52e4c632c2bcc",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:8": {
+      "frame_index": 8,
+      "nominal_timestamp_s": 0.4,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "419ed4c4d76bad77c15eb49f35ac66e68a6d24bda4f6038988ee6579e7e5c9aa",
+      "pixel_sha256": "ac513bb7942ce50ec1ae3fb145ef62c889fe14ddf3af8e47ba9a9533e698150b",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:12": {
+      "frame_index": 12,
+      "nominal_timestamp_s": 0.6,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "a87ba5cc228d7e960f36a8285f1e8b68850c88b49974f042f3bddaa71d6d5ed0",
+      "pixel_sha256": "79788ecb7ce56727af341e825f3a81f245eaff55576f39d3542c7d14e294a1ff",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:20": {
+      "frame_index": 20,
+      "nominal_timestamp_s": 1.0,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "1301cb7b171fe96a26499bfe3642960fad45dcf9caec93daeb8cb8474db807f0",
+      "pixel_sha256": "92f840300b056c66ade2e8bfae20ee6dca400b775256c017ccb2faa25c748101",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:28": {
+      "frame_index": 28,
+      "nominal_timestamp_s": 1.4,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "fec383cb1c6d35a1cf386eec3184e2f2a602497055c17ea6292f6f3f8a2f51d2",
+      "pixel_sha256": "82c946d07923dceaeb62056f26e2e9b33363d431bec285481a19fc8983ca0dc4",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:32": {
+      "frame_index": 32,
+      "nominal_timestamp_s": 1.6,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "b038db02e72993f435bac383d5d702c3d391e3d762c0f7abe5c25812273c2e80",
+      "pixel_sha256": "70627cb3a0af89426ee8127bcf6db80e56aa01b43c48cefb0602045b68c0e077",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:37": {
+      "frame_index": 37,
+      "nominal_timestamp_s": 1.85,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "2c2e54e41e3efe3725b80d4b188221d08f0c1f6deff6e9a95e6c0e3ce80b424d",
+      "pixel_sha256": "8703c79f744bc8d6a6e654bab8a449243f004d86f63a5d7549e2c91f80b3d647",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:45": {
+      "frame_index": 45,
+      "nominal_timestamp_s": 2.25,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "48284d9a42196ce550fa6541a8a45a6903fab6133411e3bc71d0114c96e17051",
+      "pixel_sha256": "92a424f17e41709ff6a52b791687b24c5fbb48500518a7e11165706248dc1f88",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:53": {
+      "frame_index": 53,
+      "nominal_timestamp_s": 2.65,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "011c74338600e41d05faa567d8535b5d71d0c6ffb8184232228aa5c2b3b105d1",
+      "pixel_sha256": "c06a144ee7f870d40f931ceb72c323cfbabdfea26cc849d3197de429813a4914",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:61": {
+      "frame_index": 61,
+      "nominal_timestamp_s": 3.05,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "4ccdfa2b081a8054a6c91ea81123cfbcafbd1f65c7e49b55088b4256008097d6",
+      "pixel_sha256": "5d29ac60268c7d48953eaf821b37318d15a98815fa95536b7efb09aed100a775",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:65": {
+      "frame_index": 65,
+      "nominal_timestamp_s": 3.25,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "e7422d22ecafadfacd981b9c3be00e6b030e74fc1c07813ff27d8f42a41b835c",
+      "pixel_sha256": "916d6d2d861219af069cd128988423a910864bf5408e80ece23d91be54316785",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    },
+    "demo_216-S0002:70": {
+      "frame_index": 70,
+      "nominal_timestamp_s": 3.5,
+      "actual_timestamp_s": null,
+      "timestamp_basis": "nominal control clock 20 Hz; actual PTS unavailable",
+      "png_sha256": "6e6684a5ee8e44c584dcf48261d30c73bbbefb9c510287ca91f9422c711c0016",
+      "pixel_sha256": "446bfa6de7fe2910c9b561ecaca55ec8ecbfbbc07437d447bdc7a7babdba7762",
+      "shape": [
+        128,
+        128,
+        3
+      ],
+      "renderer_runtime": {
+        "renderer_class": "project1_benchmark.robomimic_rgb_materializer.RoboMimicStateRenderer",
+        "mujoco_gl": "wgl"
+      }
+    }
+  }
+}
