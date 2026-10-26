@@ -53,6 +53,19 @@ def visual_tokens(log):
     return list(map(int, re.findall(r"decoding image batch \d+/\d+, n_tokens_batch = (\d+)", log)))
 
 
+def observe_visual_tokens(log, usage, image_count, previous):
+    encoded = visual_tokens(log)
+    if len(encoded) == image_count:
+        return encoded, encoded, False
+    cached = usage.get("prompt_tokens_details", {}).get("cached_tokens", 0)
+    total = usage.get("prompt_tokens", 0)
+    # A retry of the identical immutable payload may use the whole prompt KV.
+    # Reuse only its own prior measured image counts, never an N*constant guess.
+    if not encoded and len(previous) == image_count and total > 0 and cached >= total - 1:
+        return previous, [], True
+    return [], encoded, False
+
+
 def sample_gpu(stop, samples, output):
     while not stop.is_set():
         start = time.time()
@@ -104,6 +117,7 @@ def run_stage(stage, cells, output, manifest, frozen, task, model_id, logpath, p
                 "request_sha256": hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()).hexdigest()}
         append(output / "inputs.jsonl", {**meta, "request": payload})
         structure_errors = service_errors = attempt = 0
+        previous_measurement = []
         while True:
             attempt += 1
             offset = logpath.stat().st_size
@@ -117,7 +131,9 @@ def run_stage(stage, cells, output, manifest, frozen, task, model_id, logpath, p
             qc = V.validate_model_output_v0_2(choice.get("message", {}).get("content"), manifest=frames,
                 identity=V.TargetSegmentIdentity(cell["episode_id"], cell["segment_id"], cell["start_frame"], cell["end_frame"]),
                 finish_reason=choice.get("finish_reason"), processing_error=None if status == 200 else str(body))
-            tokens = visual_tokens(log)
+            tokens, encoded_now, cache_reuse = observe_visual_tokens(log, body.get("usage", {}), len(frames), previous_measurement)
+            if len(tokens) == len(frames):
+                previous_measurement = tokens
             values = [s["used_vram_mib"] for s in samples if started_wall <= s["unix_s"] <= ended_wall and s["used_vram_mib"] is not None]
             valid = status == 200 and qc.parse_ok and qc.schema_ok and qc.frame_evidence_ok and not qc.truncated
             record = {**meta, "attempt": attempt, "http_status": status, "raw_http": raw, "raw_response": body,
@@ -125,6 +141,7 @@ def run_stage(stage, cells, output, manifest, frozen, task, model_id, logpath, p
                 "valid": valid, "wall_seconds": elapsed, "started_unix_s": started_wall, "ended_unix_s": ended_wall,
                 "usage": body.get("usage", {}), "timings": body.get("timings"), "log_offset": offset,
                 "visual_embedding_tokens_per_image": tokens, "visual_embedding_tokens": sum(tokens) if len(tokens) == len(frames) else None,
+                "newly_encoded_visual_tokens": sum(encoded_now), "visual_measurement_reused_from_identical_payload": cache_reuse,
                 "visual_token_gate": len(tokens) == len(frames), "sampled_peak_vram_mib": max(values) if values else None,
                 "resource_sample_count": len(values)}
             append(output / "responses.jsonl", record)

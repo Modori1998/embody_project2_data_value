@@ -18,6 +18,10 @@ Runner首个落盘目录run_r1在生成身份前因将__file__字符串传给仅
 
 ## 后端与成本记录口径补充
 
+run_r2 Pilot在demo_2的12帧上两次出现ILLEGAL_ENUM（events[].event_type=place）。第二次相同请求KV缓存命中2761/2762 tokens，无新图像编码日志，Runner错误地将此当作不可观测而提前终止，尚未运行负例和正式集。保留4次请求全部原始输出与成本，不挪作后续成绩。
+
+观测修复：分别记录输入图像embedding tokens和本次新编码tokens。只有同一immutable payload先前已有逐图实测计数、此次无编码且后端cached_tokens>=prompt_tokens-1，才引用该payload先前实测计数，并显式标记reuse；此次新编码计0。其他无法观测情况仍停止，不以N×16推测。修复不改变payload/Prompt/策略/采样/服务参数。以run_r3全新运行完整6格Pilot；不复用run_r2输出。若其最终Schema/证据门失败，不执行正式34格。
+
 只读恢复 `_local_vlm_deploy/serve.sh` 的历史启动项：-ngl99、-c4096、-np1、--jinja、--temp0、--seed1234、-lv5；实验换用独立loopback端口8097，避免接管其他服务。`serve_alt.sh` 含8192 context与image-min-tokens1024，不采用。
 
 实际视觉token报告为后端逐图 `decoding image batch ..., n_tokens_batch = ...` 的image embedding数量，不含image delimiters；总prompt_tokens另报。不能把历史18（含包装token口径）与实测embedding token混作同一个数。单槽串行，日志offset关联每次请求；无法记录时工程门停止。显存为100ms目标周期的GPU整体采样峰值，另记真实query时长/采样间隔，不声称瞬时峰值；桌面dwm/Listary基线保留，其他未知或计算进程阻塞。
