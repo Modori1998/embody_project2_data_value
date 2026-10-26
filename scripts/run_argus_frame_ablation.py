@@ -208,7 +208,7 @@ def main():
                 "backend_impl_sha256": sha256(BACKEND.with_name("llama-server-impl.dll")),
                 "model_sha256": model_sha, "mmproj_sha256": mmproj_sha, "prompt_sha256": PROMPT_B_SHA, "schema_sha256": SCHEMA_SHA,
                 "input_manifest_sha256": sha256(args.input_manifest), "human_reference_sha256": HUMAN_SHA,
-                "runner_sha256": sha256(__file__), "planned_pilot": 6, "planned_full": 34, "warmup_calls": 0,
+                "runner_sha256": sha256(Path(__file__)), "planned_pilot": 6, "planned_full": 34, "warmup_calls": 0,
                 "token_definition": "actual decoded image embedding tokens; image delimiters excluded",
                 "telemetry_target_interval_s": 0.1, "started_unix_s": time.time()}
     dump(args.output / "run_identity.json", identity)

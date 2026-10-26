@@ -10,6 +10,8 @@
 
 ## 实施事件：INPUT_PREPARATION_CLEANUP_ERROR
 
+Runner首个落盘目录run_r1在生成身份前因将__file__字符串传给仅接受Path的历史sha256函数而停止，模型尚未加载、模型调用0。修复为Path(__file__)，保留该空目录，后续使用新Run ID run_r2。无模型请求或效果结果可供选择。
+
 首次准备目录 `outputs/argus_frame_ablation/inputs_v1`：12段渲染完成，128张不同帧，原36张PNG/pixel哈希全部匹配。退出时直接调用既有Adapter不存在的close方法，抛出AttributeError，阻止最终manifest落盘。模型调用0；不含任何效果结果。
 
 修复仅将清理改为检查close是否可调用，与既有renderer脚本一致。失败目录保留，不复用不完整manifest；以新目录inputs_v2重新完成相同冻结抽帧与原帧哈希校验。无Prompt、策略、标签调整。
