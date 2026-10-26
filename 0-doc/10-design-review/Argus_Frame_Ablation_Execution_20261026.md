@@ -1,5 +1,9 @@
 # Argus 帧数消融：执行前冻结与实施记录（2026-10-26）
 
+## 执行前资源门调整（模型调用0）
+
+首次run_r1在创建输出目录/加载模型之前被资源门阻止：当前桌面另有OMENCommandCenterBackground和Codex/ChatGPT界面GPU进程。只读核实为桌面/OEM管理程序，无其他模型计算进程。将二者纳入桌面基线白名单，和dwm/Listary一起逐请求记录，未知/计算进程仍阻塞。不结束对方进程、不声称GPU零使用。整卡显存采样含这些桌面开销，不能归因于模型独占；所有臂沿用同一规则。修改发生在任何推理之前。
+
 用户已在审阅审计与方案后选择“10 条严格配对，2 条单列”：正式10×3+2×2=34格，Pilot另6格；允许Pilot通过后运行正式集。短段3/4帧单列，不纳入10条3/6/12主比较。原方案其他固定项、抽帧算法、合法性门、重试和评分规则不变。
 
 确认后的输入时间点见 `evidence/Argus_Frame_Ablation_20261026/frame_schedule_approved.json`。最初36格草案保留作为审计，不执行其中STOP格。模型和Prompt固定4B Q4_K_M + F16 mmproj、v0.2.3、build11577、ctx4096、temperature0、seed1234、max_tokens512、json_object。

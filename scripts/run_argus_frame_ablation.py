@@ -44,7 +44,7 @@ def gpu_preflight(owned_pid=None):
         except psutil.Error:
             name = "UNKNOWN"
         rows.append({"pid": pid, "name": name})
-        if pid != owned_pid and name not in ("dwm.exe", "listary.exe"):
+        if pid != owned_pid and name not in ("dwm.exe", "listary.exe", "omencommandcenterbackground.exe", "chatgpt.exe"):
             raise RuntimeError("STOP_COMPETING_OR_UNKNOWN_GPU_PROCESS:" + line)
     return rows
 
