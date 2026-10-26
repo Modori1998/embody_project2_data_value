@@ -1,0 +1,1107 @@
+{
+  "decision": "INCONCLUSIVE_ENGINEERING",
+  "pilot_gate_pass": false,
+  "formal_status": "NOT_RUN",
+  "formal_planned_cells": 34,
+  "formal_executed_cells": 0,
+  "identity": {
+    "argv": [
+      "C:\\Users\\95611\\embody\\_local_vlm_deploy\\llama_cpp\\bin\\llama-server.exe",
+      "-m",
+      "C:\\Users\\95611\\embody\\_local_vlm_deploy\\models\\Qwen3VL-4B-Instruct-Q4_K_M.gguf",
+      "--mmproj",
+      "C:\\Users\\95611\\embody\\_local_vlm_deploy\\models\\mmproj-Qwen3VL-4B-Instruct-F16.gguf",
+      "-ngl",
+      "99",
+      "-c",
+      "4096",
+      "-np",
+      "1",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8097",
+      "--no-webui",
+      "--jinja",
+      "--temp",
+      "0",
+      "--seed",
+      "1234",
+      "-lv",
+      "5"
+    ],
+    "backend_version": "version: 0.6.0-dev (build 11577, commit cbe28bb3c)\nbuilt with Clang 20.1.8 for Windows x86_64\n",
+    "backend_sha256": "36069e585a1e80ac4a2fbab016f157df8dd137a3df463aa08d2a9cbda5f2c83b",
+    "backend_impl_sha256": "a3f7dbf9e033ec3c321edee4a3c144be126df9f57ba64a0d0baedcc663a878c7",
+    "model_sha256": "66358cb18bb6b3b1b6675aa412c7a88ef01d228f481184d13668e5201c730a0a",
+    "mmproj_sha256": "256f3a43bd4205ffef48d6b92715e1e70b5b0e9aef06522584967513a9985331",
+    "prompt_sha256": "cb9fa472a27332bb39ba37d373edfd7c3b361217137972a0553f9171ba7373c1",
+    "schema_sha256": "4cbec780693511c6e029a1fc005a7c523e5af7ea6a4ba127c7b9fc44253d0ad7",
+    "input_manifest_sha256": "2499a63834474e1c51f6bae7d8a7be7ca3b148a448cc91eb7b793f35f0d03449",
+    "human_reference_sha256": "ecc716860eaf7617e00c1b23812fb1394a2719851346580a24e057a7e1ac938c",
+    "runner_sha256": "33deb5c5b55e10bee6e79df7fb82891b5dadf22506975848abb49148062308f3",
+    "planned_pilot": 6,
+    "planned_full": 34,
+    "warmup_calls": 0,
+    "token_definition": "actual decoded image embedding tokens; image delimiters excluded",
+    "telemetry_target_interval_s": 0.1,
+    "started_unix_s": 1793022475.947177,
+    "model_load_seconds": 2.683262799999966,
+    "total_session_seconds": 30.821840800000018
+  },
+  "per_arm": {
+    "3": {
+      "planned": 2,
+      "final_valid": 2,
+      "final_failed": 0,
+      "first_legality": {
+        "n": 2,
+        "parse_ok": 2,
+        "schema_ok": 2,
+        "evidence_ok": 2,
+        "schema_valid_denominator": 2,
+        "evidence_ok_given_schema": 2
+      },
+      "final_legality": {
+        "n": 2,
+        "parse_ok": 2,
+        "schema_ok": 2,
+        "evidence_ok": 2,
+        "schema_valid_denominator": 2,
+        "evidence_ok_given_schema": 2
+      },
+      "all_attempt_legality": {
+        "n": 2,
+        "parse_ok": 2,
+        "schema_ok": 2,
+        "evidence_ok": 2,
+        "schema_valid_denominator": 2,
+        "evidence_ok_given_schema": 2
+      },
+      "own_valid_scores": {
+        "motion_phase_accuracy": 0.0,
+        "phase_correct": 0,
+        "exact_match": 0,
+        "event_type_micro_precision": 0.5,
+        "event_type_micro_recall": 0.5,
+        "event_type_micro_f1": 0.5,
+        "event_presence_precision": 0.5,
+        "event_presence_recall": 1.0,
+        "by_type": {
+          "grasp_attempt": {
+            "tp": 1,
+            "fp": 1,
+            "fn": 0
+          },
+          "object_motion": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 1
+          },
+          "release_attempt": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "event_presence_f1": 0.6666666666666666,
+        "object_motion": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "positive_truth_n": 1,
+          "caution": "own-valid cohort only; zero-positive denominator is not a recall estimate"
+        }
+      },
+      "common_valid_ids": [
+        "demo_169-S0002"
+      ],
+      "common_valid_scores": {
+        "motion_phase_accuracy": 0.0,
+        "phase_correct": 0,
+        "exact_match": 0,
+        "event_type_micro_precision": 0.0,
+        "event_type_micro_recall": 0.0,
+        "event_type_micro_f1": 0.0,
+        "event_presence_precision": 0.0,
+        "event_presence_recall": 0.0,
+        "by_type": {
+          "grasp_attempt": {
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          },
+          "object_motion": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          },
+          "release_attempt": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "event_presence_f1": 0.0
+      },
+      "end_to_end_exact": 0,
+      "end_to_end_exact_denominator": 2,
+      "all_attempt_cost": {
+        "attempts": 2,
+        "wall_seconds": 6.21321469999998,
+        "median_s": 3.10660734999999,
+        "p95_s_nearest_rank": 3.176327600000036,
+        "prompt_tokens": 4716,
+        "completion_tokens": 297,
+        "sampled_peak_vram_mib": 4736,
+        "newly_encoded_visual_tokens": 96
+      },
+      "first_attempt_cost": {
+        "attempts": 2,
+        "wall_seconds": 6.21321469999998,
+        "median_s": 3.10660734999999,
+        "p95_s_nearest_rank": 3.176327600000036,
+        "prompt_tokens": 4716,
+        "completion_tokens": 297,
+        "sampled_peak_vram_mib": 4736,
+        "newly_encoded_visual_tokens": 96
+      }
+    },
+    "6": {
+      "planned": 2,
+      "final_valid": 2,
+      "final_failed": 0,
+      "first_legality": {
+        "n": 2,
+        "parse_ok": 2,
+        "schema_ok": 2,
+        "evidence_ok": 2,
+        "schema_valid_denominator": 2,
+        "evidence_ok_given_schema": 2
+      },
+      "final_legality": {
+        "n": 2,
+        "parse_ok": 2,
+        "schema_ok": 2,
+        "evidence_ok": 2,
+        "schema_valid_denominator": 2,
+        "evidence_ok_given_schema": 2
+      },
+      "all_attempt_legality": {
+        "n": 2,
+        "parse_ok": 2,
+        "schema_ok": 2,
+        "evidence_ok": 2,
+        "schema_valid_denominator": 2,
+        "evidence_ok_given_schema": 2
+      },
+      "own_valid_scores": {
+        "motion_phase_accuracy": 0.5,
+        "phase_correct": 1,
+        "exact_match": 0,
+        "event_type_micro_precision": 0.5,
+        "event_type_micro_recall": 0.5,
+        "event_type_micro_f1": 0.5,
+        "event_presence_precision": 0.5,
+        "event_presence_recall": 1.0,
+        "by_type": {
+          "grasp_attempt": {
+            "tp": 1,
+            "fp": 1,
+            "fn": 0
+          },
+          "object_motion": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 1
+          },
+          "release_attempt": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "event_presence_f1": 0.6666666666666666,
+        "object_motion": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "positive_truth_n": 1,
+          "caution": "own-valid cohort only; zero-positive denominator is not a recall estimate"
+        }
+      },
+      "common_valid_ids": [
+        "demo_169-S0002"
+      ],
+      "common_valid_scores": {
+        "motion_phase_accuracy": 1.0,
+        "phase_correct": 1,
+        "exact_match": 0,
+        "event_type_micro_precision": 0.0,
+        "event_type_micro_recall": 0.0,
+        "event_type_micro_f1": 0.0,
+        "event_presence_precision": 0.0,
+        "event_presence_recall": 0.0,
+        "by_type": {
+          "grasp_attempt": {
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          },
+          "object_motion": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          },
+          "release_attempt": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "event_presence_f1": 0.0
+      },
+      "end_to_end_exact": 0,
+      "end_to_end_exact_denominator": 2,
+      "all_attempt_cost": {
+        "attempts": 2,
+        "wall_seconds": 7.023542299999917,
+        "median_s": 3.5117711499999587,
+        "p95_s_nearest_rank": 3.61482639999997,
+        "prompt_tokens": 4997,
+        "completion_tokens": 350,
+        "sampled_peak_vram_mib": 4736,
+        "newly_encoded_visual_tokens": 192
+      },
+      "first_attempt_cost": {
+        "attempts": 2,
+        "wall_seconds": 7.023542299999917,
+        "median_s": 3.5117711499999587,
+        "p95_s_nearest_rank": 3.61482639999997,
+        "prompt_tokens": 4997,
+        "completion_tokens": 350,
+        "sampled_peak_vram_mib": 4736,
+        "newly_encoded_visual_tokens": 192
+      }
+    },
+    "12": {
+      "planned": 2,
+      "final_valid": 1,
+      "final_failed": 1,
+      "first_legality": {
+        "n": 2,
+        "parse_ok": 2,
+        "schema_ok": 1,
+        "evidence_ok": 2,
+        "schema_valid_denominator": 1,
+        "evidence_ok_given_schema": 1
+      },
+      "final_legality": {
+        "n": 2,
+        "parse_ok": 2,
+        "schema_ok": 1,
+        "evidence_ok": 2,
+        "schema_valid_denominator": 1,
+        "evidence_ok_given_schema": 1
+      },
+      "all_attempt_legality": {
+        "n": 3,
+        "parse_ok": 3,
+        "schema_ok": 1,
+        "evidence_ok": 3,
+        "schema_valid_denominator": 1,
+        "evidence_ok_given_schema": 1
+      },
+      "own_valid_scores": {
+        "motion_phase_accuracy": 1.0,
+        "phase_correct": 1,
+        "exact_match": 0,
+        "event_type_micro_precision": 0.0,
+        "event_type_micro_recall": 0.0,
+        "event_type_micro_f1": 0.0,
+        "event_presence_precision": 0.0,
+        "event_presence_recall": 0.0,
+        "by_type": {
+          "grasp_attempt": {
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          },
+          "object_motion": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          },
+          "release_attempt": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "event_presence_f1": 0.0,
+        "object_motion": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": 0,
+          "recall": 0,
+          "f1": 0,
+          "positive_truth_n": 0,
+          "caution": "own-valid cohort only; zero-positive denominator is not a recall estimate"
+        }
+      },
+      "common_valid_ids": [
+        "demo_169-S0002"
+      ],
+      "common_valid_scores": {
+        "motion_phase_accuracy": 1.0,
+        "phase_correct": 1,
+        "exact_match": 0,
+        "event_type_micro_precision": 0.0,
+        "event_type_micro_recall": 0.0,
+        "event_type_micro_f1": 0.0,
+        "event_presence_precision": 0.0,
+        "event_presence_recall": 0.0,
+        "by_type": {
+          "grasp_attempt": {
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          },
+          "object_motion": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          },
+          "release_attempt": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "event_presence_f1": 0.0
+      },
+      "end_to_end_exact": 0,
+      "end_to_end_exact_denominator": 2,
+      "all_attempt_cost": {
+        "attempts": 3,
+        "wall_seconds": 13.786957799999868,
+        "median_s": 4.992975199999933,
+        "p95_s_nearest_rank": 5.008219199999985,
+        "prompt_tokens": 8329,
+        "completion_tokens": 758,
+        "sampled_peak_vram_mib": 4736,
+        "newly_encoded_visual_tokens": 384
+      },
+      "first_attempt_cost": {
+        "attempts": 2,
+        "wall_seconds": 10.001194399999918,
+        "median_s": 5.000597199999959,
+        "p95_s_nearest_rank": 5.008219199999985,
+        "prompt_tokens": 5567,
+        "completion_tokens": 504,
+        "sampled_peak_vram_mib": 4736,
+        "newly_encoded_visual_tokens": 384
+      }
+    }
+  },
+  "per_segment": [
+    {
+      "segment_id": "demo_2-S0003",
+      "arm": 3,
+      "frame_ids": [
+        63,
+        84,
+        106
+      ],
+      "valid": true,
+      "parsed": {
+        "motion_phase": "grasp",
+        "object_relation": [
+          "gripper_contact_visible"
+        ],
+        "gripper_state": "closed",
+        "event_assessment": "event_visible",
+        "events": [
+          {
+            "event_type": "grasp_attempt",
+            "event_outcome": "unclear",
+            "evidence_frame_indices": [
+              63,
+              84,
+              106
+            ]
+          }
+        ],
+        "evidence_frame_indices": [
+          63,
+          84,
+          106
+        ],
+        "evidence_quality": "sufficient",
+        "observation_note": "夹爪闭合并接触红色物体，物体位于桌面上，未见明显位移。"
+      },
+      "qc": {
+        "status": "REVIEW_REQUIRED",
+        "parse_ok": true,
+        "schema_ok": true,
+        "frame_evidence_ok": true,
+        "truncated": false,
+        "abstained": false,
+        "cited_frames": [
+          63,
+          63,
+          84,
+          84,
+          106,
+          106
+        ],
+        "invalid_references": [],
+        "cross_boundary_references": [],
+        "findings": [
+          {
+            "check_id": "PHASE_NOTE_MOTION_CONFLICT_CANDIDATE",
+            "scope": "CANDIDATE",
+            "message": "motion_phase='grasp'，但 observation_note 的同一分句否定了运动（'位移'）。",
+            "field": "motion_phase",
+            "detail": {
+              "clause": "未见明显位移",
+              "motion_token": "位移"
+            }
+          }
+        ]
+      },
+      "visual_embedding_tokens": 48,
+      "visual_embedding_tokens_per_image": [
+        16,
+        16,
+        16
+      ],
+      "sampled_peak_vram_mib": 4734,
+      "wall_seconds": 3.176327600000036,
+      "attempt": 1,
+      "human": {
+        "phase": "transport",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      }
+    },
+    {
+      "segment_id": "demo_2-S0003",
+      "arm": 6,
+      "frame_ids": [
+        63,
+        73,
+        78,
+        84,
+        95,
+        106
+      ],
+      "valid": true,
+      "parsed": {
+        "motion_phase": "grasp",
+        "object_relation": [
+          "gripper_contact_visible"
+        ],
+        "gripper_state": "closed",
+        "event_assessment": "event_visible",
+        "events": [
+          {
+            "event_type": "grasp_attempt",
+            "event_outcome": "unclear",
+            "evidence_frame_indices": [
+              63,
+              73,
+              78,
+              84,
+              95,
+              106
+            ]
+          }
+        ],
+        "evidence_frame_indices": [
+          63,
+          73,
+          78,
+          84,
+          95,
+          106
+        ],
+        "evidence_quality": "sufficient",
+        "observation_note": "夹爪闭合并接触红色物体，物体位于桌面上；夹爪在目标段内保持闭合状态，无明显位移。"
+      },
+      "qc": {
+        "status": "REVIEW_REQUIRED",
+        "parse_ok": true,
+        "schema_ok": true,
+        "frame_evidence_ok": true,
+        "truncated": false,
+        "abstained": false,
+        "cited_frames": [
+          63,
+          63,
+          73,
+          73,
+          78,
+          78,
+          84,
+          84,
+          95,
+          95,
+          106,
+          106
+        ],
+        "invalid_references": [],
+        "cross_boundary_references": [],
+        "findings": [
+          {
+            "check_id": "PHASE_NOTE_MOTION_CONFLICT_CANDIDATE",
+            "scope": "CANDIDATE",
+            "message": "motion_phase='grasp'，但 observation_note 的同一分句否定了运动（'位移'）。",
+            "field": "motion_phase",
+            "detail": {
+              "clause": "无明显位移",
+              "motion_token": "位移"
+            }
+          }
+        ]
+      },
+      "visual_embedding_tokens": 96,
+      "visual_embedding_tokens_per_image": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "sampled_peak_vram_mib": 4734,
+      "wall_seconds": 3.61482639999997,
+      "attempt": 1,
+      "human": {
+        "phase": "transport",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      }
+    },
+    {
+      "segment_id": "demo_2-S0003",
+      "arm": 12,
+      "frame_ids": [
+        63,
+        68,
+        73,
+        78,
+        81,
+        84,
+        89,
+        92,
+        95,
+        100,
+        103,
+        106
+      ],
+      "valid": false,
+      "parsed": {
+        "motion_phase": "place",
+        "object_relation": [
+          "gripper_contact_visible"
+        ],
+        "gripper_state": "closed",
+        "event_assessment": "event_visible",
+        "events": [
+          {
+            "event_type": "place",
+            "event_outcome": "unclear",
+            "evidence_frame_indices": [
+              63,
+              68,
+              73,
+              78,
+              81,
+              84,
+              89,
+              92,
+              95,
+              100,
+              103,
+              106
+            ]
+          }
+        ],
+        "evidence_frame_indices": [
+          63,
+          68,
+          73,
+          78,
+          81,
+          84,
+          89,
+          92,
+          95,
+          100,
+          103,
+          106
+        ],
+        "evidence_quality": "sufficient",
+        "observation_note": "夹爪闭合并接触红色物体，物体被移动至目标盒子区域。"
+      },
+      "qc": {
+        "status": "INVALID_MODEL_OUTPUT",
+        "parse_ok": true,
+        "schema_ok": false,
+        "frame_evidence_ok": true,
+        "truncated": false,
+        "abstained": false,
+        "cited_frames": [
+          63,
+          63,
+          68,
+          68,
+          73,
+          73,
+          78,
+          78,
+          81,
+          81,
+          84,
+          84,
+          89,
+          89,
+          92,
+          92,
+          95,
+          95,
+          100,
+          100,
+          103,
+          103,
+          106,
+          106
+        ],
+        "invalid_references": [],
+        "cross_boundary_references": [],
+        "findings": [
+          {
+            "check_id": "ILLEGAL_ENUM",
+            "scope": "DETERMINISTIC",
+            "message": "events[0].event_type 取值 'place' 不在 v0.2 枚举中。",
+            "field": "events",
+            "detail": {
+              "event_index": 0,
+              "allowed": [
+                "grasp_attempt",
+                "release_attempt",
+                "object_motion"
+              ]
+            }
+          }
+        ]
+      },
+      "visual_embedding_tokens": 192,
+      "visual_embedding_tokens_per_image": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "sampled_peak_vram_mib": 4736,
+      "wall_seconds": 3.7857633999999507,
+      "attempt": 2,
+      "human": {
+        "phase": "transport",
+        "events": [
+          "grasp_attempt",
+          "object_motion"
+        ]
+      }
+    },
+    {
+      "segment_id": "demo_169-S0002",
+      "arm": 3,
+      "frame_ids": [
+        4,
+        16,
+        28
+      ],
+      "valid": true,
+      "parsed": {
+        "motion_phase": "grasp",
+        "object_relation": [
+          "gripper_contact_visible"
+        ],
+        "gripper_state": "closed",
+        "event_assessment": "event_visible",
+        "events": [
+          {
+            "event_type": "grasp_attempt",
+            "event_outcome": "unclear",
+            "evidence_frame_indices": [
+              4,
+              16,
+              28
+            ]
+          }
+        ],
+        "evidence_frame_indices": [
+          4,
+          16,
+          28
+        ],
+        "evidence_quality": "sufficient",
+        "observation_note": "夹爪闭合并接触红色杯子，杯子位于木桌表面，未见明显位移。"
+      },
+      "qc": {
+        "status": "REVIEW_REQUIRED",
+        "parse_ok": true,
+        "schema_ok": true,
+        "frame_evidence_ok": true,
+        "truncated": false,
+        "abstained": false,
+        "cited_frames": [
+          4,
+          4,
+          16,
+          16,
+          28,
+          28
+        ],
+        "invalid_references": [],
+        "cross_boundary_references": [],
+        "findings": [
+          {
+            "check_id": "PHASE_NOTE_MOTION_CONFLICT_CANDIDATE",
+            "scope": "CANDIDATE",
+            "message": "motion_phase='grasp'，但 observation_note 的同一分句否定了运动（'位移'）。",
+            "field": "motion_phase",
+            "detail": {
+              "clause": "未见明显位移",
+              "motion_token": "位移"
+            }
+          }
+        ]
+      },
+      "visual_embedding_tokens": 48,
+      "visual_embedding_tokens_per_image": [
+        16,
+        16,
+        16
+      ],
+      "sampled_peak_vram_mib": 4736,
+      "wall_seconds": 3.0368870999999444,
+      "attempt": 1,
+      "human": {
+        "phase": "approach",
+        "events": []
+      }
+    },
+    {
+      "segment_id": "demo_169-S0002",
+      "arm": 6,
+      "frame_ids": [
+        4,
+        7,
+        10,
+        16,
+        22,
+        28
+      ],
+      "valid": true,
+      "parsed": {
+        "motion_phase": "approach",
+        "object_relation": [
+          "gripper_around"
+        ],
+        "gripper_state": "open",
+        "event_assessment": "event_visible",
+        "events": [
+          {
+            "event_type": "grasp_attempt",
+            "event_outcome": "unclear",
+            "evidence_frame_indices": [
+              4,
+              7,
+              10,
+              16,
+              22,
+              28
+            ]
+          }
+        ],
+        "evidence_frame_indices": [
+          4,
+          7,
+          10,
+          16,
+          22,
+          28
+        ],
+        "evidence_quality": "sufficient",
+        "observation_note": "Robot arm approaches the red can; gripper remains open. Can is stationary on the table."
+      },
+      "qc": {
+        "status": "VALID",
+        "parse_ok": true,
+        "schema_ok": true,
+        "frame_evidence_ok": true,
+        "truncated": false,
+        "abstained": false,
+        "cited_frames": [
+          4,
+          4,
+          7,
+          7,
+          10,
+          10,
+          16,
+          16,
+          22,
+          22,
+          28,
+          28
+        ],
+        "invalid_references": [],
+        "cross_boundary_references": [],
+        "findings": []
+      },
+      "visual_embedding_tokens": 96,
+      "visual_embedding_tokens_per_image": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "sampled_peak_vram_mib": 4736,
+      "wall_seconds": 3.4087158999999474,
+      "attempt": 1,
+      "human": {
+        "phase": "approach",
+        "events": []
+      }
+    },
+    {
+      "segment_id": "demo_169-S0002",
+      "arm": 12,
+      "frame_ids": [
+        4,
+        5,
+        7,
+        8,
+        10,
+        11,
+        13,
+        16,
+        19,
+        22,
+        25,
+        28
+      ],
+      "valid": true,
+      "parsed": {
+        "motion_phase": "approach",
+        "object_relation": [
+          "gripper_around"
+        ],
+        "gripper_state": "open",
+        "event_assessment": "event_visible",
+        "events": [
+          {
+            "event_type": "grasp_attempt",
+            "event_outcome": "unclear",
+            "evidence_frame_indices": [
+              4,
+              5,
+              7,
+              8,
+              10,
+              11,
+              13,
+              16,
+              19,
+              22,
+              25,
+              28
+            ]
+          }
+        ],
+        "evidence_frame_indices": [
+          4,
+          5,
+          7,
+          8,
+          10,
+          11,
+          13,
+          16,
+          19,
+          22,
+          25,
+          28
+        ],
+        "evidence_quality": "sufficient",
+        "observation_note": "Robot arm approaches the red can on the table. Gripper remains open throughout the segment. No visible object motion or contact."
+      },
+      "qc": {
+        "status": "REVIEW_REQUIRED",
+        "parse_ok": true,
+        "schema_ok": true,
+        "frame_evidence_ok": true,
+        "truncated": false,
+        "abstained": false,
+        "cited_frames": [
+          4,
+          4,
+          5,
+          5,
+          7,
+          7,
+          8,
+          8,
+          10,
+          10,
+          11,
+          11,
+          13,
+          13,
+          16,
+          16,
+          19,
+          19,
+          22,
+          22,
+          25,
+          25,
+          28,
+          28
+        ],
+        "invalid_references": [],
+        "cross_boundary_references": [],
+        "findings": [
+          {
+            "check_id": "PHASE_NOTE_MOTION_CONFLICT_CANDIDATE",
+            "scope": "CANDIDATE",
+            "message": "motion_phase='approach'，但 observation_note 的同一分句否定了运动（'motion'）。",
+            "field": "motion_phase",
+            "detail": {
+              "clause": "No visible object motion or contact",
+              "motion_token": "motion"
+            }
+          }
+        ]
+      },
+      "visual_embedding_tokens": 192,
+      "visual_embedding_tokens_per_image": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "sampled_peak_vram_mib": 4736,
+      "wall_seconds": 4.992975199999933,
+      "attempt": 1,
+      "human": {
+        "phase": "approach",
+        "events": []
+      }
+    }
+  ],
+  "pilot_first_legality": {
+    "n": 6,
+    "parse_ok": 6,
+    "schema_ok": 5,
+    "evidence_ok": 6,
+    "schema_valid_denominator": 5,
+    "evidence_ok_given_schema": 5
+  },
+  "pilot_final_legality": {
+    "n": 6,
+    "parse_ok": 6,
+    "schema_ok": 5,
+    "evidence_ok": 6,
+    "schema_valid_denominator": 5,
+    "evidence_ok_given_schema": 5
+  },
+  "pilot_all_attempt_legality": {
+    "n": 7,
+    "parse_ok": 7,
+    "schema_ok": 5,
+    "evidence_ok": 7,
+    "schema_valid_denominator": 5,
+    "evidence_ok_given_schema": 5
+  },
+  "pilot_cost": {
+    "attempts": 7,
+    "wall_seconds": 27.023714799999766,
+    "median_s": 3.61482639999997,
+    "p95_s_nearest_rank": 5.008219199999985,
+    "prompt_tokens": 18042,
+    "completion_tokens": 1405,
+    "sampled_peak_vram_mib": 4736,
+    "newly_encoded_visual_tokens": 672
+  },
+  "prior_incident_cost": {
+    "attempts": 4,
+    "wall_seconds": 16.335285,
+    "median_s": 3.91854914999999,
+    "p95_s_nearest_rank": 5.293889900000011,
+    "prompt_tokens": 10363,
+    "completion_tokens": 842,
+    "sampled_peak_vram_mib": 4736,
+    "newly_encoded_visual_tokens": 336
+  },
+  "all_runs_cost_including_incident": {
+    "attempts": 11,
+    "wall_seconds": 43.358999799999765,
+    "median_s": 3.7857633999999507,
+    "p95_s_nearest_rank": 5.293889900000011,
+    "prompt_tokens": 28405,
+    "completion_tokens": 2247,
+    "sampled_peak_vram_mib": 4736,
+    "newly_encoded_visual_tokens": 1008
+  },
+  "telemetry": {
+    "samples": 283,
+    "median_interval_s": 0.10910236835479736,
+    "max_interval_s": 0.118255615234375,
+    "baseline_sample_mib": 386,
+    "whole_gpu_includes_desktop": true
+  },
+  "artifact_sha256": {
+    "run_identity.json": "98f050af6c1ffb676aba90813287622b69f05c925dd84cbdf5fe3828dbf5f229",
+    "backend.log": "27d35f530a917500eb19c88c70004d12304e908af13a462a9a13ed84a240141d",
+    "gpu_samples.jsonl": "b3d0a2d98d7ba44e07d352f583bd2bfabd28358ad80f103ee52eda2f3684c56a",
+    "pilot/inputs.jsonl": "2b58e79c77f3bd7f4c8804fda3dea95c60d7b4a17b5dfa5b003ac31276201939",
+    "pilot/responses.jsonl": "c2d1279deb76de94239fa1def78969884aff0665b4b1c12da0e85127828a6ce7",
+    "pilot/terminal.json": "7b34b582ea26afecb41c5ec44ecf2cf2d38bfe87ef36fe913c7c7eb7358d1932",
+    "pilot/summary.json": "6dd69c408a47669bdae78305ca08313c5b9cbea18509179c8eec0dadd4db5a7d",
+    "incident.json": "1d281fabd49102c57b4817ab3e2334a4455c158725b7da63da84c290f59aa589"
+  }
+}

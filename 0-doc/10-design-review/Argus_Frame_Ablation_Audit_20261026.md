@@ -1,5 +1,7 @@
 # P2 Argus：3/6/12 帧实验现场审计（2026-10-26）
 
+本报告保留首次只读审计时点。用户后来确认34格矩阵，输入准备及Pilot已执行；后续状态以 [Pilot结果](Argus_Frame_Ablation_Pilot_Results_20261026.md) 为准：工程门失败，正式集未运行。
+
 状态：`AUDIT_COMPLETE / DESIGN_REVIEW_REQUIRED`。本轮模型调用 0、权重下载 0、新 RGB 渲染 0。本报告区分 GitHub 已跟踪证据、本地重新核验和仍未知项；不修改历史结论。实施方案见 [Argus_Frame_Ablation_Plan_20261026.md](Argus_Frame_Ablation_Plan_20261026.md)。
 
 ## 工作树与 SSOT

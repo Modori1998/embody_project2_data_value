@@ -1,5 +1,7 @@
 # P2 Argus：3/6/12 帧实施方案（待确认，2026-10-26）
 
+此文保留最初提交的设计草案。用户随后确认推荐的34格方案；执行前修订与事件见 [Execution](Argus_Frame_Ablation_Execution_20261026.md)，实际Pilot及停止结论见 [Pilot Results](Argus_Frame_Ablation_Pilot_Results_20261026.md)。未选择的方案均未执行。
+
 状态：`DRAFT / NO_INFERENCE_AUTHORIZED_THIS_STAGE`。已完成工作见 [现场审计](Argus_Frame_Ablation_Audit_20261026.md)。先提交本方案供审阅；本轮不下载权重、不加载模型、不跑 Pilot 或正式集。CPU 草案不是可执行授权或实验结果。
 
 ## 唯一干预与固定项
