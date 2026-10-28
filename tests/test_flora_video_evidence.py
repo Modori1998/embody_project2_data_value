@@ -64,6 +64,12 @@ class FloraVideoEvidenceTest(unittest.TestCase):
                                 for f in p["frames"]) for p in packs))
         self.assertTrue(all(verify_pack(p, self.out) for p in packs))
         self.assertEqual(len(list((self.out / "images" / "demo_2").glob("*.png"))), 18)
+        candidates = [json.loads(x) for x in (self.out / "model_input_candidates.jsonl").read_text().splitlines()]
+        self.assertEqual(len(candidates), 12)
+        self.assertTrue(all(x["model_call_status"] == "NOT_RUN" for x in candidates))
+        self.assertTrue(all(x["caption_hint_unverified"] is None for x in candidates
+                            if x["variant"] == "vision_only"))
+        self.assertEqual(len(list((self.out / "contact_sheets").glob("*.html"))), 2)
 
     def test_validator_valid_and_bad_citation(self):
         build_video_evidence(self.zip, self.root / "recovery", self.out)
@@ -112,6 +118,25 @@ class FloraVideoEvidenceTest(unittest.TestCase):
         with self.assertRaisesRegex(VideoEvidenceError, "EVIDENCE_PNG_HASH_MISMATCH"):
             verify_pack(pack, self.out)
 
+    def test_native_directory(self):
+        folder = self.root / "native" / "raw_json"
+        folder.mkdir(parents=True)
+        (folder / "demo_2.json").write_text(json.dumps(self.native))
+        records = read_native_zip(folder.parent)
+        self.assertEqual(list(records), ["demo_2"])
+        result = build_video_evidence(folder.parent, self.root / "recovery", self.out)
+        self.assertEqual(result["processed_flora_segments"], 2)
+
+    def test_video_filename_pattern(self):
+        renamed = self.video_dir / "demo_2.mp4"
+        self.video.rename(renamed)
+        result = build_video_evidence(self.zip, self.root / "recovery", self.out,
+                                      filename_pattern="{episode}.mp4")
+        self.assertEqual(result["decoded_frames"], 20)
+        with self.assertRaisesRegex(VideoEvidenceError, "INVALID_VIDEO_FILENAME_PATTERN"):
+            build_video_evidence(self.zip, self.root / "recovery", self.root / "bad",
+                                 filename_pattern="../../{episode}.mp4")
+
     def test_native_unknown_field_retained(self):
         self.assertTrue(read_native_zip(self.zip)["demo_2"]["record"]["pipeline"]["unknown_future_field"])
 
@@ -120,7 +145,8 @@ class FloraVideoEvidenceTest(unittest.TestCase):
         another = self.root / "replay"
         build_video_evidence(self.zip, self.root / "recovery", another)
         for name in ("video_frame_manifest.jsonl", "evidence_packs.jsonl",
-                     "sampling_comparison.jsonl", "episode_inventory.jsonl", "summary.json"):
+                     "sampling_comparison.jsonl", "episode_inventory.jsonl",
+                     "model_input_candidates.jsonl", "summary.json"):
             self.assertEqual((self.out / name).read_bytes(), (another / name).read_bytes())
 
     def test_short_uniform_sampling(self):
