@@ -23,6 +23,8 @@ def main() -> int:
     ap.add_argument("--video-dir", required=True, help="Directory containing videos/ or demo_N_agentview_20fps.mp4")
     ap.add_argument("--output-dir", required=True, help="Must not already contain files")
     ap.add_argument("--episode", action="append", dest="episodes", help="Repeat for smoke; omit for all 15")
+    ap.add_argument("--video-pattern", default="{episode}_agentview_20fps.mp4",
+                    help='MP4 basename pattern, e.g. "{episode}.mp4" (no directory separator)')
     ap.add_argument("--ffmpeg", default="ffmpeg")
     ap.add_argument("--ffprobe", default="ffprobe")
     args = ap.parse_args()
@@ -30,6 +32,7 @@ def main() -> int:
         summary = build_video_evidence(
             args.flora_source, args.video_dir, args.output_dir,
             episodes=args.episodes, ffmpeg=args.ffmpeg, ffprobe=args.ffprobe,
+            filename_pattern=args.video_pattern,
         )
     except (VideoEvidenceError, ValueError, OSError, KeyError, json.JSONDecodeError) as exc:
         print("FLORA_VIDEO_G3_BLOCKED:", exc, file=sys.stderr)
