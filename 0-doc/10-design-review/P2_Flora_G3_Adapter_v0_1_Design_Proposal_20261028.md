@@ -268,7 +268,7 @@ outputs/flora_g3_adapter/v0_1/<run_id>/
 1. 无损解析并 roundtrip/引用 Flora 原生 JSON，保留全部 10 个顶层键及未来新增键。
 2. 非法或缺失 `source_clock`、视频哈希不匹配、Episode 名称相同但 source manifest 不一致 → 失败/UNVERIFIED。
 3. `[start_s,end_s)` 与 G1 闭区间端点转换、最后一帧、跨多个 G1、完全不重叠、时钟偏移、短片段。
-4. Flask? **无新增 Web 服务依赖**；只测输入文件、对齐器、Validator，可离线回放。
+4. **无新增 Web 服务依赖**；只测输入文件、对齐器、Validator，并支持离线回放。
 5. 事件引用不存在帧、引用 BEFORE/AFTER 邻居帧、跨 target 范围 → INVALID/REVIEW，原始预测不能被修补。
 6. `event_assessment=event_visible` 却 `events=[]`，或 `no_event_visible` 却有 events → 结构无效。
 7. `gripper_state=closed`、`motion_phase=grasp` 不自动推出 success；物体静止的 note 却有 `object_motion` → 矛盾候选。
