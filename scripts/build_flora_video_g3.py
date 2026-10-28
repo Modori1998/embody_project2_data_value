@@ -18,7 +18,8 @@ from src.project2_g3.flora_video_evidence import VideoEvidenceError, build_video
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--flora-zip", required=True, help="Flora export ZIP with raw_json/demo_N.json members")
+    ap.add_argument("--flora-zip", "--flora-source", dest="flora_source", required=True,
+                    help="Flora native ZIP or directory containing raw_json/demo_N.json files")
     ap.add_argument("--video-dir", required=True, help="Directory containing videos/ or demo_N_agentview_20fps.mp4")
     ap.add_argument("--output-dir", required=True, help="Must not already contain files")
     ap.add_argument("--episode", action="append", dest="episodes", help="Repeat for smoke; omit for all 15")
@@ -27,7 +28,7 @@ def main() -> int:
     args = ap.parse_args()
     try:
         summary = build_video_evidence(
-            args.flora_zip, args.video_dir, args.output_dir,
+            args.flora_source, args.video_dir, args.output_dir,
             episodes=args.episodes, ffmpeg=args.ffmpeg, ffprobe=args.ffprobe,
         )
     except (VideoEvidenceError, ValueError, OSError, KeyError, json.JSONDecodeError) as exc:
