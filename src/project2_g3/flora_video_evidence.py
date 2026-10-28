@@ -80,8 +80,12 @@ def read_native_zip(path: Path) -> dict[str, dict]:
     return result
 
 
-def video_for(video_dir: Path, episode: str) -> Path:
-    filename = f"{episode}_agentview_20fps.mp4"
+def video_for(video_dir: Path, episode: str, filename_pattern: str) -> Path:
+    if (filename_pattern.count("{episode}") != 1 or "/" in filename_pattern
+            or "\\" in filename_pattern or ".." in filename_pattern
+            or not filename_pattern.endswith(".mp4")):
+        raise VideoEvidenceError("INVALID_VIDEO_FILENAME_PATTERN")
+    filename = filename_pattern.replace("{episode}", episode)
     candidates = [video_dir / filename, video_dir / "videos" / filename]
     found = [p for p in candidates if p.is_file()]
     if len(found) != 1:
@@ -182,7 +186,8 @@ def validate_g3_reply(raw_text: str, pack: dict, output_dir: Path, *, finish_rea
 
 def build_video_evidence(flora_zip: str | Path, video_dir: str | Path, output_dir: str | Path,
                          *, episodes: list[str] | None = None,
-                         ffmpeg: str = "ffmpeg", ffprobe: str = "ffprobe") -> dict:
+                         ffmpeg: str = "ffmpeg", ffprobe: str = "ffprobe",
+                         filename_pattern: str = "{episode}_agentview_20fps.mp4") -> dict:
     """Create all 3/5/9 frame candidates; no model request or annotation is sent."""
     src = read_native_zip(Path(flora_zip))
     chosen = sorted(src) if episodes is None else list(dict.fromkeys(episodes))
@@ -197,7 +202,7 @@ def build_video_evidence(flora_zip: str | Path, video_dir: str | Path, output_di
     for episode in chosen:
         native = src[episode]
         record = native["record"]
-        path = video_for(directory, episode)
+        path = video_for(directory, episode, filename_pattern)
         video_sha = digest(path.read_bytes())
         if video_sha != record["input_sha256"]["main"]:
             raise VideoEvidenceError(f"FLORA_VIDEO_SHA_MISMATCH:{episode}")
