@@ -173,7 +173,7 @@ def build_links(flora_zip: str | Path, output_dir: str | Path, source_manifest: 
                "link_count": len(links), "source_alignment_verified": False,
                "mapping_status_counts": dict(Counter(x["status"] for x in audit)),
                "missing_source_manifest_is_blocker": any(x["status"] == "MISSING_SOURCE_MANIFEST" for x in audit),
-               "alignment_blocked": any(x["status"] != "SOURCE_MANIFEST_SELF_CONSISTENT" for x in audit),
+               "alignment_blocked": True,  # candidate consistency never proves external provenance
                "notes": ["A link is not semantic ground truth.",
                          "No source provenance can be independently verified from the Flora ZIP alone.",
                          "Never infer G1 frame indices from nominal FPS."]}

@@ -27,7 +27,7 @@ python scripts/build_flora_g3_adapter.py \
   --source-manifest /path/to/trusted_source_frame_mapping.json
 ```
 
-CLI exit code `3` = **alignment blocked**, not an execution crash. Exit `0` with an internally consistent manifest means only *candidate links were computed*; `source_alignment_verified` stays `false` until independent source audit.
+CLI exit code `3` = **alignment blocked**, not an execution crash. Local hardening now also blocks internally consistent candidate manifests: consistency alone cannot prove external provenance. See [local source and partial G1 audit](P2_Flora_G3_Local_Alignment_Audit_20261028.md) for the recovered 15-video lineage and remaining full-coverage blocker.
 
 ### Current real-data run (uploaded ZIP, no G1 source manifest)
 

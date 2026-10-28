@@ -60,6 +60,7 @@ class FloraAdapterTests(unittest.TestCase):
         p = self.root / "source.json"; manifest(p)
         result = build_links(self.zip, self.root / "out", p)
         self.assertFalse(result["source_alignment_verified"])
+        self.assertTrue(result["alignment_blocked"])
         links = self.read_links()
         self.assertEqual(len(links), 3)  # second Flora segment overlaps two G1 spans
         self.assertEqual([v["g1_target"].get("g1_segment_id") for v in links], ["S1", "S2", "S3"])
@@ -90,6 +91,24 @@ class FloraAdapterTests(unittest.TestCase):
             z.writestr("raw_json/demo_2.json", json.dumps(self.flora))
         with self.assertRaises(AdapterError):
             build_links(self.zip, self.root / "out")
+
+    def test_many_flora_to_one_g1_and_half_open_boundary(self):
+        p = self.root / "source.json"
+        manifest(p)
+        obj = json.loads(p.read_text())
+        obj["episodes"][0]["g1_segments"] = [
+            {"segment_id": "whole", "start_frame": 0, "end_frame": 25}]
+        p.write_text(json.dumps(obj))
+        build_links(self.zip, self.root / "out", p)
+        links = self.read_links()
+        self.assertEqual([x["g1_target"]["matched_video_frame_count"] for x in links], [2, 4])
+        self.assertEqual([x["g1_target"]["matched_source_frame_min_max"] for x in links], [[0,5],[10,25]])
+
+    def test_repeat_outputs_identical(self):
+        build_links(self.zip, self.root / "out")
+        before = {p.name:p.read_bytes() for p in (self.root / "out").iterdir()}
+        build_links(self.zip, self.root / "out")
+        self.assertEqual(before, {p.name:p.read_bytes() for p in (self.root / "out").iterdir()})
 
 
 if __name__ == "__main__":
