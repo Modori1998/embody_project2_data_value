@@ -7,6 +7,7 @@ No model inference, G1 identity claims, synthetic action labels or schema edits.
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import re
 import struct
@@ -274,6 +275,44 @@ def build_video_evidence(flora_zip: str | Path, video_dir: str | Path, output_di
         with (out / filename).open("w", encoding="utf-8") as f:
             for row in rows:
                 f.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+    # Candidate-only request descriptors, not rendered prompts or predictions.
+    model_candidates = []
+    for pack in packs:
+        for variant in ("vision_only", "vision_plus_flora_caption"):
+            model_candidates.append({
+                "schema_version": "P2_FLORA_VIDEO_G3_REQUEST_CANDIDATE_V0_1",
+                "target_segment_id": pack["target"]["target_segment_id"],
+                "evidence_pack_sha256": pack["evidence_pack_sha256"],
+                "sampling_policy": pack["sampling"]["policy"],
+                "variant": variant,
+                "ordered_png_paths": [f["png_path"] for f in pack["frames"]],
+                "caption_hint_unverified": (pack["flora_native"]["caption_hint_unverified"]
+                                            if variant == "vision_plus_flora_caption" else None),
+                "model_schema_version": "P2_G3_SEMANTIC_JSON_V0_2_CANDIDATE",
+                "prompt_status": "NOT_RENDERED_NEEDS_VIDEO_ONLY_PROMPT_REVIEW",
+                "model_call_status": "NOT_RUN",
+            })
+        if pack["sampling"]["policy"] == "uniform_9":
+            contact = out / "contact_sheets" / (
+                pack["target"]["target_segment_id"].replace("/", "_") + ".html"
+            )
+            contact.parent.mkdir(parents=True, exist_ok=True)
+            cells = "".join(
+                f'<figure><img src="../{html.escape(f["png_path"], quote=True)}" width="160">'
+                f'<figcaption>Frame {f["frame_index"]}, {f["pts_s"]:.3f}s</figcaption></figure>'
+                for f in pack["frames"]
+            )
+            caption = html.escape(str(pack["flora_native"]["caption_hint_unverified"]))
+            contact.write_text(
+                '<!doctype html><meta charset="utf-8"><title>Video-only evidence audit</title>'
+                '<style>body{font-family:sans-serif}main{display:flex;flex-wrap:wrap;gap:12px}'
+                'figure{margin:0}img{max-width:100%}</style>'
+                f'<h1>{html.escape(pack["target"]["target_segment_id"])}</h1>'
+                f'<p>Unverified Flora caption: {caption}</p><main>{cells}</main>'
+                '<p>Audit preview only; never submit this HTML/contact sheet as G3 model evidence.</p>',
+                encoding="utf-8",
+            )
+    write_jsonl("model_input_candidates.jsonl", model_candidates)
     write_jsonl("video_frame_manifest.jsonl", all_video_frames)
     write_jsonl("evidence_packs.jsonl", packs)
     write_jsonl("sampling_comparison.jsonl", sample_rows)
@@ -281,6 +320,7 @@ def build_video_evidence(flora_zip: str | Path, video_dir: str | Path, output_di
     summary = {"schema_version": VERSION, "processed_episodes": len(episode_rows),
                "processed_flora_segments": sum(x["flora_segment_count"] for x in episode_rows),
                "decoded_frames": len(all_video_frames), "evidence_packs": len(packs),
+               "request_candidates_not_run": len(model_candidates),
                "sampling_policies": list(POLICIES), "video_sha_verified": True,
                "g3_v0_2_validator_preflight": "PASS",
                "formal_g1_alignment": "NOT_APPLICABLE_VIDEO_ONLY",
