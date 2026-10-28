@@ -7,7 +7,6 @@ No model inference, G1 identity claims, synthetic action labels or schema edits.
 from __future__ import annotations
 
 import hashlib
-import html
 import json
 import re
 import struct
@@ -40,30 +39,44 @@ def canonical_sha(obj: object) -> str:
 
 
 def read_native_zip(path: Path) -> dict[str, dict]:
-    if not path.is_file():
-        raise VideoEvidenceError(f"FLORA_ZIP_MISSING:{path}")
+    """Read the untouched ZIP or a native JSON directory; never rewrite originals."""
+    if path.is_dir():
+        folder = path / "raw_json" if (path / "raw_json").is_dir() else path
+        files = sorted(folder.glob("demo_*.json"))
+        members = [(f"raw_json/{f.name}", f.read_bytes()) for f in files]
+    elif path.is_file():
+        try:
+            with zipfile.ZipFile(path) as z:
+                names = [n for n in z.namelist() if n.startswith("raw_json/") and n.endswith(".json")]
+                if len(set(names)) != len(names):
+                    raise VideoEvidenceError("DUPLICATE_NATIVE_MEMBER")
+                members = [(name, z.read(name)) for name in sorted(names)]
+        except zipfile.BadZipFile as exc:
+            raise VideoEvidenceError(f"INVALID_NATIVE_ZIP:{path}") from exc
+    else:
+        raise VideoEvidenceError(f"FLORA_NATIVE_SOURCE_MISSING:{path}")
+    if not members:
+        raise VideoEvidenceError("EMPTY_NATIVE_SOURCE")
     result = {}
-    with zipfile.ZipFile(path) as z:
-        names = [n for n in z.namelist() if n.startswith("raw_json/") and n.endswith(".json")]
-        if not names or len(set(names)) != len(names):
-            raise VideoEvidenceError("INVALID_NATIVE_ARCHIVE")
-        for name in sorted(names):
-            episode = Path(name).stem
-            if not EPISODE_RE.fullmatch(episode) or name != f"raw_json/{episode}.json":
-                raise VideoEvidenceError(f"INVALID_NATIVE_MEMBER:{name}")
-            raw = z.read(name)
+    for name, raw in members:
+        episode = Path(name).stem
+        if not EPISODE_RE.fullmatch(episode) or name != f"raw_json/{episode}.json" or episode in result:
+            raise VideoEvidenceError(f"INVALID_NATIVE_MEMBER:{name}")
+        try:
             record = json.loads(raw)
-            if record.get("source_clock") != CLOCK:
-                raise VideoEvidenceError(f"UNSUPPORTED_CLOCK:{episode}")
-            if record.get("camera_roles") != ["main"]:
-                raise VideoEvidenceError(f"UNSUPPORTED_CAMERA_ROLES:{episode}")
-            value = record.get("input_sha256", {}).get("main", "")
-            if not re.fullmatch(r"[0-9a-f]{64}", value):
-                raise VideoEvidenceError(f"INVALID_VIDEO_HASH:{episode}")
-            segments = record.get("segments")
-            if not isinstance(segments, list) or not segments:
-                raise VideoEvidenceError(f"EMPTY_SEGMENTS:{episode}")
-            result[episode] = {"record": record, "raw_sha256": digest(raw), "member": name}
+        except (ValueError, UnicodeDecodeError) as exc:
+            raise VideoEvidenceError(f"INVALID_NATIVE_JSON:{episode}") from exc
+        if not isinstance(record, dict) or record.get("source_clock") != CLOCK:
+            raise VideoEvidenceError(f"UNSUPPORTED_CLOCK:{episode}")
+        if record.get("camera_roles") != ["main"]:
+            raise VideoEvidenceError(f"UNSUPPORTED_CAMERA_ROLES:{episode}")
+        value = record.get("input_sha256", {}).get("main", "")
+        if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+            raise VideoEvidenceError(f"INVALID_VIDEO_HASH:{episode}")
+        segments = record.get("segments")
+        if not isinstance(segments, list) or not segments:
+            raise VideoEvidenceError(f"EMPTY_SEGMENTS:{episode}")
+        result[episode] = {"record": record, "raw_sha256": digest(raw), "member": name}
     return result
 
 
